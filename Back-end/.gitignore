@@ -1,0 +1,33 @@
+# Ignore Python bytecode files
+__pycache__/
+*.py[cod]
+
+# Ignore environment variables file
+.env
+
+# Ignore PostgreSQL database files
+*.sql
+
+# Ignore virtual environment folder
+venv/
+env/
+
+# Ignore log files and databases
+*.log
+*.sqlite3
+
+# Ignore node_modules folder for frontend (if using Node.js)
+node_modules/
+
+# Ignore coverage reports
+htmlcov/
+.coverage
+*.cover
+*.py,cover
+
+# Ignore IDE specific files (optional)
+.vscode/
+.idea/
+
+# Ignore compiled static files
+/staticfiles/
