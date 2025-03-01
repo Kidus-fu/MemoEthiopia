@@ -1,6 +1,10 @@
 from pathlib import Path
 import os
-import dj_database_url
+from datetime import timedelta
+from dotenv import load_dotenv
+from urllib.parse import urlparse
+
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -8,13 +12,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-+3q^$w86*2*+gsb119&-0%9#4z_z*mp)5y!jtd*b=sbg+dt)#1'
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [os.getenv("ALLOWED_HOSTS")]
 
 
 # Application definition
@@ -30,6 +33,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
 
+    # Docmentation
+    'drf_yasg',
     #Apps 
     "notes",
 
@@ -68,16 +73,29 @@ TEMPLATES = [
 WSGI_APPLICATION = 'MemoEthiopa.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+# If u in test make this 
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+# If u in production make this
+tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
 
 DATABASES = {
-    'default': dj_database_url.config(default="postgresql://notes_ak0u_user:tQbdoPSpR8n7DyK8Opu8l4f2Y8SkCMXa@dpg-cs7f40tumphs73a5gbk0-a.oregon-postgres.render.com/notes_ak0u")
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': tmpPostgres.path.replace('/', ''),  # Extracts DB name
+        'USER': tmpPostgres.username,  # Extracts username
+        'PASSWORD': tmpPostgres.password,  # Extracts password
+        'HOST': tmpPostgres.hostname,  # Extracts hostname
+        'PORT': 5432,  # PostgreSQL default port
+    }
 }
 
-# Password validation
-# https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -108,6 +126,11 @@ USE_L10N = True
 
 USE_TZ = True
 
+AUTHENTICATION_BACKENDS = [
+    'notes.auth_backend.EmailAuthBackend',  # Your custom email login backend
+    'django.contrib.auth.backends.ModelBackend',  # Keep default for username login
+]
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -116,12 +139,17 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
 }
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Add your frontend URL
 ]
 
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=10),
+}
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'

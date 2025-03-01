@@ -7,9 +7,10 @@ __pycache__/
 
 # Ignore PostgreSQL database files
 *.sql
-
+madia/
 # Ignore virtual environment folder
 venv/
+.env/
 env/
 
 # Ignore log files and databases

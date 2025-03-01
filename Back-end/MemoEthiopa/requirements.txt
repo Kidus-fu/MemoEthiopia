@@ -1,5 +1,11 @@
-Django>=3.2,<4.0
-djangorestframework>=3.12,<4.0
-psycopg2-binary>=2.9,<3.0  # For PostgreSQL, remove if using SQLite
-djangorestframework-simplejwt>=4.0,<5.0  # For JWT authentication
-django-cors-headers>=3.10,<4.0  # For handling CORS
+Django
+djangorestframework
+psycopg2-binary
+djangorestframework-simplejwt
+django-cors-headers
+dj_database_url
+Pillow
+setuptools>=65.0
+wheel>=0.38.4
+drf-yasg
+dotenv

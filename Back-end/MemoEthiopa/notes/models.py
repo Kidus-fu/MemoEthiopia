@@ -1,23 +1,58 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.timezone import now
 
 class userInfo(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)  # Links user profile to Django's built-in User model
-    username = models.CharField(max_length=200)
     bio = models.TextField(blank=True, null=True)  # Optional field for user biography
     profile_picture = models.ImageField(blank=True, null=True, upload_to='profile_pictures/')  # Optional profile picture
+    class Meta:
+        verbose_name = "User Information"
+        verbose_name_plural = "User Information"
+     
 
     def __str__(self):
         return self.user.username  # Display username for easy identification
 
-class Note(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Links each note to a specific user
-    title = models.CharField(max_length=255)  # Title of the note
-    content = models.TextField()  # Main content of the note
-    image = models.ImageField(blank=True, null=True, upload_to="notesImg/")  # Optional image for the note
-    files = models.FileField(blank=True, null=True, upload_to="notesFiles/")  # Optional files related to the note
-    created_at = models.DateTimeField(auto_now_add=True)  # Timestamp when the note is created
-    updated_at = models.DateTimeField(auto_now=True)  # Timestamp when the note is last updated
+# Category Model
+class Category(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="categories")
+    name = models.CharField(max_length=255, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.title  # Display note title for identification
+        return self.name
+
+# Note Model
+class Note(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="notes")
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, related_name="notes")
+    title = models.CharField(max_length=255)
+    content = models.TextField()
+    image = models.ImageField(upload_to="notes_images/", blank=True, null=True)
+    file = models.FileField(upload_to="notes_files/", blank=True, null=True)
+    is_pinned = models.BooleanField(default=False)
+    is_archived = models.BooleanField(default=False)
+    color = models.CharField(max_length=20, blank=True, null=True)  # Optional note color
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.title} - {self.user.username}"
+    def get_absolute_url(self):
+        URL = f"http://localhost:8000/api-v1/notes/{self.id}/"
+        return URL
+
+# Shared Notes Model (Optional, for collaboration)
+class SharedNote(models.Model):
+    note = models.ForeignKey(Note, on_delete=models.CASCADE, related_name="shared_with")
+    shared_with = models.ForeignKey(User, on_delete=models.CASCADE, related_name="shared_notes")
+    permission = models.CharField(
+        max_length=10,
+        choices=[("view", "View"), ("edit", "Edit")],
+        default="view",
+    )
+    shared_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.note.title} shared with {self.shared_with.username}"
