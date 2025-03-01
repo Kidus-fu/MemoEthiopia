@@ -10,3 +10,5 @@ wheel>=0.38.4
 drf-yasg
 dotenv
 Procfile
+waitress
+gunicorn
