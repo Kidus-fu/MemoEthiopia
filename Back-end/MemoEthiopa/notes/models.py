@@ -40,7 +40,7 @@ class Note(models.Model):
     def __str__(self):
         return f"{self.title} - {self.user.username}"
     def get_absolute_url(self):
-        URL = f"http://localhost:8000/api-v1/notes/{self.id}/"
+        URL = f"https://memoethiopia.onrender.com/api-v1/notes/{self.id}/"
         return URL
 
 # Shared Notes Model (Optional, for collaboration)
