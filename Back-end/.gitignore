@@ -16,6 +16,9 @@ env/
 *.log
 *.sqlite3
 
+migrations/
+madia/
+
 # Ignore node_modules folder for frontend (if using Node.js)
 node_modules/
 

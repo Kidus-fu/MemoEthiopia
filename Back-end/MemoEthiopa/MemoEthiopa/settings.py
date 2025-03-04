@@ -143,11 +143,14 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # Add your frontend URL
+    "http://localhost:5173",  # Add your frontend URL
 ]
 
+CORS_ALLOW_ALL_ORIGINS = True  # Allows all origins
+
+
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=5),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=15),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=10),
 }
 

@@ -5,7 +5,9 @@ from django.utils.timezone import now
 class userInfo(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)  # Links user profile to Django's built-in User model
     bio = models.TextField(blank=True, null=True)  # Optional field for user biography
-    profile_picture = models.ImageField(blank=True, null=True, upload_to='profile_pictures/')  # Optional profile picture
+    profile_picture = models.ImageField(blank=True, null=True, upload_to='profile_pictures/')  # Optional profile pictur
+    paln = models.CharField(max_length=100,default="Free")
+    joined_at = models.DateTimeField(auto_now_add=True)
     class Meta:
         verbose_name = "User Information"
         verbose_name_plural = "User Information"
