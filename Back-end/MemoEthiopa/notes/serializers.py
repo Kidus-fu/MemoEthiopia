@@ -16,7 +16,7 @@ class userInfoSerializer(serializers.ModelSerializer):
     usermore = serializers.SerializerMethodField()
     class Meta:
         model = userInfo # serializers take model 
-        fields = ['id','user','bio','profile_picture','usermore'] # make fields all coulem
+        fields = '__all__' # make fields all coulem
     def get_usermore(self, obj):
         return {
             "username": obj.user.username,
