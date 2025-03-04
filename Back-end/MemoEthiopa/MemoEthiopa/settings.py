@@ -82,7 +82,6 @@ WSGI_APPLICATION = 'MemoEthiopa.wsgi.application'
 #     }
 # }
 
-
 # If u in production make this
 tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
 
@@ -144,14 +143,11 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Add your frontend URL
+    "http://localhost:3000",  # Add your frontend URL
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True  # Allows all origins
-
-
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=15),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=10),
 }
 

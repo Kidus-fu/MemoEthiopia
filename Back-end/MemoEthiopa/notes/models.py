@@ -5,9 +5,7 @@ from django.utils.timezone import now
 class userInfo(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)  # Links user profile to Django's built-in User model
     bio = models.TextField(blank=True, null=True)  # Optional field for user biography
-    profile_picture = models.ImageField(blank=True, null=True, upload_to='profile_pictures/')  # Optional profile pictur
-    paln = models.CharField(max_length=100,default="Free")
-    joined_at = models.DateTimeField(auto_now_add=True)
+    profile_picture = models.ImageField(blank=True, null=True, upload_to='profile_pictures/')  # Optional profile picture
     class Meta:
         verbose_name = "User Information"
         verbose_name_plural = "User Information"
@@ -28,14 +26,14 @@ class Category(models.Model):
 # Note Model
 class Note(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="notes")
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL,blank=True,null=True ,related_name="notes")
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, related_name="notes")
     title = models.CharField(max_length=255)
     content = models.TextField()
     image = models.ImageField(upload_to="notes_images/", blank=True, null=True)
     file = models.FileField(upload_to="notes_files/", blank=True, null=True)
     is_pinned = models.BooleanField(default=False)
     is_archived = models.BooleanField(default=False)
-    color = models.CharField(max_length=20, default="#0000")  # Optional note color
+    color = models.CharField(max_length=20, blank=True, null=True)  # Optional note color
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
