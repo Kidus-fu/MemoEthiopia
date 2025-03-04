@@ -12,6 +12,10 @@ venv/
 .env/
 env/
 
+
+madia/
+migrations/
+
 # Ignore log files and databases
 *.log
 *.sqlite3
