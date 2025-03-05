@@ -35,7 +35,7 @@ class Note(models.Model):
     file = models.FileField(upload_to="notes_files/", blank=True, null=True)
     is_pinned = models.BooleanField(default=False)
     is_archived = models.BooleanField(default=False)
-    color = models.CharField(max_length=20, blank=True, null=True)  # Optional note color
+    color = models.CharField(max_length=20, default="#B64526")  # Optional note color
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -47,6 +47,7 @@ class Note(models.Model):
 
 # Shared Notes Model (Optional, for collaboration)
 class SharedNote(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE , related_name="shared_user")
     note = models.ForeignKey(Note, on_delete=models.CASCADE, related_name="shared_with")
     shared_with = models.ForeignKey(User, on_delete=models.CASCADE, related_name="shared_notes")
     permission = models.CharField(
@@ -58,3 +59,16 @@ class SharedNote(models.Model):
 
     def __str__(self):
         return f"{self.note.title} shared with {self.shared_with.username}"
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="notifications")  # The user receiving the notification
+    message = models.TextField()  # The notification content/message
+    is_read = models.BooleanField(default=False)  # If the notification has been read or not
+    created_at = models.DateTimeField(auto_now_add=True)  # When the notification was created
+    updated_at = models.DateTimeField(auto_now=True)  # When the notification was last updated
+
+    def __str__(self):
+        return f"Notification for {self.user.username} - {self.message[:30]}..."  # Display first 30 characters of the message
+
+    class Meta:
+        ordering = ["-created_at"]  # Show newest notifications first
+

@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     #Apps 
     "notes",
+    'otp_auth',
 
 ]
 
@@ -147,6 +148,13 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True  # Allows all origins
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.elasticemail.com"
+EMAIL_PORT = 587  # Can also use 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "seeh51593@gmail.com"
+EMAIL_HOST_PASSWORD = "14D71231A17A901BC537958BA70D4AE84006"
 
 
 SIMPLE_JWT = {

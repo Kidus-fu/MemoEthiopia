@@ -120,6 +120,11 @@ class Note(models.Model):
 * **`PUT /api-v1/categories/{id}/`** → Update a category
 * **`DELETE /api-v1/categories/{id}/`** → Delete a category
 
+## OTP 
+
+* `POST /api-v1/otp/send-otp/` → Send a OTP in email
+* `POST /api-v1/otp/verify-otp/` → Verify a OTP 
+
 ## Deployment
 
 ### Environment Variables
@@ -193,6 +198,23 @@ class Note(models.Model):
 {
     "username":"",
     "password":""
+}
+```
+
+## OTP send
+
+```json
+{
+    "email":"user@gmail.et"
+}
+```
+
+## OTP verify
+
+```json
+{
+    "email":"user@email.et",
+    "otp":"333333"
 }
 ```
 

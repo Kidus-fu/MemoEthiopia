@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 #Models 
 from django.contrib.auth import authenticate
-from .models import userInfo,Note,Category
+from .models import userInfo,Note,Category,SharedNote,Notification
 from rest_framework.reverse import reverse
 
 class NoteSerializer(serializers.ModelSerializer):
@@ -58,3 +58,14 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ["id", "user", "name", "created_at"]
+
+
+
+class SharedNoteSerializer(serializers.Serializer):
+    class Meta:
+        model = SharedNote
+        fields = "__all__"
+class NotificationSerializer(serializers.Serializer):
+    class Meta:
+        model = Notification
+        fields = "__all__"
