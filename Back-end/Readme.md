@@ -120,10 +120,10 @@ class Note(models.Model):
 * **`PUT /api-v1/categories/{id}/`** → Update a category
 * **`DELETE /api-v1/categories/{id}/`** → Delete a category
 
-## OTP 
+## OTP
 
 * `POST /api-v1/otp/send-otp/` → Send a OTP in email
-* `POST /api-v1/otp/verify-otp/` → Verify a OTP 
+* `POST /api-v1/otp/verify-otp/` → Verify a OTP
 
 ## Deployment
 
@@ -220,10 +220,8 @@ class Note(models.Model):
 
 ## Conclusion
 
-This backend powers the **Memo Ethiopia** application by providing APIs for user authentication, note management, and categories. Feel free to contribute or customize based on your needs!
+This backend powers the **Memo Ethiopia** application by providing APIs for user authentication, note management, and categories. Feel free to contribute or customize based on your needs! Test in [URL](https://memoethiopia.onrender.com/)
 
 ---
 
-### 🛠 Need Help?
-
-If you face any issues, open an issue on GitHub or contact the developer!
+### 🛠 Need Help?If you face any issues, open an issue on GitHub or contact the developer!

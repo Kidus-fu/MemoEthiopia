@@ -18,6 +18,9 @@ from .models import Note , userInfo ,Category ,SharedNote ,Notification
 
 from rest_framework.response import Response
 
+def home(request):
+    return render(request, 'home.html')
+
 class NoteView(
     mixins.ListModelMixin,
     mixins.RetrieveModelMixin,

@@ -153,8 +153,8 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.elasticemail.com"
 EMAIL_PORT = 587  # Can also use 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "seeh51593@gmail.com"
-EMAIL_HOST_PASSWORD = "14D71231A17A901BC537958BA70D4AE84006"
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 
 
 SIMPLE_JWT = {
@@ -163,6 +163,13 @@ SIMPLE_JWT = {
 }
 
 STATIC_URL = '/static/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# For development, use the following to collect static files
+if DEBUG:
+    STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR /"madia"
 # Default primary key field type

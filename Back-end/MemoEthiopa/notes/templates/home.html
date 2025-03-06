@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://cdn.pixabay.com/photo/2016/12/16/12/44/pencil-1911312_1280.png">
+    <title>Memo Ethiopia Backend Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+        }
+        h1 {
+            margin: 0;
+        }
+        section {
+            margin: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2, h3 {
+            color: #4CAF50;
+        }
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        ul li {
+            margin-bottom: 10px;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        .section-title {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .important {
+            color: #d9534f;
+        }
+        .endpoint {
+            background-color: #e9ecef;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .api-endpoint {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Memo Ethiopia Backend Documentation</h1>
+</header>
+
+<section>
+    <h2 class="section-title">Overview</h2>
+    <p>Memo Ethiopia is a real-time note-taking application built using Django and DjangoREST Framework (DRF). This documentation covers the backend implementation, including models, APIs, authentication, and deployment.</p>
+</section>
+
+<section>
+    <h2 class="section-title">Technologies Used</h2>
+    <ul>
+        <li>Django (Web framework)</li>
+        <li>Django REST Framework (DRF) (API development)</li>
+        <li>PostgreSQL (Database)</li>
+        <li>DRF-YASG (Swagger API documentation)</li>
+        <li>JWT Authentication (User authentication)</li>
+    </ul>
+</section>
+
+<section>
+    <h2 class="section-title">Installation</h2>
+    <p>Follow these steps to set up the backend:</p>
+    <ol>
+        <li>Clone the repository:
+            <pre><code>git clone https://github.com/Kidus-fu/MemoEthiopia.git</code></pre>
+        </li>
+        <li>Create a virtual environment and activate it:
+            <pre><code>python -m venv venv
+source venv/bin/activate  # On Windows use venv\Scripts\activate</code></pre>
+        </li>
+        <li>Install dependencies:
+            <pre><code>pip install -r requirements.txt</code></pre>
+        </li>
+        <li>Set up the database:
+            <pre><code>python manage.py migrate</code></pre>
+        </li>
+        <li>Create a superuser:
+            <pre><code>python manage.py createsuperuser</code></pre>
+        </li>
+        <li>Run the development server:
+            <pre><code>python manage.py runserver</code></pre>
+        </li>
+    </ol>
+</section>
+
+<section>
+    <h2 class="section-title">Models</h2>
+    <h3>UserInfo Model</h3>
+    <pre><code>class UserInfo(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bio = models.TextField(blank=True, null=True)
+    profile_picture = models.ImageField(blank=True, null=True, upload_to='profile_pictures/')
+</code></pre>
+
+    <h3>Category Model</h3>
+    <pre><code>class Category(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="categories")
+    name = models.CharField(max_length=255, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+</code></pre>
+
+    <h3>Note Model</h3>
+    <pre><code>class Note(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="notes")
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, related_name="notes")
+    title = models.CharField(max_length=255)
+    content = models.TextField()
+    image = models.ImageField(upload_to="notes_images/", blank=True, null=True)
+    file = models.FileField(upload_to="notes_files/", blank=True, null=True)
+    is_pinned = models.BooleanField(default=False)
+    is_archived = models.BooleanField(default=False)
+    color = models.CharField(max_length=20, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+</code></pre>
+</section>
+
+<section>
+    <h2 class="section-title">API Endpoints</h2>
+    
+    <div class="endpoint">
+        <span class="api-endpoint">Authentication</span>
+        <ul>
+            <li>POST /api-v1/username/token/ → Obtain JWT token using user name</li>
+            <li>POST /api-v1/email/token/ → Obtain JWT token using email</li>
+            <li>POST /api-v1/token/refresh/ → Refresh JWT token</li>
+        </ul>
+    </div>
+
+    <div class="endpoint">
+        <span class="api-endpoint">User Endpoints</span>
+        <ul>
+            <li>GET /api-v1/users/ → List users</li>
+            <li>POST /api-v1/register/ → Register new user</li>
+            <li>GET /api-v1/users/{id}/ → Get user details</li>
+        </ul>
+    </div>
+
+    <div class="endpoint">
+        <span class="api-endpoint">Notes Endpoints</span>
+        <ul>
+            <li>GET /api-v1/notes/ → List all notes</li>
+            <li>POST /api-v1/notes/ → Create a note</li>
+            <li>GET /api-v1/notes/{id}/ → Retrieve a note</li>
+            <li>PUT /api-v1/notes/{id}/ → Update a note</li>
+            <li>DELETE /api-v1/notes/{id}/ → Delete a note</li>
+        </ul>
+    </div>
+
+    <div class="endpoint">
+        <span class="api-endpoint">Categories Endpoints</span>
+        <ul>
+            <li>GET /api-v1/categories/ → List all categories</li>
+            <li>POST /api-v1/categories/ → Create a category</li>
+            <li>GET /api-v1/categories/{id}/ → Retrieve a category</li>
+            <li>PUT /api-v1/categories/{id}/ → Update a category</li>
+            <li>DELETE /api-v1/categories/{id}/ → Delete a category</li>
+        </ul>
+    </div>
+
+    <div class="endpoint">
+        <span class="api-endpoint">OTP</span>
+        <ul>
+            <li>POST /api-v1/otp/send-otp/ → Send an OTP to email</li>
+            <li>POST /api-v1/otp/verify-otp/ → Verify an OTP</li>
+        </ul>
+    </div>
+</section>
+
+<section>
+    <h2 class="section-title">Deployment</h2>
+    <p>Environment variables should be set in the .env file:</p>
+    <pre><code>SECRET_KEY=your-secret-key
+DEBUG=True
+DATABASE_URL=postgres://user:password@localhost:5432/memo_ethiopia
+ALLOWED_HOSTS=your-allowed-hosts</code></pre>
+</section>
+
+</body>
+</html>
