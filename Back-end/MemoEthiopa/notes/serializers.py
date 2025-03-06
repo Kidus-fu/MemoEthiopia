@@ -61,10 +61,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 
-class SharedNoteSerializer(serializers.Serializer):
-    class Meta:
-        model = SharedNote
-        fields = "__all__"
+
 class NotificationSerializer(serializers.Serializer):
     class Meta:
         model = Notification

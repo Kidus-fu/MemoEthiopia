@@ -12,7 +12,6 @@ class userInfo(models.Model):
         verbose_name = "User Information"
         verbose_name_plural = "User Information"
      
-
     def __str__(self):
         return self.user.username  # Display username for easy identification
 

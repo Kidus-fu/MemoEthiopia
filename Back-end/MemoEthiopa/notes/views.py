@@ -11,10 +11,10 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from rest_framework import permissions
 #serializers 
-from .serializers import NoteSerializer , userInfoSerializer , UserCreateSerializer ,EmailLoginSerializer,CategorySerializer , SharedNoteSerializer , NotificationSerializer
+from .serializers import NoteSerializer , userInfoSerializer , UserCreateSerializer ,EmailLoginSerializer,CategorySerializer  , NotificationSerializer
 
 #models 
-from .models import Note , userInfo ,Category ,SharedNote ,Notification
+from .models import Note , userInfo ,Category  ,Notification
 
 from rest_framework.response import Response
 
@@ -185,46 +185,6 @@ class CategoryView(
         return Response({"message": "Category deleted successfully"}, status=204)
 
 CategoryViewURL = CategoryView.as_view()
-
-
-class SharedNoteView(
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    mixins.CreateModelMixin,
-    mixins.DestroyModelMixin,
-    generics.GenericAPIView
-    ):
-    """
-    Example to a JSOn format
-    ...
-    """
-    serializer_class = SharedNoteSerializer
-    lookup_field = "pk"
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-    def get_queryset(self):
-        user = self.request.user  # Get the currently authenticated user
-        return SharedNote.objects.filter(user=user)  # Filter share notes by the user
-
-    def get(self, request, *args, **kwargs):
-        pk = kwargs.get("pk", None)
-        if pk is None:  
-            return self.list(request, *args, **kwargs)
-        return self.retrieve(request, *args, **kwargs)
-    def post(self, request, *args, **kwargs):
-        request.data['user'] = request.user.id 
-        return super().create(request, *args, **kwargs)
-    def put(self, request, *args, **kwargs):
-        request.data['user'] = request.user.id 
-        return super().update(request, *args, **kwargs)
-    def patch(self, request, *args, **kwargs):
-        request.data['user'] = request.user.id 
-        return super().update(request, *args, **kwargs)
-    def delete(self, request, *args, **kwargs):
-        super().destroy(request, *args, **kwargs)
-        return Response({"message": "SharedNote deleted successfully"}, status=204)
-    
-SharedNoteViewURL  = SharedNoteView.as_view()
 
 class NotificationView(
     mixins.ListModelMixin,

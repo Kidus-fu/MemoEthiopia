@@ -1,5 +1,5 @@
 from django.urls import path , include
-from .views import  NoteViewtoUrl, UserCreateViewtoUrl, userinfoViewtoUrl ,EmailLoginView,CategoryViewURL ,SharedNoteViewURL,NotificationViewURL
+from .views import  NoteViewtoUrl, UserCreateViewtoUrl, userinfoViewtoUrl ,EmailLoginView,CategoryViewURL ,NotificationViewURL
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -17,6 +17,5 @@ urlpatterns = [
     path("categories/", CategoryViewURL, name="category-list"),
     path("categories/<int:pk>/", CategoryViewURL, name="category-detail"),
     path("otp/",include("otp_auth.urls")),
-    path("shared-note/",SharedNoteViewURL,name="shared-note"),
     path("notification/",NotificationViewURL,name="Notification"),
 ]
