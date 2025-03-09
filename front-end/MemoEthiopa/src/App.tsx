@@ -1,13 +1,33 @@
 // import { useState } from 'react'
 
+import { useEffect } from 'react'
 import './App.css'
-import CustomEditor from './m'
+import { useSelector } from 'react-redux'
+import { RootState } from './store/store'
+import LandingPage from './components/LandingPage'
+import "./components/LadingNavBer.css";
 
 function App() {
+  const loggedIn = useSelector((state: RootState) => state.userinfo.loggedIn)
+  useEffect(() => {
+    document.title = "Memo Ethiopa"
+  })
 
   return (
     <>
-     <p>Memo Ethiopa</p>
+      {loggedIn ?
+        (
+          <>
+          {/* userpage */}
+          </>
+        )
+          :
+          (
+            <>
+            <LandingPage />
+            </>
+          )
+     }
     </>
   )
 }
