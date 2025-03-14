@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Ethio_logo from "../assets/MemoEthio_logo_4.png";
 import { Link } from "react-router-dom";
 import { CloseOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import { Drawer } from "antd";
+import { Divider, Drawer, Result } from "antd";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
 
@@ -22,7 +22,7 @@ const LandingNavBar: React.FC = () => {
 
   return (
     <>
-      <nav className={getClassNames("bg-[#282829]  text-gray-200 h-16 sticky top-0")}>
+      <nav className={getClassNames("bg-[#282829] z-50 text-gray-200 h-16 sticky top-0")}>
         <div className={getClassNames("flex justify-between h-16")}>
           {/* Logo */}
           <div className={getClassNames("ms-6 mt-2 h-auto")}>
@@ -46,32 +46,56 @@ const LandingNavBar: React.FC = () => {
                   setMenuOpen(null);
                   setSubMenuOpen(null);
                 }}
-                className={getClassNames("relative hover:border p-1 hover:border-gray-500")}
+                className={getClassNames("relative hover:border p-1  hover:border-gray-500")}
               >
-                <small>Menu 1</small>
+                <small>Company</small>
+
                 {menuOpen === 1 && (
-                  <div className={getClassNames("flex z-[1000] absolute  left-0 h-96 w-auto top-8 bg-[#282929] text-white p-1 shadow-md")}>
+                  <div className={getClassNames("flex z-[1000] absolute p-1  ms-4 left-0 h-72 w-auto top-8 bg-[#282929] text-white  shadow-md")}>
                     <div className={getClassNames("w-28 mt-3")}>
-                      <Link to="/" className={getClassNames("block py-2")}>Child Menu 1</Link>
                       <div
                         className={getClassNames("relative group")}
                         onMouseEnter={() => setSubMenuOpen(1)}
                         onMouseLeave={() => setSubMenuOpen(null)}
                       >
-                        <Link to="/" className={getClassNames("block py-2")}>Child Menu 2</Link>
+                        <Link to="/" className={getClassNames("block py-2")}>About Us</Link>
+
                       </div>
-                      <Link to="/" className={getClassNames("block py-2")}>Child Menu 3</Link>
+                      <Link to="#" className={getClassNames("block py-2")}>Careers</Link>
+                      <Link to="/" className={getClassNames("block py-2")}>Press</Link>
+                      <Link to="/" className={getClassNames("block py-2")}>News</Link>
                     </div>
                     <div
-                      className={getClassNames("w-80 z-50 bg-[#282929] text-white")}
-                      onMouseEnter={() => setSubMenuOpen(subMenuOpen === 1 ? 1 : 0)}
+                      className={getClassNames("w-96 z-50  bg-[#282929] text-white")}
+                      style={{ overflow: "auto", scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
+                      onMouseEnter={() => setSubMenuOpen(subMenuOpen ? subMenuOpen : null)}
                       onMouseLeave={() => setSubMenuOpen(null)}
                     >
+                      {subMenuOpen === null && (
+                        <>
+                          <Result status="info" children={
+                            <div className="flex justify-center text-white ">
+                              Hover one item
+                            </div>
+                          } />
+                        </>
+                      )}
                       {subMenuOpen === 1 && (
-                        <div className={getClassNames("p-3")}>
-                          <Link to="/" className={getClassNames("block py-2")}>Sub-Child 1</Link>
-                          <Link to="/" className={getClassNames("block py-2")}>Sub-Child 2</Link>
-                          <Link to="/" className={getClassNames("block py-2")}>Sub-Child 3</Link>
+                        <div className={getClassNames("p-2")}>
+
+                          <div className={getClassNames("mt-2")}>
+                            <p className={getClassNames("font-sans")}><b>Memo Ethiopa apps</b>
+                              <br />
+                              Are more useful than you might think.
+                              <br />
+                              Taking notes with pen and paper works just fine for some, but if you have a smartphone or tablet, using an app designed for <u>note-taking</u> can truly change the way you get things done.</p>
+                            <ul className={getClassNames("text-left space-y-2")}>
+                              <li>Easy Note Creation – Quickly capture and organize your ideas.</li>
+                              <li>Cloud Sync – Access your notes anytime, anywhere.</li>
+                              <li>Secure & Private – Your data is encrypted and safe.</li>
+                              <li>Smart Search – Find your notes in seconds.</li>
+                            </ul>
+                          </div>
                         </div>
                       )}
                     </div>
@@ -81,12 +105,20 @@ const LandingNavBar: React.FC = () => {
 
               {/* Menu 2 */}
               <li
-                onMouseEnter={() => setMenuOpen(2)}
+                onMouseEnter={() => setMenuOpen(null)}
                 onMouseLeave={() => setMenuOpen(null)}
                 className={getClassNames("relative hover:border p-1 ms-2 hover:border-gray-500")}
               >
-                <small>Menu 2</small>
-                {menuOpen === 2 && (
+                <small>Newsletter</small>
+              </li>
+              {/* Menu 3 */}
+              <li
+                onMouseEnter={() => setMenuOpen(3)}
+                onMouseLeave={() => setMenuOpen(null)}
+                className={getClassNames("relative hover:border p-1 ms-2 hover:border-gray-500")}
+              >
+                <small>Developer Options</small>
+                {menuOpen === 3 && (
                   <div className={getClassNames("absolute left-0 w-48 top-8 bg-[#282929] text-white p-3 shadow-md")}>
                     <Link to="/" className={getClassNames("block py-2")}>Child Menu 1</Link>
                     <Link to="/" className={getClassNames("block py-2")}>Child Menu 2</Link>
@@ -95,14 +127,14 @@ const LandingNavBar: React.FC = () => {
                 )}
               </li>
 
-              {/* Menu 3 */}
+              {/* Menu 4 */}
               <li
-                onMouseEnter={() => setMenuOpen(3)}
+                onMouseEnter={() => setMenuOpen(4)}
                 onMouseLeave={() => setMenuOpen(null)}
                 className={getClassNames("relative hover:border p-1 ms-2 hover:border-gray-500")}
               >
                 <small>Menu 3</small>
-                {menuOpen === 3 && (
+                {menuOpen === 4 && (
                   <div className={getClassNames("absolute left-0 w-48 top-8 bg-[#282929] text-white p-3 shadow-md")}>
                     <Link to="/" className={getClassNames("block py-2")}>Child Menu 1</Link>
                     <Link to="/" className={getClassNames("block py-2")}>Child Menu 2</Link>
@@ -128,92 +160,93 @@ const LandingNavBar: React.FC = () => {
             <MenuFoldOutlined className={getClassNames("text-3xl")} />
           </div>
         </div>
-      </nav>
+      </nav >
 
       {/* Mobile Drawer */}
-      <Drawer
+      < Drawer
         title="MemoEthiopia"
         placement="left"
         closable={false}
         onClose={onCloseMobileMenu}
-        style={{ backgroundColor: "#282929", color: "#fff" }}
+        style={{ backgroundColor: "#282929", color: "#fff" }
+        }
         open={openMobileMenu}
-        extra={<CloseOutlined className={getClassNames("cursor-pointer text-black")} onClick={onCloseMobileMenu} />}
+        extra={< CloseOutlined className={getClassNames("cursor-pointer text-black")} onClick={onCloseMobileMenu} />}
       >
         <ul className={getClassNames("flex cursor-default")}>
-              {/* Menu 1 */}
-              <li
-                onMouseEnter={() => setMenuOpen(1)}
-                onMouseLeave={() => {
-                  setMenuOpen(null);
-                  setSubMenuOpen(null);
-                }}
-                className={getClassNames("relative hover:border p-1 hover:border-gray-500")}
-              >
-                <small>Menu 1</small>
-                {menuOpen === 1 && (
-                  <div className={getClassNames("flex z-[1000] absolute  left-0 h-96 w-auto top-8 bg-[#282929] text-white p-1 shadow-md")}>
-                    <div className={getClassNames("w-28 mt-3")}>
-                      <Link to="/" className={getClassNames("block py-2")}>Child Menu 1</Link>
-                      <div
-                        className={getClassNames("relative group")}
-                        onMouseEnter={() => setSubMenuOpen(1)}
-                        onMouseLeave={() => setSubMenuOpen(null)}
-                      >
-                        <Link to="/" className={getClassNames("block py-2")}>Child Menu 2</Link>
-                      </div>
-                      <Link to="/" className={getClassNames("block py-2")}>Child Menu 3</Link>
-                    </div>
-                    <div
-                      className={getClassNames("w-80 z-50 bg-[#282929] text-white")}
-                      onMouseEnter={() => setSubMenuOpen(subMenuOpen === 1 ? 1 : 0)}
-                      onMouseLeave={() => setSubMenuOpen(null)}
-                    >
-                      {subMenuOpen === 1 && (
-                        <div className={getClassNames("p-3")}>
-                          <Link to="/" className={getClassNames("block py-2")}>Sub-Child 1</Link>
-                          <Link to="/" className={getClassNames("block py-2")}>Sub-Child 2</Link>
-                          <Link to="/" className={getClassNames("block py-2")}>Sub-Child 3</Link>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </li>
-
-              {/* Menu 2 */}
-              <li
-                onMouseEnter={() => setMenuOpen(2)}
-                onMouseLeave={() => setMenuOpen(null)}
-                className={getClassNames("relative hover:border p-1 ms-2 hover:border-gray-500")}
-              >
-                <small>Menu 2</small>
-                {menuOpen === 2 && (
-                  <div className={getClassNames("absolute left-0 w-48 top-8 bg-[#282929] text-white p-3 shadow-md")}>
-                    <Link to="/" className={getClassNames("block py-2")}>Child Menu 1</Link>
+          {/* Menu 1 */}
+          <li
+            onMouseEnter={() => setMenuOpen(1)}
+            onMouseLeave={() => {
+              setMenuOpen(null);
+              setSubMenuOpen(null);
+            }}
+            className={getClassNames("relative hover:border p-1 hover:border-gray-500")}
+          >
+            <small>Menu 1</small>
+            {menuOpen === 1 && (
+              <div className={getClassNames("flex z-[1000] absolute  left-0 h-96 w-auto top-8 bg-[#282929] text-white p-1 shadow-md")}>
+                <div className={getClassNames("w-28 mt-3")}>
+                  <Link to="/" className={getClassNames("block py-2")}>Child Menu 1</Link>
+                  <div
+                    className={getClassNames("relative group")}
+                    onMouseEnter={() => setSubMenuOpen(1)}
+                    onMouseLeave={() => setSubMenuOpen(null)}
+                  >
                     <Link to="/" className={getClassNames("block py-2")}>Child Menu 2</Link>
-                    <Link to="/" className={getClassNames("block py-2")}>Child Menu 3</Link>
                   </div>
-                )}
-              </li>
+                  <Link to="/" className={getClassNames("block py-2")}>Child Menu 3</Link>
+                </div>
+                <div
+                  className={getClassNames("w-80 z-50 bg-[#282929] text-white")}
+                  onMouseEnter={() => setSubMenuOpen(subMenuOpen === 1 ? 1 : 0)}
+                  onMouseLeave={() => setSubMenuOpen(null)}
+                >
+                  {subMenuOpen === 1 && (
+                    <div className={getClassNames("p-3")}>
+                      <Link to="/" className={getClassNames("block py-2")}>Sub-Child 1</Link>
+                      <Link to="/" className={getClassNames("block py-2")}>Sub-Child 2</Link>
+                      <Link to="/" className={getClassNames("block py-2")}>Sub-Child 3</Link>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </li>
 
-              {/* Menu 3 */}
-              <li
-                onMouseEnter={() => setMenuOpen(3)}
-                onMouseLeave={() => setMenuOpen(null)}
-                className={getClassNames("relative hover:border p-1 ms-2 hover:border-gray-500")}
-              >
-                <small>Menu 3</small>
-                {menuOpen === 3 && (
-                  <div className={getClassNames("absolute left-0 w-48 top-8 bg-[#282929] text-white p-3 shadow-md")}>
-                    <Link to="/" className={getClassNames("block py-2")}>Child Menu 1</Link>
-                    <Link to="/" className={getClassNames("block py-2")}>Child Menu 2</Link>
-                    <Link to="/" className={getClassNames("block py-2")}>Child Menu 3</Link>
-                  </div>
-                )}
-              </li>
-            </ul>
-      </Drawer>
+          {/* Menu 2 */}
+          <li
+            onMouseEnter={() => setMenuOpen(2)}
+            onMouseLeave={() => setMenuOpen(null)}
+            className={getClassNames("relative hover:border p-1 ms-2 hover:border-gray-500")}
+          >
+            <small>Menu 2</small>
+            {menuOpen === 2 && (
+              <div className={getClassNames("absolute left-0 w-48 top-8 bg-[#282929] text-white p-3 shadow-md")}>
+                <Link to="/" className={getClassNames("block py-2")}>Child Menu 1</Link>
+                <Link to="/" className={getClassNames("block py-2")}>Child Menu 2</Link>
+                <Link to="/" className={getClassNames("block py-2")}>Child Menu 3</Link>
+              </div>
+            )}
+          </li>
+
+          {/* Menu 3 */}
+          <li
+            onMouseEnter={() => setMenuOpen(3)}
+            onMouseLeave={() => setMenuOpen(null)}
+            className={getClassNames("relative hover:border p-1 ms-2 hover:border-gray-500")}
+          >
+            <small>Menu 3</small>
+            {menuOpen === 3 && (
+              <div className={getClassNames("absolute left-0 w-48 top-8 bg-[#282929] text-white p-3 shadow-md")}>
+                <Link to="/" className={getClassNames("block py-2")}>Child Menu 1</Link>
+                <Link to="/" className={getClassNames("block py-2")}>Child Menu 2</Link>
+                <Link to="/" className={getClassNames("block py-2")}>Child Menu 3</Link>
+              </div>
+            )}
+          </li>
+        </ul>
+      </Drawer >
     </>
   );
 };
