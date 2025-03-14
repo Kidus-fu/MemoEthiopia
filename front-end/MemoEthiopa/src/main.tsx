@@ -9,6 +9,8 @@ import Error404 from './components/Error_404.tsx';
 import store from './store/store.ts';
 import OTP from './components/OTP.tsx';
 import SingUp from './components/Sing_up.tsx';
+
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={store}>

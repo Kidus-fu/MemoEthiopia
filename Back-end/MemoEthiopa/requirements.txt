@@ -1,1 +1,15 @@
-pillow==11.1.0
+Django
+djangorestframework
+psycopg2-binary
+djangorestframework-simplejwt
+django-cors-headers
+dj_database_url
+Pillow
+setuptools>=65.0
+wheel>=0.38.4
+drf-yasg
+dotenv
+pyotp
+Procfile
+waitress
+gunicorn

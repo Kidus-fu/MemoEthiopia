@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
 body {
-    background-color: #181818;
+  background-color: #181818;
+}
+
+.slider-container {
+  width: 100%;
+
+}
+
+.slick-slide img {
+  width: 100%;
+  border-radius: 10px;
 }
