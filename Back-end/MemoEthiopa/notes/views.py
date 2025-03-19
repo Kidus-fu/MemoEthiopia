@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
 from django.core.mail import send_mail
+from django.shortcuts import get_object_or_404
 
 #api views
 from rest_framework import generics , mixins 
@@ -11,10 +12,14 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from rest_framework import permissions
 #serializers 
-from .serializers import NoteSerializer , userInfoSerializer , UserCreateSerializer ,EmailLoginSerializer,CategorySerializer  , NotificationSerializer
+from .serializers import NoteSerializer , userInfoSerializer , UserCreateSerializer ,EmailLoginSerializer,CategorySerializer  , NotificationSerializer, SharedNoteSerializer, ShardNoteSerializer
+
+# permission 
+
+from .permission import IsStaffEditor
 
 #models 
-from .models import Note , userInfo ,Category  ,Notification
+from .models import Note, userInfo, Category, Notification, SharedNote
 
 from rest_framework.response import Response
 
@@ -45,15 +50,17 @@ class NoteView(
     """
     model = Note
     serializer_class = NoteSerializer
+    lookup_field = "uuid"
     
     permission_classes = [permissions.IsAuthenticated]
     def get_queryset(self):
         user = self.request.user  # Get the currently authenticated user
-        return Note.objects.filter(user=user)  # Filter notes by the user
+        query = Note.objects.filter(user=user)
+        return query
 
     def get(self, request, *args, **kwargs):
-        pk = kwargs.get("pk", None)
-        if pk is None:  # List all notes for the authenticated user
+        uuid = kwargs.get("uuid", None)
+        if uuid is None:  # List all notes for the authenticated user
             return self.list(request, *args, **kwargs)
         return self.retrieve(request, *args, **kwargs)
 
@@ -89,13 +96,16 @@ class userinfoView(
     }
     """
     serializer_class = userInfoSerializer
-    lookup_field = "pk"
-    queryset = userInfo.objects.all()
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    lookup_field = "uuid"
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,IsStaffEditor]
+
+    def get_queryset(self):
+        query = userInfo.objects.exclude(user=self.request.user)
+        return query
 
     def get(self, request, *args, **kwargs):
-        pk = kwargs.get("pk", None)
-        if pk is None:  # List all notes for the authenticated user
+        uuid = kwargs.get("uuid", None)
+        if uuid is None:  
             return self.list(request, *args, **kwargs)
         return self.retrieve(request, *args, **kwargs)
     def post(self, request, *args, **kwargs):
@@ -186,6 +196,23 @@ class CategoryView(
 
 CategoryViewURL = CategoryView.as_view()
 
+
+
+class GetSharedNoteView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, uuid):
+        """Retrieve a shared note if the user has access"""
+        shared_note = get_object_or_404(SharedNote, uuid=uuid, shared_with=request.user)
+        serializer = ShardNoteSerializer(shared_note.note)  # Serialize the actual Note model
+        return Response(serializer.data)
+class GetSherdNotes(APIView):
+    parser_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        shared_notes = SharedNote.objects.filter(shared_with=request.user)  # Get multiple objects
+        serializer = SharedNoteSerializer(shared_notes, many=True)  # Serialize multiple objects
+        return Response(serializer.data)
 class NotificationView(
     mixins.ListModelMixin,
     mixins.RetrieveModelMixin,
@@ -203,7 +230,7 @@ class NotificationView(
 
     def get_queryset(self):
         user = self.request.user  # Get the currently authenticated user
-        return Notification.objects.filter(user=user)  # Filter share notes by the user
+        return Notification.objects.filter(user=user,is_read=False)  # Filter share notes by the user
 
     def get(self, request, *args, **kwargs):
         pk = kwargs.get("pk", None)

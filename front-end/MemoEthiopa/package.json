@@ -10,7 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.6.1",
     "@reduxjs/toolkit": "^2.6.0",
+    "@tailwindcss/vite": "^4.0.11",
+    "animate.css": "^4.1.1",
     "antd": "^5.24.2",
     "axios": "^1.8.1",
     "framer-motion": "^12.4.10",
@@ -18,14 +21,21 @@
     "quill": "^2.0.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-draggable": "^4.4.6",
+    "react-google-recaptcha": "^3.1.0",
     "react-quill": "^2.0.0",
     "react-redux": "^9.2.0",
-    "react-router-dom": "^7.2.0"
+    "react-router": "^7.3.0",
+    "react-router-dom": "^7.2.0",
+    "react-slick": "^0.30.3",
+    "slick-carousel": "^1.8.1",
+    "tailwindcss": "^4.0.11"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
+    "@types/react-slick": "^0.23.13",
     "@vitejs/plugin-react-swc": "^3.8.0",
     "eslint": "^9.21.0",
     "eslint-plugin-react-hooks": "^5.1.0",

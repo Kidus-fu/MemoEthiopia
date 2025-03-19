@@ -6,33 +6,110 @@ from .models import userInfo,Note,Category,SharedNote,Notification
 from rest_framework.reverse import reverse
 
 class NoteSerializer(serializers.ModelSerializer):
+    user_info = serializers.SerializerMethodField()
     absolute_url = serializers.SerializerMethodField()
     class Meta:
         model = Note # serializers take model
-        fields = ['id','user','title','content','image','file','created_at','updated_at','absolute_url','color','is_pinned','is_archived','category'] # make fields all coulem
+        fields = [
+            "absolute_url",
+            "category",
+            "color",
+            "content",
+            "created_at",
+            "file",
+            "id",
+            "image",
+            "is_archived",
+            "is_pinned",
+            "title",
+            "updated_at",
+            "user_info",
+            "uuid",
+        ]
+
     def get_absolute_url(self, obj):
         return obj.get_absolute_url()
+    def get_user_info(self, obj):
+        username = obj.user.username
+        id = obj.user.id
+        email = obj.user.email
+        user_info = getattr(obj.user, 'userInfo', None)  # Get userInfo object safely
+
+        return {
+            "bio": user_info.bio if user_info else "No bio available",
+            "email": email,
+            "id": id,
+            "paln": user_info.paln if user_info.paln else "Free",
+            "profile_picture": user_info.profile_picture.url if user_info and user_info.profile_picture else None,
+            "username": username,
+            "uuid": user_info.uuid if user_info.uuid else "Not Loger Have UUID",
+        }
+class ShardNoteSerializer(serializers.ModelSerializer):
+    user_info = serializers.SerializerMethodField()
+    class Meta:
+        model = Note # serializers take model
+        fields = [
+            "category",
+            "color",
+            "content",
+            "created_at",
+            "file",
+            "id",
+            "image",
+            "is_archived",
+            "is_pinned",
+            "title",
+            "updated_at",
+            "user_info",
+        ]
+
+    def get_absolute_url(self, obj):
+        return obj.get_absolute_url()
+    def get_user_info(self, obj):
+        username = obj.user.username
+        id = obj.user.id
+        email = obj.user.email
+        user_info = getattr(obj.user, 'userInfo', None)  # Get userInfo object safely
+
+        return {
+            "bio": user_info.bio if user_info else "No bio available",
+            "email": email,
+            "paln": user_info.paln if user_info.paln else "Free",
+            "profile_picture": user_info.profile_picture.url if user_info and user_info.profile_picture else None,
+            "username": username,
+        }
+
 class userInfoSerializer(serializers.ModelSerializer):
     usermore = serializers.SerializerMethodField()
     class Meta:
         model = userInfo # serializers take model 
-        fields = '__all__' # make fields all coulem
+        fields = [
+            "bio",
+            "id",
+            "is_verfied",
+            "joined_at",
+            "paln",
+            "profile_picture",
+            "user",
+            "usermore",
+            "uuid",
+        ]
     def get_usermore(self, obj):
         return {
-            "username": obj.user.username,
             "email": obj.user.email,
             "first_name": obj.user.first_name,
             "last_name": obj.user.last_name,
+            "username": obj.user.username,
         }
 class UserCreateSerializer (serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            "username",
             "email",
-            "password",
             "first_name",
             "last_name",
+            "password",
+            "username",
         ]
         extra_kwargs = {"password": {"write_only": True}} 
 
@@ -55,13 +132,80 @@ class EmailLoginSerializer(serializers.Serializer):
             return user
         raise serializers.ValidationError("Invalid email or password")
 class CategorySerializer(serializers.ModelSerializer):
+    user_info = serializers.SerializerMethodField()
     class Meta:
         model = Category
-        fields = ["id", "user", "name", "created_at"]
+        fields = [
+            "created_at",
+            "id",
+            "name",
+            "user_info",
+        ]
+    def get_user_info(self,obj):
+        username = obj.user.username
+        id = obj.user.id
+        email = obj.user.email
+        user_info = getattr(obj.user, 'userInfo', None)  # Get userInfo object safely
+
+        return {
+            "id":id,
+            "username": username,
+            "email": email,
+            "bio": user_info.bio if user_info else "No bio available",
+            "profile_picture": user_info.profile_picture.url if user_info and user_info.profile_picture else None,
+            "paln": user_info.paln if user_info.paln else "Free",
+            "uuid": user_info.uuid if user_info.uuid else "Not Loger Have UUID"
+        }
+
+class SharedNoteSerializer(serializers.ModelSerializer):
+    user_name = serializers.SerializerMethodField()
+    shared_with_name = serializers.SerializerMethodField()
+    notetitle = serializers.SerializerMethodField()
+    class Meta:
+        model = SharedNote
+        fields = [
+            "note",
+            "notetitle",
+            "permission",
+            "shared_with_name",
+            "user_name",
+            "uuid",
+        ]
+    def get_notetitle(self,obj):
+        return obj.note.title
+    def get_user_name(self, obj):
+        username = obj.user.username
+        id = obj.user.id
+        email = obj.user.email
+        user_info = getattr(obj.user, 'userInfo', None)  # Get userInfo object safely
+
+        return {
+            "id":id,
+            "username": username,
+            "email": email,
+            "bio": user_info.bio if user_info else "No bio available",
+            "profile_picture": user_info.profile_picture.url if user_info and user_info.profile_picture else None,
+            "paln": user_info.paln if user_info.paln else "Free",
+            "uuid": user_info.uuid if user_info.uuid else "Not Loger Have UUID"
+        }
 
 
-
-
+    
+    def get_shared_with_name(self,obj):
+        username = obj.shared_with.username
+        id = obj.shared_with.id
+        email = obj.shared_with.email
+        user_info = getattr(obj.shared_with, 'userInfo', None) 
+        return {
+            "id":id,
+            "username":username,
+            "email":email,
+            "bio": user_info.bio if user_info else "No bio available",
+            "profile_picture": user_info.profile_picture.url if user_info and user_info.profile_picture else None,
+            "paln": user_info.paln if user_info.paln else "Free",
+            "uuid": user_info.uuid if user_info.uuid else "Not Loger Have UUID"
+            }
+    
 class NotificationSerializer(serializers.Serializer):
     class Meta:
         model = Notification
