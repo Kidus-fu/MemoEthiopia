@@ -35,6 +35,7 @@ def send_otp(request):
             return Response({'message': 'OTP sent successfully!'})
         
         except User.DoesNotExist:
+
             return Response({'error': 'User not found'}, status=400)
 
     return Response(serializer.errors, status=400)
@@ -59,6 +60,7 @@ def verify_otp(request):
                     latest_otp.delete()
                     return Response({'message': 'OTP verified successfully!'})
                 else:
+                    latest_otp.delete()
                     return Response({'error': 'Invalid or expired OTP'}, status=400)
             else:
                 return Response({'error': 'No OTP found'}, status=400)

@@ -1,19 +1,31 @@
+import uuid
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.timezone import now
 
+import uuid
+from django.db import models
+from django.contrib.auth.models import User
+
 class userInfo(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)  # Links user profile to Django's built-in User model
-    bio = models.TextField(blank=True, null=True)  # Optional field for user biography
-    profile_picture = models.ImageField(blank=True, null=True, upload_to='profile_pictures/')  # Optional profile pictur
-    paln = models.CharField(max_length=100,default="Free")
-    joined_at = models.DateTimeField(auto_now_add=True,blank=True,null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="userInfo")  
+    bio = models.TextField(blank=True, null=True)  
+    profile_picture = models.ImageField(blank=True, null=True, upload_to='profile_pictures/')  
+    paln = models.CharField(max_length=100, default="Free")
+    joined_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    
+    # Corrected UUID field
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False,unique=True)
+    
+    is_verfied = models.BooleanField(blank=True, null=True, default=False)
+
     class Meta:
         verbose_name = "User Information"
         verbose_name_plural = "User Information"
-     
+
     def __str__(self):
-        return self.user.username  # Display username for easy identification
+        return f"{self.user.username} - {self.uuid}"
+
 
 # Category Model
 class Category(models.Model):
@@ -30,6 +42,7 @@ class Note(models.Model):
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, related_name="notes")
     title = models.CharField(max_length=255)
     content = models.TextField()
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False)
     image = models.ImageField(upload_to="notes_images/", blank=True, null=True)
     file = models.FileField(upload_to="notes_files/", blank=True, null=True)
     is_pinned = models.BooleanField(default=False)
@@ -49,6 +62,7 @@ class SharedNote(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE , related_name="shared_user")
     note = models.ForeignKey(Note, on_delete=models.CASCADE, related_name="shared_with")
     shared_with = models.ForeignKey(User, on_delete=models.CASCADE, related_name="shared_notes")
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False)    
     permission = models.CharField(
         max_length=10,
         choices=[("view", "View"), ("edit", "Edit")],
@@ -58,6 +72,7 @@ class SharedNote(models.Model):
 
     def __str__(self):
         return f"{self.note.title} shared with {self.shared_with.username}"
+
 class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="notifications")  # The user receiving the notification
     message = models.TextField()  # The notification content/message
