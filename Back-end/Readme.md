@@ -214,7 +214,7 @@ class Note(models.Model):
 ```json
 {
     "email":"user@email.et",
-    "otp":"333333"
+    "otp_code":"333333"
 }
 ```
 
