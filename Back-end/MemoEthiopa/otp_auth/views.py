@@ -5,7 +5,7 @@ from datetime import timedelta
 from .serializers import VerifyOTPSerializer , SendOTPSerializer
 from .models import User, OTP  # Assuming these are your models
 from django.core.mail import send_mail
-
+from notes.models import userInfo
 
 def send_email(to_email, otp_code):
     subject = 'Your OTP Code'
@@ -52,11 +52,14 @@ def verify_otp(request):
         try:
             user = User.objects.get(email=email)
             latest_otp = OTP.objects.filter(user=user).order_by('-created_at').first()
+            verify_user = userInfo.objects.get(user=user)
 
             if latest_otp:
                 # Check if OTP is within 15-minute validity period
                 time_difference = timezone.now() - latest_otp.created_at
                 if latest_otp.otp_code == otp_code and time_difference < timedelta(minutes=15):
+                    verify_user.is_verfied = True
+                    verify_user.save()
                     latest_otp.delete()
                     return Response({'message': 'OTP verified successfully!'})
                 else:

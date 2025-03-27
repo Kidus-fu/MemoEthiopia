@@ -13,3 +13,4 @@ pyotp
 Procfile
 waitress
 gunicorn
+whitenoise
