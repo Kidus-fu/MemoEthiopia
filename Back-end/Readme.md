@@ -64,7 +64,7 @@ python manage.py runserver
 * **`POST /api-v1/username/token/`** → Obtain JWT token using user name
 * **`POST /api-v1/email/token/`** → Obtain JWT token using email
 * **`POST /api-v1/token/refresh/`** → Refresh JWT token
-* **`POST /api-v1/register/`** → To sing up
+* **`POST /api-v1/register/`** → To sign up
 
 ### User Endpoints
 
@@ -191,7 +191,7 @@ python manage.py runserver
 
 ```
 
-### User Singup 👤
+### User Signup 👤
 
 ```json
 {
@@ -203,7 +203,7 @@ python manage.py runserver
 }
 ```
 
-### User Singin in email 👤
+### User Signin in email 👤
 
 ```json
 {
@@ -212,7 +212,7 @@ python manage.py runserver
 }
 ```
 
-### User Singin in username 👤
+### User Signin in username 👤
 
 ```json
 {
@@ -242,9 +242,9 @@ python manage.py runserver
 
 ```json
 {
-    "user":"shearuser_id",
+    "user":"shared_user_id",
     "note":"note_id",
-    "sheard_with":"sheard_with_id",    
+    "sheard_with":"shared_with_id",    
     "permission": "edit | view"
 }
 ```
