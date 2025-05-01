@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import './App.css'
 import { useSelector } from 'react-redux'
 import { RootState } from './store/store'
-import LandingPage from './components/LandingPage'
+import LandingPage from './components/Landing/LandingPage'
 
 function App() {
   const loggedIn = useSelector((state: RootState) => state.userinfo.loggedIn)
@@ -17,7 +17,7 @@ function App() {
       {loggedIn ?
         (
           <>
-          home
+          <p className="text-lime-400">Home</p>
           {/* userpage */}
           </>
         )

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import Ethio_logo from "../assets/MemoEthio_logo_4.png";
+import React, {  useState } from "react";
+import Ethio_logo from "../../assets/MemoEthio_logo_4.png";
 import { Link } from "react-router-dom";
 import { CloseOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import { Divider, Drawer, Result } from "antd";
+import { Drawer, Result } from "antd";
 import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
+import { RootState } from "../../store/store";
 
 const LandingNavBar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState<number | null>(null);
@@ -146,12 +146,16 @@ const LandingNavBar: React.FC = () => {
           </div>
 
           {/* Action Buttons */}
-          <div className={getClassNames("me-6 hidden md:block mt-2 flex gap-7")}>
+          <div className={getClassNames("me-6 md:block mt-2 flex gap-7")}>
             <button className={getClassNames("bg-[#312EB5] p-2 rounded me-4 cursor-pointer transform hover:scale-105 transition-all delay-150")}>
-              Get Free Account
+              <Link to="/singup" className={getClassNames("text-white")}>
+                Get Free Account
+              </Link>
             </button>
             <button className={getClassNames("hover:border hover:border-gray-500 p-2 border cursor-pointer  border-[#282829] hover:scale-110 transition-all delay-150")}>
-              Sign In
+              <Link to="/singin" className={getClassNames("text-white")}>
+                Sign In
+              </Link>
             </button>
           </div>
 

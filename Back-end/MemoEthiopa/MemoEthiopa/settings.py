@@ -153,7 +153,7 @@ CORS_ALLOW_ALL_ORIGINS = True  # Allows all origins
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.elasticemail.com"
-EMAIL_PORT = 587  # Can also use 587
+EMAIL_PORT = 587  # Can also use 587 by defult
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
@@ -177,7 +177,7 @@ else:
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR /"madia"
+MEDIA_ROOT = BASE_DIR / "madia"
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 

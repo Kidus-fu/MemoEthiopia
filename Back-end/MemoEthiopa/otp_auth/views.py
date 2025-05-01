@@ -6,6 +6,7 @@ from .serializers import VerifyOTPSerializer , SendOTPSerializer
 from .models import User, OTP  # Assuming these are your models
 from django.core.mail import send_mail
 from notes.models import userInfo
+from rest_framework.decorators import permission_classes
 
 def send_email(to_email, otp_code):
     subject = 'Your OTP Code'
@@ -15,13 +16,15 @@ def send_email(to_email, otp_code):
 
 @api_view(['POST'])
 def send_otp(request):
+
     serializer = SendOTPSerializer(data=request.data)
     
     if serializer.is_valid():
         email = serializer.validated_data['email']
         
-        try:
-            user = User.objects.get(email=email)
+        users = User.objects.filter(email=email)
+        if users.exists():
+            user = users.first()  # Use the first user in the queryset
 
             # Generate OTP
             otp_code = OTP.generate_otp()
@@ -33,9 +36,7 @@ def send_otp(request):
             send_email(user.email, otp_code)  # Example function for sending OTP
            
             return Response({'message': 'OTP sent successfully!'})
-        
-        except User.DoesNotExist:
-
+        else:
             return Response({'error': 'User not found'}, status=400)
 
     return Response(serializer.errors, status=400)
@@ -49,8 +50,9 @@ def verify_otp(request):
         email = serializer.validated_data['email']
         otp_code = serializer.validated_data['otp_code']
 
-        try:
-            user = User.objects.get(email=email)
+        users = User.objects.filter(email=email)
+        if users.exists():
+            user = users.first()  # Use the first user in the queryset
             latest_otp = OTP.objects.filter(user=user).order_by('-created_at').first()
             verify_user = userInfo.objects.get(user=user)
 
@@ -68,7 +70,7 @@ def verify_otp(request):
             else:
                 return Response({'error': 'No OTP found'}, status=400)
 
-        except User.DoesNotExist:
+        else:
             return Response({'error': 'User not found'}, status=400)
     
     return Response(serializer.errors, status=400)

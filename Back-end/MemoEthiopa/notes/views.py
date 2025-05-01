@@ -8,20 +8,43 @@ from rest_framework import generics , mixins
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
 
 from rest_framework import permissions
 #serializers 
-from .serializers import NoteSerializer , userInfoSerializer , UserCreateSerializer ,EmailLoginSerializer,CategorySerializer  , NotificationSerializer, SharedNoteSerializer, ShardNoteSerializer
+from .serializers import NoteSerializer , userInfoSerializer , UserCreateSerializer ,EmailLoginSerializer,CategorySerializer  , NotificationSerializer, SharedNoteSerializer, ShardNoteSerializer,FavoriteSerializer,FolderSerializer,ChangePasswordSerializer,AiChatSerializer
 
 # permission 
 
 from .permission import IsStaffEditor
 
 #models 
-from .models import Note, userInfo, Category, Notification, SharedNote
+from .models import Note, userInfo, Category, Notification, SharedNote, Favorite, Folder
 
-from rest_framework.response import Response
+class ChangePasswordView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        serializer = ChangePasswordSerializer(data=request.data)
+
+        if serializer.is_valid():
+            user = request.user
+
+            # Check old password
+            if not user.check_password(serializer.validated_data['old_password']):
+                return Response({"old_password": "Wrong password."}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Set new password
+            user.set_password(serializer.validated_data['new_password'])
+            user.save()
+
+            return Response({"detail": "Password changed successfully."}, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+ChangePasswordURL = ChangePasswordView.as_view()
 
 def home(request):
     return render(request, 'home.html')
@@ -55,7 +78,7 @@ class NoteView(
     permission_classes = [permissions.IsAuthenticated]
     def get_queryset(self):
         user = self.request.user  # Get the currently authenticated user
-        query = Note.objects.filter(user=user)
+        query = Note.objects.filter(user=user,is_trashed=False)  # Filter notes by the user
         return query
 
     def get(self, request, *args, **kwargs):
@@ -79,6 +102,43 @@ class NoteView(
         return Response({"message": "Note deleted successfully"}, status=204)
 
 NoteViewtoUrl = NoteView.as_view()
+
+class NoteOuttoTrashView(
+    mixins.UpdateModelMixin,
+    generics.GenericAPIView,
+    ):
+    """
+    Example to a JSOn format
+    {
+        "user": null,
+        "title": "",
+        "content": "",
+        "image": null,
+        "file": null,
+        "color": "",
+        "is_pinned": false,
+        "is_archived": false,
+        "category": null
+     }
+    """
+    model = Note
+    serializer_class = NoteSerializer
+    lookup_field = "uuid"
+
+
+    permission_classes = [permissions.IsAuthenticated]
+    def get_queryset(self):
+        user = self.request.user  # Get the currently authenticated user
+        query = Note.objects.filter(user=user,is_trashed=True)  
+        return query
+    def put(self, request, *args, **kwargs):
+        request.data['user'] = request.user.id 
+        return super().update(request, *args, **kwargs)
+    def patch(self, request, *args, **kwargs):
+        request.data['user'] = request.user.id 
+        return super().update(request, *args, **kwargs)
+NoteOuttoTrashViewURL = NoteOuttoTrashView.as_view()
+    
 
 class userinfoView(
     mixins.ListModelMixin,
@@ -247,3 +307,108 @@ class NotificationView(
         super().destroy(request, *args, **kwargs)
         return Response({"message": "Notification deleted successfully"}, status=204)
 NotificationViewURL = NotificationView.as_view()
+
+class FavoritesView (
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
+    generics.GenericAPIView
+    ):
+    """
+    Example to a JSOn format
+    ...
+    """
+    serializer_class = FavoriteSerializer
+    lookup_field = "pk"
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        user = self.request.user  # Get the currently authenticated user
+        return Favorite.objects.filter(user=user)  
+
+    def get(self, request, *args, **kwargs):
+        pk = kwargs.get("pk", None)
+        if pk is None:  
+            return self.list(request, *args, **kwargs)
+        return self.retrieve(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+    def put(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+    def patch(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+    def delete(self, request, *args, **kwargs):
+        super().destroy(request, *args, **kwargs)
+        return Response({"message": "Favorites deleted successfully"}, status=204)
+FavoritesURL = FavoritesView.as_view()
+
+class TrashNoteView (
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
+    generics.GenericAPIView
+    ):
+    """
+    Example to a JSOn format
+    ...
+    """
+    serializer_class = NoteSerializer
+    lookup_field = "pk"
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        user = self.request.user  # Get the currently authenticated user
+        return Note.objects.filter(user=user,is_trashed=True)  
+
+    def get(self, request, *args, **kwargs):
+        pk = kwargs.get("pk", None)
+        if pk is None:  
+            return self.list(request, *args, **kwargs)
+        return self.retrieve(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+    def put(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+    def patch(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+    def delete(self, request, *args, **kwargs):
+        super().destroy(request, *args, **kwargs)
+        return Response({"message": "TrashNote deleted successfully"}, status=204)
+TrashNoteURL = TrashNoteView.as_view()
+
+class FolderView (
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
+    generics.GenericAPIView
+    ):
+    """
+    Example to a JSOn format
+    ...
+    """
+    serializer_class = FolderSerializer
+    lookup_field = "pk"
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        user = self.request.user  # Get the currently authenticated user
+        return Folder.objects.filter(user=user)  
+
+    def get(self, request, *args, **kwargs):
+        pk = kwargs.get("pk", None)
+        if pk is None:  
+            return self.list(request, *args, **kwargs)
+        return self.retrieve(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+    def put(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+    def patch(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+    def delete(self, request, *args, **kwargs):
+        super().destroy(request, *args, **kwargs)
+        return Response({"message": "Folder deleted successfully"}, status=204)
+FolderURL = FolderView.as_view()

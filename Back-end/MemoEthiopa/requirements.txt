@@ -14,3 +14,10 @@ Procfile
 waitress
 gunicorn
 whitenoise
+drf-spectacular
+
+langchain
+langchain-groq
+duckduckgo-search
+langchain-community
+groq

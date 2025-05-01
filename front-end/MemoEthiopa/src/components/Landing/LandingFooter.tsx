@@ -1,8 +1,8 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../store/store';
 import { Link } from 'react-router-dom';
-import Ethio_logo from "../assets/MemoEthio_logo_4.png";
+import Ethio_logo from "../../assets/MemoEthio_logo_4.png";
+import { RootState } from '../../store/store';
 
 const LandingFooter: React.FC = () => {
     const DeveloperTest: boolean = useSelector((state: RootState) => state.developertest.border_test)

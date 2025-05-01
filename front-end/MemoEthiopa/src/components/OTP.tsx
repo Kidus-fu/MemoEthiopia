@@ -3,12 +3,11 @@ import { ConfigProvider, Input, Popover, Spin, } from 'antd';
 import type { GetProps } from 'antd';
 import Ethio_logo from "../assets/MemoEthio_logo_4.png";
 import { motion } from "framer-motion"
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import { ArrowLeftOutlined, BugFilled, BugOutlined } from "@ant-design/icons";
 import { backToClentMode, changeToDeveloperMode } from '../store/Developer_test';
-
 type OTPProps = GetProps<typeof Input.OTP>;
 
 
@@ -17,6 +16,8 @@ const OTP: React.FC = () => {
     const [loading, setLoading] = useState(false)
     const otp_ready = useSelector((state: RootState) => state.userinfo.otp_ready)
     const navigate = useNavigate()
+    const location = useLocation()
+    const email = location.state?.email || null; 
     const DeveloperTest: boolean = useSelector((state: RootState) => state.developertest.border_test)
     const dispatch = useDispatch()
     const userready = () => {
@@ -31,7 +32,7 @@ const OTP: React.FC = () => {
 
         if (values.length == 6) {
             const value = values.join("")
-            console.log(value);
+            console.log({"value": value, "email": email});
             setLoading(true)
             setTimeout(() => {
                 setLoading(false)
@@ -95,7 +96,9 @@ const OTP: React.FC = () => {
                     className={getClassNames("flex justify-center shadow shadow-[#4b4b4e] md:scale-125 h-[50vh] items-center md:w-2/4 p-6 rounded-4xl bg-[#2D2D2F]")}
                 >
                     <div className={getClassNames("fixed top-3 z-50 p-1 left-4 text-white")} title='Back'>
+                        <Link to={"/singup"} className={getClassNames('cursor-default')}>
                         <ArrowLeftOutlined className={getClassNames('text-white p-1')} />
+                        </Link>
                     </div>
                     <div className={getClassNames("w-full md:w-2/4 p-1 flex flex-col justify-center items-center mr-3")}>
                         <h2 className={getClassNames('text-2xl m-5 text-white shadow p-1 shadow-gary-500')} style={{ fontFamily: "Kaushan Script, cursive" }}>OTP Input</h2>

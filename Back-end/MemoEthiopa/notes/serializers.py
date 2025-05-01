@@ -2,8 +2,20 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 #Models 
 from django.contrib.auth import authenticate
-from .models import userInfo,Note,Category,SharedNote,Notification
+from .models import userInfo,Note,Category,SharedNote,Notification,Favorite,TrashNote,Folder
 from rest_framework.reverse import reverse
+from django.contrib.auth.password_validation import validate_password
+
+
+
+
+
+class AiChatSerializer(serializers.Serializer):
+    message = serializers.CharField(required=True)
+    def validate_message(self, value):
+        if not value.strip():
+            raise serializers.ValidationError("Message cannot be empty.")
+        return value
 
 class NoteSerializer(serializers.ModelSerializer):
     user_info = serializers.SerializerMethodField()
@@ -17,6 +29,8 @@ class NoteSerializer(serializers.ModelSerializer):
             "content",
             "created_at",
             "file",
+            "folder",
+            "is_trashed",
             "id",
             "image",
             "is_archived",
@@ -78,6 +92,16 @@ class ShardNoteSerializer(serializers.ModelSerializer):
             "profile_picture": user_info.profile_picture.url if user_info and user_info.profile_picture else None,
             "username": username,
         }
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+
+    def validate_new_password(self, value):
+        validate_password(value)
+        return value
+
 
 class userInfoSerializer(serializers.ModelSerializer):
     usermore = serializers.SerializerMethodField()
@@ -210,3 +234,44 @@ class NotificationSerializer(serializers.Serializer):
     class Meta:
         model = Notification
         fields = "__all__"
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    notes = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Favorite
+        fields = ["id","user","notes"]
+    def get_notes(self, obj):
+        notes = obj.note  # Assuming obj.note is a single Note object
+        return NoteSerializer(notes).data if notes else None
+class TrashNoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TrashNote
+        fields = "__all__"
+
+class FolderSerializer(serializers.ModelSerializer):
+    notes = serializers.SerializerMethodField()
+    user_info = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Folder
+        fields = ["id","name","user","created_at","notes","user_info"]
+    def get_notes(self, obj):
+        notes = obj.notes.all()
+        return NoteSerializer(notes, many=True).data
+    def get_user_info(self, obj):
+        username = obj.user.username
+        id = obj.user.id
+        email = obj.user.email
+        user_info = getattr(obj.user, 'userInfo', None) 
+        return { 
+            "id":id,
+            "username":username,
+            "email":email,
+            "bio": user_info.bio if user_info else "No bio available",
+            "profile_picture": user_info.profile_picture.url if user_info and user_info.profile_picture else None,
+            "paln": user_info.paln if user_info.paln else "Free",
+            "uuid": user_info.uuid if user_info.uuid else "Not Loger Have UUID"
+            }
+    
+               
