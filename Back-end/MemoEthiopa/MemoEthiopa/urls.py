@@ -12,4 +12,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("api-v1/",include("notes.urls")),
     path("Docs/",include("notes.docurl")),
+    path("memoai/",include("AI.url")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

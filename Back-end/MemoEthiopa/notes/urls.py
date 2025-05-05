@@ -1,6 +1,5 @@
 from django.urls import path , include
 from .views import  NoteViewtoUrl, UserCreateViewtoUrl, userinfoViewtoUrl ,EmailLoginView,CategoryViewURL ,NotificationViewURL, GetSharedNoteView, GetSherdNotes,TrashNoteURL,FavoritesURL,FolderURL,NoteOuttoTrashViewURL,ChangePasswordURL
-from .chatbot import MemoChatURL
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -12,7 +11,6 @@ urlpatterns = [
     path("username/token/",TokenObtainPairView.as_view(), name='email_login'),
     path("change-password/",ChangePasswordURL, name="change-password"),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path("otcb/", MemoChatURL, name="memo-chat"),
     path("notes/", NoteViewtoUrl, name="note-list"),
     path("notes/<uuid:uuid>/",NoteViewtoUrl, name="note-detail"),
     path("notes/outtrash/<uuid:uuid>/",NoteOuttoTrashViewURL, name="NoteOuttoTrash"),

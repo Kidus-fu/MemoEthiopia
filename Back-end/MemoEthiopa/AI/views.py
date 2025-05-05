@@ -56,7 +56,7 @@ class MemoChatView(APIView):
         # Set up the chain and invoke it
         chain = prompt | llm
         response = chain.invoke({"input": user_message})
-        return Response({"response": response.content}, status=200)
+        return Response({"response": response}, status=200)
 
 
 

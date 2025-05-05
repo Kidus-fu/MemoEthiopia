@@ -3,10 +3,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.timezone import now
 
-import uuid
-from django.db import models
-from django.contrib.auth.models import User
-
 class userInfo(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="userInfo")  
     bio = models.TextField(blank=True, null=True)  

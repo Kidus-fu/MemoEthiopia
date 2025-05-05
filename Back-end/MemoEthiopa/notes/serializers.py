@@ -48,16 +48,23 @@ class NoteSerializer(serializers.ModelSerializer):
         id = obj.user.id
         email = obj.user.email
         user_info = getattr(obj.user, 'userInfo', None)  # Get userInfo object safely
+        user_data = {
+                "bio": user_info.bio if user_info and user_info.bio else "No bio available",
+                "email": email,
+                "id": id,
+                "paln": user_info.paln if user_info and user_info.paln else "Free",
+                "profile_picture": user_info.profile_picture.url if user_info and user_info.profile_picture else None,
+                "username": username,
+                "uuid": user_info.uuid if user_info and user_info.uuid else "Not Loger Have UUID",
+                "phone_number": user_info.phone_number if user_info and user_info.phone_number else "Not Provided",
+                "location": user_info.location if user_info and user_info.location else "Unknown",
+                "date_of_birth": user_info.date_of_birth.isoformat() if user_info and user_info.date_of_birth else "Not Set",
+                "gender": user_info.gender if user_info and user_info.gender else "Not Specified",
+                "social_links": user_info.social_links if user_info and user_info.social_links else [],
+                "preferred_language": user_info.preferred_language if user_info and user_info.preferred_language else "en"
+            }
 
-        return {
-            "bio": user_info.bio if user_info else "No bio available",
-            "email": email,
-            "id": id,
-            "paln": user_info.paln if user_info.paln else "Free",
-            "profile_picture": user_info.profile_picture.url if user_info and user_info.profile_picture else None,
-            "username": username,
-            "uuid": user_info.uuid if user_info.uuid else "Not Loger Have UUID",
-        }
+        return user_data
 class ShardNoteSerializer(serializers.ModelSerializer):
     user_info = serializers.SerializerMethodField()
     class Meta:
@@ -117,6 +124,12 @@ class userInfoSerializer(serializers.ModelSerializer):
             "user",
             "usermore",
             "uuid",
+            "phone_number",
+            "location",
+            "date_of_birth",
+            "gender",
+            "social_links",
+            "preferred_language"
         ]
     def get_usermore(self, obj):
         return {
@@ -170,16 +183,22 @@ class CategorySerializer(serializers.ModelSerializer):
         id = obj.user.id
         email = obj.user.email
         user_info = getattr(obj.user, 'userInfo', None)  # Get userInfo object safely
-
-        return {
-            "id":id,
-            "username": username,
-            "email": email,
-            "bio": user_info.bio if user_info else "No bio available",
-            "profile_picture": user_info.profile_picture.url if user_info and user_info.profile_picture else None,
-            "paln": user_info.paln if user_info.paln else "Free",
-            "uuid": user_info.uuid if user_info.uuid else "Not Loger Have UUID"
-        }
+        user_data = {
+                "bio": user_info.bio if user_info and user_info.bio else "No bio available",
+                "email": email,
+                "id": id,
+                "paln": user_info.paln if user_info and user_info.paln else "Free",
+                "profile_picture": user_info.profile_picture.url if user_info and user_info.profile_picture else None,
+                "username": username,
+                "uuid": user_info.uuid if user_info and user_info.uuid else "Not Loger Have UUID",
+                "phone_number": user_info.phone_number if user_info and user_info.phone_number else "Not Provided",
+                "location": user_info.location if user_info and user_info.location else "Unknown",
+                "date_of_birth": user_info.date_of_birth.isoformat() if user_info and user_info.date_of_birth else "Not Set",
+                "gender": user_info.gender if user_info and user_info.gender else "Not Specified",
+                "social_links": user_info.social_links if user_info and user_info.social_links else [],
+                "preferred_language": user_info.preferred_language if user_info and user_info.preferred_language else "en"
+            }
+        return user_data
 
 class SharedNoteSerializer(serializers.ModelSerializer):
     user_name = serializers.SerializerMethodField()
@@ -202,19 +221,23 @@ class SharedNoteSerializer(serializers.ModelSerializer):
         id = obj.user.id
         email = obj.user.email
         user_info = getattr(obj.user, 'userInfo', None)  # Get userInfo object safely
+        user_data = {
+                "bio": user_info.bio if user_info and user_info.bio else "No bio available",
+                "email": email,
+                "id": id,
+                "paln": user_info.paln if user_info and user_info.paln else "Free",
+                "profile_picture": user_info.profile_picture.url if user_info and user_info.profile_picture else None,
+                "username": username,
+                "uuid": user_info.uuid if user_info and user_info.uuid else "Not Loger Have UUID",
+                "phone_number": user_info.phone_number if user_info and user_info.phone_number else "Not Provided",
+                "location": user_info.location if user_info and user_info.location else "Unknown",
+                "date_of_birth": user_info.date_of_birth.isoformat() if user_info and user_info.date_of_birth else "Not Set",
+                "gender": user_info.gender if user_info and user_info.gender else "Not Specified",
+                "social_links": user_info.social_links if user_info and user_info.social_links else [],
+                "preferred_language": user_info.preferred_language if user_info and user_info.preferred_language else "en"
+            }
+        return user_data
 
-        return {
-            "id":id,
-            "username": username,
-            "email": email,
-            "bio": user_info.bio if user_info else "No bio available",
-            "profile_picture": user_info.profile_picture.url if user_info and user_info.profile_picture else None,
-            "paln": user_info.paln if user_info.paln else "Free",
-            "uuid": user_info.uuid if user_info.uuid else "Not Loger Have UUID"
-        }
-
-
-    
     def get_shared_with_name(self,obj):
         username = obj.shared_with.username
         id = obj.shared_with.id
@@ -264,14 +287,21 @@ class FolderSerializer(serializers.ModelSerializer):
         id = obj.user.id
         email = obj.user.email
         user_info = getattr(obj.user, 'userInfo', None) 
-        return { 
-            "id":id,
-            "username":username,
-            "email":email,
-            "bio": user_info.bio if user_info else "No bio available",
-            "profile_picture": user_info.profile_picture.url if user_info and user_info.profile_picture else None,
-            "paln": user_info.paln if user_info.paln else "Free",
-            "uuid": user_info.uuid if user_info.uuid else "Not Loger Have UUID"
-            }
+        user_data = {
+    "bio": user_info.bio if user_info and user_info.bio else "No bio available",
+    "email": email,
+    "id": id,
+    "paln": user_info.paln if user_info and user_info.paln else "Free",
+    "profile_picture": user_info.profile_picture.url if user_info and user_info.profile_picture else None,
+    "username": username,
+    "uuid": user_info.uuid if user_info and user_info.uuid else "Not Loger Have UUID",
+    "phone_number": user_info.phone_number if user_info and user_info.phone_number else "Not Provided",
+    "location": user_info.location if user_info and user_info.location else "Unknown",
+    "date_of_birth": user_info.date_of_birth.isoformat() if user_info and user_info.date_of_birth else "Not Set",
+    "gender": user_info.gender if user_info and user_info.gender else "Not Specified",
+    "social_links": user_info.social_links if user_info and user_info.social_links else [],
+    "preferred_language": user_info.preferred_language if user_info and user_info.preferred_language else "en"
+}
+        return  user_data
     
                

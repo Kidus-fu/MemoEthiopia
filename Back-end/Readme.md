@@ -2,7 +2,32 @@
 
 ## Overview
 
-Memo Ethiopia is a real-time note-taking application built using Django and Django REST Framework (DRF). This documentation covers the backend implementation, including models, APIs, authentication, and deployment.
+Memo Ethiopia is a real-time note-taking application designed to help users create, manage, and share notes efficiently. Built with Django and Django REST Framework (DRF), it offers a robust backend architecture for handling user authentication, note management, and real-time data interaction.
+
+This documentation provides a comprehensive overview of the backend implementation, including:
+
+* RESTful APIs to perform CRUD operations on notes and user data
+* Authentication & Authorization using token-based JWT access control
+* Error Handling & Validation to ensure data integrity
+* Deployment Instructions for running the backend on production servers in render.com
+
+Memo Ethiopia is built with scalability and extensibility in mind, making it suitable for users
+
+### Key Backend Features
+The backend powers the Memo Ethiopia application by providing a robust set of APIs to support:
+
+* User Authentication – Secure login, registration, and token-based access control
+* Note Management – Create, edit, delete, and organize notes with features like:
+  * <u>Folders</u> for categorizing notes 
+  * <u>Trash</u> for soft-deletion and recory
+  * <u>Pinning</u> for marking important notes
+  * <u>Archiving</u> for decluttering the workspace
+
+* Custom Colors – Allow users to color-code their notes
+* AI Agent Integration – Enable smart note suggestions or actions via an AI assistant
+* OTCB Chat Functionality – One-Time Chat Bot for quick chat
+* Translation Services – Translate word between languages (e.g., Amharic and English) for multilingual support
+
 
 ## Technologies Used
 
@@ -127,7 +152,7 @@ python manage.py runserver
 * **`DELETE /api-v1/favorites/{id}/`** → Delete a favorites
 
 ## OTCB (One Time Chat Bot)
-* **`POST /api-v1/otcb/`** → Send a message to the user
+* **`POST /memoai/otcb/`** → Send a message to the user
 
 ## Deployment
 
@@ -136,10 +161,14 @@ python manage.py runserver
 * `.env` file must include:
 
   ```env
-  SECRET_KEY=your-secret-key
-  DEBUG=True
-  DATABASE_URL=postgres://user:password@localhost:5432/memo_ethiopia
   ALLOWED_HOSTS=*
+  DATABASE_URL=postgres://user:password@localhost:5432/memo_ethiopia
+  DEBUG=True
+  EMAIL_HOST_PASSWORD = 
+  EMAIL_HOST_USER = 
+  SECRET_KEY=your-secret-key
+  LANGSMITH_API_KEY= your-langsmith-api-key
+  GROQ_API_KEY = your-groq-api-key
   ```
 
 ## API Documentation

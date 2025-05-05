@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     #Apps 
     "notes",
     'otp_auth',
+    'AI',
 
 ]
 
