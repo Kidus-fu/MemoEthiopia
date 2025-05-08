@@ -153,6 +153,18 @@ python manage.py runserver
 
 ## OTCB (One Time Chat Bot)
 * **`POST /memoai/otcb/`** → Send a message to the user
+## AI Agent Chat session 
+* **`GET /memoai/chat-session/`** → List all chat-session
+* **`POST /memoai/chat-session/`** → Create a chat-session
+* **`GET /memoai/chat-session/{uuid}/`** → Retrieve a chat-session
+* **`PUT /memoai/chat-session/{uuid}/`** → Update a chat-session
+* **`DELETE /memoai/chat-session/{uuid}/`** → Delete a chat-session
+
+## AI Agent Chat message 
+* **`GET /api-v1/chat-message/`** → List all chat-message
+* **`POST /api-v1/chat-message/`** → Create a chat-message
+* **`GET /api-v1/chat-message/{id}/`** → Retrieve a chat-message
+* **`DELETE /memoai/chat-message/{uuid}/`** → Delete a chat-message
 
 ## Deployment
 
@@ -323,6 +335,28 @@ python manage.py runserver
 }
 ```
 
+## AI Agent Chat session
+```json
+{
+    "user":"user_id",
+    "Title":"",
+    "description":"",
+    "linked_note":"note_id",
+    "is_active":bool
+}
+
+```
+
+## AI Agent Chat message:
+``` json
+{
+  "session_id": 3,
+  "sender": "user",
+  "message": "Hello",
+  "tool_used": "get_weather",
+  "token_count":44
+}
+```
 
 ## OTCB (one time chat boT) 🤖
 

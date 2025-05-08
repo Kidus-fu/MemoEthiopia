@@ -117,7 +117,7 @@ class userInfoSerializer(serializers.ModelSerializer):
         fields = [
             "bio",
             "id",
-            "is_verfied",
+            "is_verified",
             "joined_at",
             "paln",
             "profile_picture",

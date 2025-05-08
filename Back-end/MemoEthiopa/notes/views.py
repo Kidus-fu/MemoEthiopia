@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
-
+from django.contrib.auth.models import User
 #api views
 from rest_framework import generics , mixins 
 from rest_framework.response import Response
@@ -19,6 +19,8 @@ from .serializers import NoteSerializer , userInfoSerializer , UserCreateSeriali
 # permission 
 
 from .permission import IsStaffEditor
+
+from AI.encode import encode_query_data, decode_query_data
 
 #models 
 from .models import Note, userInfo, Category, Notification, SharedNote, Favorite, Folder
@@ -75,9 +77,24 @@ class NoteView(
     serializer_class = NoteSerializer
     lookup_field = "uuid"
     
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    
     def get_queryset(self):
         user = self.request.user  # Get the currently authenticated user
+        urlquery = self.request.query_params.get("query", None)
+        if urlquery is not None:
+            # Decode the query data
+            decoded_data = decode_query_data(urlquery)
+            user_name = decoded_data.get("user_name")
+            print(user_name)
+            if user_name is not None:
+                try:
+                    matched_user = User.objects.get(username=user_name)
+                    query = Note.objects.filter(user=matched_user, is_trashed=False)
+                    return query
+                except user.DoesNotExist:
+                    return Note.objects.none() # Return an empty queryset if user not found
+        print(user)
         query = Note.objects.filter(user=user,is_trashed=False)  # Filter notes by the user
         return query
 
@@ -157,10 +174,21 @@ class userinfoView(
     """
     serializer_class = userInfoSerializer
     lookup_field = "uuid"
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,IsStaffEditor]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    def get_queryset(self):
-        query = userInfo.objects.exclude(user=self.request.user)
+    def get_queryset(self,):
+        user = self.request.user  # Get the currently authenticated user
+        urlquery = self.request.query_params.get("query", None)
+        if urlquery is not None:
+            # Decode the query data
+            decoded_data = decode_query_data(urlquery)
+            user_id = decoded_data.get("user_id")
+            
+            if user_id is not None:
+                # Filter by user_id if provided
+                query = userInfo.objects.all()
+                return query
+        query = userInfo.objects.all()
         return query
 
     def get(self, request, *args, **kwargs):
@@ -179,7 +207,7 @@ class userinfoView(
         return super().update(request, *args, **kwargs)
     def delete(self, request, *args, **kwargs):
         super().destroy(request, *args, **kwargs)
-        return Response({"message": "Note deleted successfully"}, status=204)
+        return Response({"message": "User deleted successfully"}, status=204)
 
 userinfoViewtoUrl = userinfoView.as_view()
 
