@@ -1,12 +1,14 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework import generics, mixins
 from langchain.prompts import ChatPromptTemplate
 from langchain_groq import ChatGroq
 from dotenv import load_dotenv
-import os
 from datetime import datetime
-import json 
+from .models import ChatSession, ChatMessage
+from .serializers import ChatSessionSerializer, ChatMessageSerializer
+
 load_dotenv()
 
 # Initialize your LLM
@@ -59,6 +61,67 @@ class MemoChatView(APIView):
         return Response({"response": response}, status=200)
 
 
+class ChatSessionView(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
+    mixins.UpdateModelMixin,
+    generics.GenericAPIView,):
+
+    queryset = ChatSession.objects.all()
+    serializer_class = ChatSessionSerializer
+    lookup_field = "uuid"
+    permission_classes = [IsAuthenticated]
+    def get_queryset(self):
+        user = self.request.user
+        return self.queryset.filter(user=user)
+    def get(self, request, *args, **kwargs):
+        uuid = kwargs.get("uuid", None)
+        if uuid is None:  # List all notes for the authenticated user
+            return self.list(request, *args, **kwargs)
+        return self.retrieve(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+
+        request.data['user'] = request.user.id  
+        return super().create(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        request.data['user'] = request.user.id 
+        return super().update(request, *args, **kwargs)
+    def patch(self, request, *args, **kwargs):
+        request.data['user'] = request.user.id 
+        return super().update(request, *args, **kwargs)
+    def delete(self, request, *args, **kwargs):
+        super().destroy(request, *args, **kwargs)
+        return Response({"message": "Session was deleted successfully"}, status=204)
+ChatSessionURL = ChatSessionView.as_view()
+class ChatMessageView(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
+    mixins.UpdateModelMixin,
+    generics.GenericAPIView,
+):
+    queryset = ChatMessage.objects.all()
+    serializer_class = ChatMessageSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_field = "pk"
+
+    def get(self, request, *args, **kwargs):
+        pk = kwargs.get("pk", None)
+        if pk is None:  # List all notes for the authenticated user
+            return self.list(request, *args, **kwargs)
+        return self.retrieve(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        super().destroy(request, *args, **kwargs)
+        return Response({"message": "Chat deleted successfully"}, status=204)
+ChatMessageURL = ChatMessageView.as_view()
 
 # Endpoint to interact with the view
 MemoChatURL = MemoChatView.as_view()
