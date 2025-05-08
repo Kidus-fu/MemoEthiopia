@@ -30,8 +30,7 @@ agent_executor = initialize_agent(
     llm=llm,
     agent=AgentType.CHAT_ZERO_SHOT_REACT_DESCRIPTION,
     verbose=False,
-    max_iterations=5,
-    handle_parsing_errors=True,
-    
+    max_iterations=8,
+    handle_parsing_errors=True,   
 )
 

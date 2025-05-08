@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated,IsAuthenticatedOrReadOnly
 from rest_framework import generics, mixins
 from langchain.prompts import ChatPromptTemplate
 from langchain_groq import ChatGroq
@@ -72,10 +72,7 @@ class ChatSessionView(
     queryset = ChatSession.objects.all()
     serializer_class = ChatSessionSerializer
     lookup_field = "uuid"
-    permission_classes = [IsAuthenticated]
-    def get_queryset(self):
-        user = self.request.user
-        return self.queryset.filter(user=user)
+    permission_classes = [IsAuthenticatedOrReadOnly]
     def get(self, request, *args, **kwargs):
         uuid = kwargs.get("uuid", None)
         if uuid is None:  # List all notes for the authenticated user

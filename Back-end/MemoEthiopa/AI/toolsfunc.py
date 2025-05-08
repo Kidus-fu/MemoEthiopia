@@ -11,6 +11,7 @@ load_dotenv()
 
 # Testing
 endpoint = "http://localhost:8000/api-v1/"
+aiendpoint = "http://localhost:8000/memoai/"
 # production 
 # endpoint = "https://memoethiopia.onrender.com/api-v1/"
 
@@ -114,7 +115,7 @@ def GetWeather(location: str,) -> str:
 
     except Exception as e:
         return f"⚠️ Error: {str(e)}"
-def GetDateTime() -> str:
+def GetDateTime(*args,**kwargs) -> str:
     """
     Get the current date and time in a human-readable format.
     """
@@ -182,7 +183,7 @@ def conversation(session_uuid):
     """
     This function is used to generate a conversation with the user.
     """
-    url = f"{endpoint}chat-session/{session_uuid}/"
+    url = f"{aiendpoint}chat-session/{session_uuid}/"
     response = requests.get(url)
     if response.status_code == 200:
         return response.json()
