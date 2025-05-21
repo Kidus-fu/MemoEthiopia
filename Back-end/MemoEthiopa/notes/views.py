@@ -170,6 +170,7 @@ class userinfoView(
         "user": null,
         "bio": "",
         "profile_picture": null
+        .......
     }
     """
     serializer_class = userInfoSerializer
@@ -197,7 +198,8 @@ class userinfoView(
             return self.list(request, *args, **kwargs)
         return self.retrieve(request, *args, **kwargs)
     def post(self, request, *args, **kwargs):
-        request.data['user'] = request.user.id 
+        print(request.data)
+        # request.data['user'] = request.user.id 
         return super().create(request, *args, **kwargs)
     def put(self, request, *args, **kwargs):
         request.data['user'] = request.user.id 
@@ -213,21 +215,14 @@ userinfoViewtoUrl = userinfoView.as_view()
 
 
 
-class UserCreateView(generics.CreateAPIView):
-    """
-    Example to a JSOn format
-    {
-        "username": "",
-        "email": "",
-        "password": "",
-        "first_name": "",
-        "last_name": ""
-    }
-    """
-    serializer_class = UserCreateSerializer
-
-    def post(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
+class UserCreateView(APIView):
+    def post(self, request):
+        serializer = UserCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            return Response({"message": "User created"}, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 UserCreateViewtoUrl = UserCreateView.as_view()
 class EmailLoginView(APIView):
     def post(self, request):

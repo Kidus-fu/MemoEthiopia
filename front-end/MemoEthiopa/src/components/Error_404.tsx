@@ -11,7 +11,7 @@ const Error404: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [suggestionClosed, setSuggestionClosed] = useState(false);
 
-    const validRoutes = ['/singup', '/singin', '/otp', '/dashboard'];
+    const validRoutes = ['/singup', '/singin', '/otp_verification', '/dashboard'];
     const { getSuggestion } = usePathSuggestion(validRoutes);
     const userPath = useLocation().pathname;
     const suggestion = getSuggestion(userPath);

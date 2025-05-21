@@ -2,7 +2,7 @@ import React from 'react';
 import LandingNavBar from './LandingNavBer';
 import Section1 from '../Section1';
 import { Popover } from 'antd';
-import { backToClentMode, changeToDeveloperMode } from '../../store/Developer_test';
+import { backToClentMode, changeToDeveloperMode } from '../../store/features/Developer_test';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import { BugFilled, BugOutlined } from '@ant-design/icons';

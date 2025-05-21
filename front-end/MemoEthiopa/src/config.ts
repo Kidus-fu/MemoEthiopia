@@ -1,2 +1,2 @@
-export const  ACCESS_TOKEN:string = "access"
-export const REFRESH_TOKEN:string = "refresh"
+export const  ACCESS_TOKEN:string = "memoethio_access"
+export const REFRESH_TOKEN:string = "memoethio_refresh"

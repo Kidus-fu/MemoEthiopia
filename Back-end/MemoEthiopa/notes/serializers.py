@@ -138,7 +138,7 @@ class userInfoSerializer(serializers.ModelSerializer):
             "last_name": obj.user.last_name,
             "username": obj.user.username,
         }
-class UserCreateSerializer (serializers.ModelSerializer):
+class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
@@ -148,17 +148,20 @@ class UserCreateSerializer (serializers.ModelSerializer):
             "password",
             "username",
         ]
-        extra_kwargs = {"password": {"write_only": True}} 
+        extra_kwargs = {"password": {"write_only": True}}
 
-        def create(self, validated_data):  
-            user = User(
-                username=validated_data["username"],  
-                email=validated_data["email"]
-            )
-            user.set_password(validated_data["password"])  
-            user.full_clean()
-            user.save()
-            return user
+    def create(self, validated_data):
+        user = User(
+            username=validated_data["username"],
+            email=validated_data["email"],
+            first_name=validated_data["first_name"],
+            last_name=validated_data["last_name"]
+        )
+        user.set_password(validated_data["password"])
+        user.full_clean()
+        user.save()
+        return user
+
 class EmailLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
