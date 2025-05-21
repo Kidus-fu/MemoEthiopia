@@ -79,26 +79,26 @@ WSGI_APPLICATION = 'MemoEthiopa.wsgi.application'
 
 # If u in test make this 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
-# If u in production make this
-# tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': tmpPostgres.path.replace('/', ''),  # Extracts DB name
-#         'USER': tmpPostgres.username,  # Extracts username
-#         'PASSWORD': tmpPostgres.password,  # Extracts password
-#         'HOST': tmpPostgres.hostname,  # Extracts hostname
-#         'PORT': 5432,  # PostgreSQL default port
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
+# If u in production make this
+tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': tmpPostgres.path.replace('/', ''),  # Extracts DB name
+        'USER': tmpPostgres.username,  # Extracts username
+        'PASSWORD': tmpPostgres.password,  # Extracts password
+        'HOST': tmpPostgres.hostname,  # Extracts hostname
+        'PORT': 5432,  # PostgreSQL default port
+    }
+}
 
 
 AUTH_PASSWORD_VALIDATORS = [
