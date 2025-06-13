@@ -23,11 +23,10 @@ const LandingPage: React.FC = () => {
     const HandelerClient = () => {
         dispatch(backToClentMode())
     }
-
     return (
         <>
             <LandingNavBar />
-                <LandingPageCarousel />
+            <LandingPageCarousel />
             <div className='text-white mx-3 md:mx-10 mt-2'>
                 <Section1 />
                 <Section2 />

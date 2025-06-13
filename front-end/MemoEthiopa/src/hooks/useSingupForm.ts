@@ -8,13 +8,13 @@ import { ACCESS_TOKEN, REFRESH_TOKEN } from "../config"
 
 export const useSingupFrom = () => {
     const [postsingup, { isLoading }] = usePostsingupMutation()
-    const [postlogin ] = usePostloginMutation()
+    const [postlogin] = usePostloginMutation()
     const SingupisLoading = isLoading
     const showMessage = useMessage()
 
     const SinguponFinish: FormProps<SingupType>['onFinish'] = async (values: any) => {
         try {
-            const password = values.password 
+            const password = values.password
             const clear_data = {
                 username: values.username,
                 email: values.email,
@@ -25,40 +25,51 @@ export const useSingupFrom = () => {
             const singupResponse = await postsingup({
                 singupuser: clear_data
             })
-            
-            if ('error' in singupResponse && singupResponse.error?.status === 400) {
-                showMessage("error","Bad request check your form")
+
+            if (
+                'error' in singupResponse &&
+                singupResponse.error &&
+                typeof (singupResponse.error as any).status !== "undefined" &&
+                (singupResponse.error as any).status === 400
+            ) {
+                showMessage("error", "Bad request check your form")
             }
 
             console.log(singupResponse)
             if (singupResponse?.data) {
                 localStorage.setItem("userinfo", JSON.stringify(singupResponse.data));
             }
-            const username = singupResponse.data.username 
+            const username = singupResponse.data.username
             const login_data = {
                 username: username,
-                password:password
+                password: password
             }
             console.log(login_data);
-            
+
             const singinResponse = await postlogin({
-                loginuser:login_data,
-                methodLogin : "username"
+                loginuser: login_data,
+                methodLogin: "username"
             })
-            if ('error' in singinResponse && singinResponse.error?.status !== 200) {
-                    showMessage("error", "Invalid username or password")
-                    return false
-                 }
-                 const access_token = singinResponse.data.access
-                 const resfresh_token = singinResponse.data.refresh
-                 localStorage.setItem(ACCESS_TOKEN, access_token)
-                 localStorage.setItem(REFRESH_TOKEN, resfresh_token)
-                 window.location.href = "/otp_verification"
-                return true
+            if (
+                'error' in singinResponse &&
+                singinResponse.error &&
+                typeof (singinResponse.error as any).status !== "undefined" &&
+                (singinResponse.error as any).status !== 200
+            ) {
+                showMessage("error", "Invalid username or password")
+                return false
+            }
+            const access_token = singinResponse.data.access
+            const resfresh_token = singinResponse.data.refresh
+            localStorage.setItem(ACCESS_TOKEN, access_token)
+            localStorage.setItem(REFRESH_TOKEN, resfresh_token)
+            window.location.href = "/otp_verification"
+            return true
 
         } catch {
 
-        }}
+        }
+    }
     const SinguponFinishFailed: FormProps<SingupType>['onFinishFailed'] = (errorInfo) => {
         showMessage("warning", "Please fill all required fields.")
         console.log('Validation Failed:', errorInfo);

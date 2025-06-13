@@ -14,7 +14,7 @@ import { SingupType } from "../type";
 import { useSingupFrom } from "../../hooks/useSingupForm";
 
 
-const SingUp: React.FC = () => {
+const SignUp: React.FC = () => {
     const theme = useSelector((state: RootState) => state.theam.theme);
     const DeveloperTest = useSelector((state: RootState) => state.developertest.border_test);
     const dispatch = useDispatch()
@@ -217,4 +217,4 @@ const SingUp: React.FC = () => {
     );
 };
 
-export default SingUp
+export default SignUp

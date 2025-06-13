@@ -1,216 +1,123 @@
-import React, {  useState } from "react";
-import Ethio_logo from "../../assets/MemoEthio_logo_4.png";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { CloseOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import { Drawer, Result } from "antd";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
+import { Result } from "antd";
+import EthioLogo from "../../assets/MemoEthio_logo_4.png";
 
 const LandingNavBar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState<number | null>(null);
   const [subMenuOpen, setSubMenuOpen] = useState<number | null>(null);
   const [openMobileMenu, setOpenMobileMenu] = useState(false);
-  const DeveloperTest: boolean = useSelector((state: RootState) => state.developertest.border_test);
+  const borderTest = useSelector((state: RootState) => state.developertest.border_test);
+  const theme = useSelector((state: RootState) => state.theam.theme);
 
+  useEffect(() => {
+    document.title = "Memo Ethiopia | Landing Page";
 
-  const showDrawerMobileMenu = () => setOpenMobileMenu(true);
-  const onCloseMobileMenu = () => setOpenMobileMenu(false);
+    let startX = 0;
+    let isEdgeSwipe = false;
 
+    const handleTouchStart = (e: TouchEvent) => {
+      startX = e.touches[0].clientX;
+      const screenWidth = window.innerWidth;
 
-  // Helper function to add Developer_test class if needed
-  const getClassNames = (baseClass: string) => `${baseClass} ${DeveloperTest ? 'border border-red-700' : ''}`;
+      // Only allow swipe if started from left 40px or right 40px
+      isEdgeSwipe = startX < 40 || startX > screenWidth - 40;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      e.preventDefault()
+      const endX = e.touches[0].clientX;
+      if (startX - endX > 150) {
+        setOpenMobileMenu(false);
+      }
+      if (!isEdgeSwipe) return;
+
+      e.preventDefault(); // prevent scrolling only when it's edge swipe
+
+      if (startX - endX > 50) {
+        setOpenMobileMenu(false);
+      } else if (endX - startX > 50) {
+        // swipe right from left edge
+        setOpenMobileMenu(true);
+      }
+    };
+
+    document.addEventListener("touchstart", handleTouchStart);
+    document.addEventListener("touchmove", handleTouchMove, { passive: false });
+
+    return () => {
+      document.removeEventListener("touchstart", handleTouchStart);
+      document.removeEventListener("touchmove", handleTouchMove);
+    };
+  }, []);
+  useEffect(() => {
+    if (openMobileMenu) {
+      document.body.style.overflow = "hidden"; // Prevent body scroll when menu is open
+    } else {
+      document.body.style.overflow = "auto"; // Allow body scroll when menu is closed
+    }
+  }
+    , [openMobileMenu]);
+
+  const getClasses = (...classes: string[]) => {
+    const border = borderTest ? "border border-red-700" : "";
+    const themeStyles = theme === "dark"
+      ? "bg-[#363535] text-white p-2"
+      : "bg-[#e9e9e9]  text-black p-2";
+    return [...classes, border, themeStyles].join(" ");
+  };
 
   return (
-    <>
-      <nav className={getClassNames("bg-[#282829] z-50 text-gray-200 h-16 sticky top-0")}>
-        <div className={getClassNames("flex justify-between h-16")}>
-          {/* Logo */}
-          <div className={getClassNames("ms-6 mt-2 h-auto")}>
-            <Link to={"/"} className={getClassNames("cursor-default")}>
-              <img
-                src={Ethio_logo}
-                alt="MemoEthio Logo"
-                className={getClassNames("h-14 w-14")}
-                onDragStart={(e) => e.preventDefault()}
-              />
-            </Link>
-          </div>
+    <nav className={getClasses("sticky z-50 top-0   h-14")}>
+      <div className={getClasses("flex  justify-between items-center h-full px-6")}>
+        {/* Logo */}
+        <Link to="/">
+          <img
+            src={EthioLogo}
+            alt="MemoEthio Logo"
+            className={getClasses("h-14 w-14")}
+            title="Memo Ethiopia Logo"
+            draggable={false}
+            onDragStart={(e) => e.preventDefault()}
+          />
+        </Link>
 
-          {/* Desktop Menu */}
-          <div className={getClassNames("menu mt-2 z-[1000] hidden md:block h-9")}>
-            <ul className={getClassNames("flex cursor-default")}>
-              {/* Menu 1 */}
-              <li
-                onMouseEnter={() => setMenuOpen(1)}
-                onMouseLeave={() => {
-                  setMenuOpen(null);
-                  setSubMenuOpen(null);
-                }}
-                className={getClassNames("relative hover:border p-1  hover:border-gray-500")}
-              >
-                <small>Company</small>
-
-                {menuOpen === 1 && (
-                  <div className={getClassNames("flex z-[1000] absolute p-1  ms-4 left-0 h-72 w-auto top-8 bg-[#282929] text-white  shadow-md")}>
-                    <div className={getClassNames("w-28 mt-3")}>
-                      <div
-                        className={getClassNames("relative group")}
-                        onMouseEnter={() => setSubMenuOpen(1)}
-                        onMouseLeave={() => setSubMenuOpen(null)}
-                      >
-                        <Link to="/" className={getClassNames("block py-2")}>About Us</Link>
-
-                      </div>
-                      <Link to="#" className={getClassNames("block py-2")}>Careers</Link>
-                      <Link to="/" className={getClassNames("block py-2")}>Press</Link>
-                      <Link to="/" className={getClassNames("block py-2")}>News</Link>
-                    </div>
-                    <div
-                      className={getClassNames("w-96 z-50  bg-[#282929] text-white")}
-                      style={{ overflow: "auto", scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
-                      onMouseEnter={() => setSubMenuOpen(subMenuOpen ? subMenuOpen : null)}
-                      onMouseLeave={() => setSubMenuOpen(null)}
-                    >
-                      {subMenuOpen === null && (
-                        <>
-                          <Result status="info" children={
-                            <div className="flex justify-center text-white ">
-                              Hover one item
-                            </div>
-                          } />
-                        </>
-                      )}
-                      {subMenuOpen === 1 && (
-                        <div className={getClassNames("p-2")}>
-
-                          <div className={getClassNames("mt-2")}>
-                            <p className={getClassNames("font-sans")}><b>Memo Ethiopa apps</b>
-                              <br />
-                              Are more useful than you might think.
-                              <br />
-                              Taking notes with pen and paper works just fine for some, but if you have a smartphone or tablet, using an app designed for <u>note-taking</u> can truly change the way you get things done.</p>
-                            <ul className={getClassNames("text-left space-y-2")}>
-                              <li>Easy Note Creation – Quickly capture and organize your ideas.</li>
-                              <li>Cloud Sync – Access your notes anytime, anywhere.</li>
-                              <li>Secure & Private – Your data is encrypted and safe.</li>
-                              <li>Smart Search – Find your notes in seconds.</li>
-                            </ul>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </li>
-
-              {/* Menu 2 */}
-              <li
-                onMouseEnter={() => setMenuOpen(null)}
-                onMouseLeave={() => setMenuOpen(null)}
-                className={getClassNames("relative hover:border p-1 ms-2 hover:border-gray-500")}
-              >
-                <small>Newsletter</small>
-              </li>
-              {/* Menu 3 */}
-              <li
-                onMouseEnter={() => setMenuOpen(3)}
-                onMouseLeave={() => setMenuOpen(null)}
-                className={getClassNames("relative hover:border p-1 ms-2 hover:border-gray-500")}
-              >
-                <small>Developer Options</small>
-                {menuOpen === 3 && (
-                  <div className={getClassNames("absolute left-0 w-48 top-8 bg-[#282929] text-white p-3 shadow-md")}>
-                    <Link to="/" className={getClassNames("block py-2")}>Child Menu 1</Link>
-                    <Link to="/" className={getClassNames("block py-2")}>Child Menu 2</Link>
-                    <Link to="/" className={getClassNames("block py-2")}>Child Menu 3</Link>
-                  </div>
-                )}
-              </li>
-
-              {/* Menu 4 */}
-              <li
-                onMouseEnter={() => setMenuOpen(4)}
-                onMouseLeave={() => setMenuOpen(null)}
-                className={getClassNames("relative hover:border p-1 ms-2 hover:border-gray-500")}
-              >
-                <small>Menu 3</small>
-                {menuOpen === 4 && (
-                  <div className={getClassNames("absolute left-0 w-48 top-8 bg-[#282929] text-white p-3 shadow-md")}>
-                    <Link to="/" className={getClassNames("block py-2")}>Child Menu 1</Link>
-                    <Link to="/" className={getClassNames("block py-2")}>Child Menu 2</Link>
-                    <Link to="/" className={getClassNames("block py-2")}>Child Menu 3</Link>
-                  </div>
-                )}
-              </li>
-            </ul>
-          </div>
-
-          {/* Action Buttons */}
-          <div className={getClassNames("me-6 md:block mt-2 flex gap-7")}>
-            <button className={getClassNames("bg-[#312EB5] p-2 rounded me-4 cursor-pointer transform hover:scale-105 transition-all delay-150")}>
-              <Link to="/singup" className={getClassNames("text-white")}>
-                Get Free Account
-              </Link>
-            </button>
-            <button className={getClassNames("hover:border hover:border-gray-500 p-2 border cursor-pointer  border-[#282829] hover:scale-110 transition-all delay-150")}>
-              <Link to="/singin" className={getClassNames("text-white")}>
-                Sign In
-              </Link>
-            </button>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className={getClassNames("me-4 my-4 md:hidden")} onClick={showDrawerMobileMenu}>
-            <MenuFoldOutlined className={getClassNames("text-3xl")} />
-          </div>
-        </div>
-      </nav >
-
-      {/* Mobile Drawer */}
-      < Drawer
-        title="MemoEthiopia"
-        placement="left"
-        closable={false}
-        onClose={onCloseMobileMenu}
-        style={{ backgroundColor: "#282929", color: "#fff" }
-        }
-        open={openMobileMenu}
-        extra={< CloseOutlined className={getClassNames("cursor-pointer text-black")} onClick={onCloseMobileMenu} />}
-      >
-        <ul className={getClassNames("flex cursor-default")}>
-          {/* Menu 1 */}
+        {/* Desktop Menu */}
+        <ul className={getClasses("hidden lg:flex gap-3 items-center select-none ")}>
           <li
+            className="relative group"
             onMouseEnter={() => setMenuOpen(1)}
             onMouseLeave={() => {
               setMenuOpen(null);
               setSubMenuOpen(null);
             }}
-            className={getClassNames("relative hover:border p-1 hover:border-gray-500")}
           >
-            <small>Menu 1</small>
+            <span className="cursor-pointer" title="Company">Company</span>
             {menuOpen === 1 && (
-              <div className={getClassNames("flex z-[1000] absolute  left-0 h-96 w-auto top-8 bg-[#282929] text-white p-1 shadow-md")}>
-                <div className={getClassNames("w-28 mt-3")}>
-                  <Link to="/" className={getClassNames("block py-2")}>Child Menu 1</Link>
-                  <div
-                    className={getClassNames("relative group")}
-                    onMouseEnter={() => setSubMenuOpen(1)}
-                    onMouseLeave={() => setSubMenuOpen(null)}
-                  >
-                    <Link to="/" className={getClassNames("block py-2")}>Child Menu 2</Link>
-                  </div>
-                  <Link to="/" className={getClassNames("block py-2")}>Child Menu 3</Link>
+              <div className={getClasses("absolute top-full  flex gap-6 shadow-md")}>
+                <div>
+                  <Link to="/" className="block py-1" onMouseEnter={() => setSubMenuOpen(1)}>About</Link>
+                  <Link to="/#footer" className="block py-1" onMouseEnter={() => setSubMenuOpen(2)}>Careers</Link>
+                  <Link to="/" className="block py-1" >Press</Link>
+                  <Link to="/" className="block py-1">News</Link>
                 </div>
-                <div
-                  className={getClassNames("w-80 z-50 bg-[#282929] text-white")}
-                  onMouseEnter={() => setSubMenuOpen(subMenuOpen === 1 ? 1 : 0)}
-                  onMouseLeave={() => setSubMenuOpen(null)}
-                >
-                  {subMenuOpen === 1 && (
-                    <div className={getClassNames("p-3")}>
-                      <Link to="/" className={getClassNames("block py-2")}>Sub-Child 1</Link>
-                      <Link to="/" className={getClassNames("block py-2")}>Sub-Child 2</Link>
-                      <Link to="/" className={getClassNames("block py-2")}>Sub-Child 3</Link>
+                <div className="w-96">
+                  {subMenuOpen === null ? (
+                    <Result status="info" title="Hover one item" />
+                  ) : (
+                    <div className={getClasses("select-text")}>
+                      <p><b>Memo Ethiopia apps</b><br />
+                        Are more useful than you might think.
+                        Taking notes with pen and paper works just fine for some, but if you have a smartphone or tablet, using an app designed for note-taking can truly change the way you get things done.
+                      </p>
+                      <ul className="list-disc ml-5 mt-2">
+                        <li>Easy Note Creation</li>
+                        <li>Cloud Sync</li>
+                        <li>Secure & Private</li>
+                        <li>Smart Search</li>
+                      </ul>
                     </div>
                   )}
                 </div>
@@ -218,40 +125,109 @@ const LandingNavBar: React.FC = () => {
             )}
           </li>
 
-          {/* Menu 2 */}
+          <li className="cursor-pointer" title="Newsletter">Newsletter</li>
+          <li className="cursor-pointer" title="About Us">Features</li>
+          <li className="cursor-pointer" title="About Us">Pricing</li>
+
           <li
-            onMouseEnter={() => setMenuOpen(2)}
+            className="relative group cursor-pointer"
+            onMouseEnter={() => setMenuOpen(3)}
             onMouseLeave={() => setMenuOpen(null)}
-            className={getClassNames("relative hover:border p-1 ms-2 hover:border-gray-500")}
           >
-            <small>Menu 2</small>
-            {menuOpen === 2 && (
-              <div className={getClassNames("absolute left-0 w-48 top-8 bg-[#282929] text-white p-3 shadow-md")}>
-                <Link to="/" className={getClassNames("block py-2")}>Child Menu 1</Link>
-                <Link to="/" className={getClassNames("block py-2")}>Child Menu 2</Link>
-                <Link to="/" className={getClassNames("block py-2")}>Child Menu 3</Link>
+            <span title="Developer Options">Developer Options</span>
+            {menuOpen === 3 && (
+              <div className={getClasses("absolute top-full  p-3 shadow-md w-48")}>
+                <Link to="/" className="block py-1">Child Menu 1</Link>
+                <Link to="/" className="block py-1">Child Menu 2</Link>
+                <Link to="/" className="block py-1">Child Menu 3</Link>
               </div>
             )}
           </li>
 
-          {/* Menu 3 */}
-          <li
-            onMouseEnter={() => setMenuOpen(3)}
-            onMouseLeave={() => setMenuOpen(null)}
-            className={getClassNames("relative hover:border p-1 ms-2 hover:border-gray-500")}
-          >
-            <small>Menu 3</small>
-            {menuOpen === 3 && (
-              <div className={getClassNames("absolute left-0 w-48 top-8 bg-[#282929] text-white p-3 shadow-md")}>
-                <Link to="/" className={getClassNames("block py-2")}>Child Menu 1</Link>
-                <Link to="/" className={getClassNames("block py-2")}>Child Menu 2</Link>
-                <Link to="/" className={getClassNames("block py-2")}>Child Menu 3</Link>
-              </div>
-            )}
-          </li>
+          <li className="cursor-pointer text-blue-500" title="AI-Powered Memory Assistant">AI Assistant</li>
+          <li className="cursor-pointer" title="About Us">About</li>
         </ul>
-      </Drawer >
-    </>
+
+        {/* Action Buttons */}
+        <div className="hidden lg:flex gap-4 items-center">
+          <Link to="/signin" title="" className="px-4 py-2 border border-gray-700 rounded hover:scale-105 transition-transform">Sign In</Link>
+          <Link to="/signup" className="px-4 py-2 bg-blue-900  text-white rounded hover:scale-105 transition-transform">Get Free Account</Link>
+        </div>
+
+        {/* Mobile Toggle */}
+        <button onClick={() => setOpenMobileMenu(true)} className="lg:hidden">☰</button>
+      </div>
+
+      {/* Mobile Menu */}
+      <div className={getClasses("fixed top-0 h-full z-50 transition-transform duration-500 ease-in-out",
+        openMobileMenu ? "translate-x-0" : "-translate-x-full"
+      )}>
+        <div
+          className={getClasses(
+            "relative top-0 left-0 z-50 h-screen w-80 transition-transform duration-500 ease-in-out",
+            openMobileMenu ? "translate-x-0" : "-translate-x-full"
+          )}
+          id="mobile-menu"
+        >
+          <div className="p-7 flex justify-between items-center">
+            <span className="text-lg font-semibold">Menu</span>
+            <button
+              onClick={() => setOpenMobileMenu(false)}
+              className="text-xl font-bold hover:text-red-500 transition-colors duration-300"
+            >
+              ✕
+            </button>
+          </div>
+          <div className="p-4 space-y-1">
+
+            <ul className={getClasses("items-center select-none ")}>
+              <li
+                className="relative group"
+                onMouseEnter={() => setMenuOpen(1)}
+                onMouseLeave={() => {
+                  setMenuOpen(null);
+                  setSubMenuOpen(null);
+                }}
+              >
+                <span className="cursor-pointer" title="Company">Company</span>
+
+              </li>
+
+              <li className="cursor-pointer" title="Newsletter">Newsletter</li>
+              <li className="cursor-pointer" title="About Us">Features</li>
+              <li className="cursor-pointer" title="About Us">Pricing</li>
+
+              <li
+                className="relative group cursor-pointer"
+                onMouseEnter={() => setMenuOpen(3)}
+                onMouseLeave={() => setMenuOpen(null)}
+              >
+                <span title="Developer Options">Developer Options</span>
+                {menuOpen === 3 && (
+                  <div className={getClasses("absolute top-full  p-3 shadow-md w-48")}>
+                    <Link to="/" className="block py-1">Child Menu 1</Link>
+                    <Link to="/" className="block py-1">Child Menu 2</Link>
+                    <Link to="/" className="block py-1">Child Menu 3</Link>
+                  </div>
+                )}
+              </li>
+
+              <li className="cursor-pointer text-blue-500" title="AI-Powered Memory Assistant">AI Assistant</li>
+              <li className="cursor-pointer" title="About Us">About</li>
+            </ul>
+          </div>
+          {/* Footer menu items here */}
+          <div className="fixed bottom-0 w-2/3">
+            <div className="m-2 p-2">
+              <Link to="/singup" className="px-4 py-2 bg-blue-900  text-white rounded hover:scale-105 transition-transform">Get Free Account</Link>
+            </div>
+            <div className="m-2 p-2 w-2/3">
+              <Link to="/singin" className="px-4 py-2 border border-gray-700 rounded hover:scale-105 transition-transform">Sign In</Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
   );
 };
 

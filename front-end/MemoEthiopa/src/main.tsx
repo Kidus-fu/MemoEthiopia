@@ -7,9 +7,9 @@ import { Provider } from "react-redux";
 import Error404 from './components/Error_404.tsx';
 import store from './store/store.ts';
 import SignIn from './Pages/login/SingIn.tsx';
-import SingUp from './Pages/singup/SingUp.tsx';
 import OTP from './Pages/OTP/OTP.tsx';
 import Home from './Pages/home/home.tsx';
+import SignUp from './Pages/signup/SignUp.tsx';
 
 
 createRoot(document.getElementById('root')!).render(
@@ -19,8 +19,8 @@ createRoot(document.getElementById('root')!).render(
         <Routes>
           <Route path="/" element={<App />} />
           {/* <Route index element={<FirstContent />} /> */}
-          <Route path='/singin' element={<SignIn />} />
-          <Route path='/singup' element={<SingUp />} />
+          <Route path='/signin' element={<SignIn />} />
+          <Route path='/signup' element={<SignUp />} />
           <Route path='/otp_verification' element={<OTP />} />
           <Route path='*' element={<Error404 />} />
           <Route path='/feed' element={<Home />} />

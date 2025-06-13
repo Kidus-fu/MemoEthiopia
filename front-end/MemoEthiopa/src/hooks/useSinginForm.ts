@@ -53,7 +53,13 @@ export const useSigninForm = () => {
         loginuser: data,
         methodLogin: "username"
       })
-      if ('error' in usernameResponse && usernameResponse.error?.status !== 200) {
+      if (
+        'error' in usernameResponse &&
+        (
+          (usernameResponse.error && 'status' in usernameResponse.error && (usernameResponse.error as { status?: number }).status !== 200)
+          || (!('status' in (usernameResponse.error ?? {})))
+        )
+      ) {
         showMessage("error", "Invalid username or password")
         return false
       }

@@ -36,7 +36,7 @@ const SignIn: React.FC = () => {
     }, []);
     const getClassNames = (base: string) => {
         const border = DeveloperTest ? 'border border-red-700' : '';
-        const themeStyle = theme === 'dark' ? ' bg-[#1C1C1C] text-white' : 'bg-[#F3F6FB] text-black';
+        const themeStyle = theme === 'dark' ? ' bg-[#1C1C1C] text-white p-1' : 'bg-[#F3F6FB] text-black p-1';
         return `${base} ${border} ${themeStyle}`;
     };
 
@@ -120,7 +120,7 @@ const SignIn: React.FC = () => {
                                                 disabled={SinginisLoading}
                                             >
                                                 <Form.Item<SingupType>
-                                                    name="usernameoremail"
+                                                    name="username"
                                                     rules={[{ required: true, message: 'Please input your username or email!', validator: validateUsernameEmail }]}
                                                 >
                                                     <Input prefix={<UserOutlined />} placeholder='username/email' />
@@ -137,7 +137,7 @@ const SignIn: React.FC = () => {
                                                     <button
                                                         type="submit"
                                                         className={getClassNames(
-                                                            "rounded-lg bg-gradient-to-r text-white from-[#6f6dcc] to-[#312EB5] p-2 mt-1 font-bold w-4/5 max-w-sm mx-auto"
+                                                            "rounded-lg bg-gradient-to-r text-white from-[#6f6dcc] to-[#312EB5]  mt-1 font-bold w-4/5 max-w-sm mx-auto"
                                                         )}
                                                     >
                                                         {SinginisLoading ? <Loading3QuartersOutlined className='animate-spin' /> : ""}   Login Now
