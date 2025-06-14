@@ -70,10 +70,11 @@ const LandingPage: React.FC = () => {
                 </div>
             ) : (
                 <>
-                    <LandingNavBar />
+                
                     <div className={getClassNames("min-h-screen flex flex-col")}>
-                        <ThemeSelector />
+                        <LandingNavBar />
                         <div className={getClassNames("")}>
+                        
                             <LandingPageCarousel />
                         </div>
                         <div className={getClassNames("")}>
@@ -89,12 +90,13 @@ const LandingPage: React.FC = () => {
 
                         <Popover title="1 Click to Off, Double Click to On">
                             <button
-                                className={getClassNames("fixed bottom-0  text-xl border p-4 right-0 m-2 rounded-full border-red-800 ")}
+                                className={getClassNames("fixed bottom-0  text-xl border p-4 z-50 right-0 m-2 rounded-full border-red-800 ")}
                                 onDoubleClick={HandelerDeveloperTest}
                                 onClick={HandelerClient}
                                 onTouchStartCapture={HandelerDeveloperTest}
                                 onTouchEnd={HandelerClient}
                             >
+                                <ThemeSelector />
                                 {DeveloperTest ? <BugFilled /> : <BugOutlined />}
                             </button>
                         </Popover>

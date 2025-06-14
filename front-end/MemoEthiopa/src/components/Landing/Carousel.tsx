@@ -2,6 +2,7 @@ import React from 'react';
 import { Carousel } from 'antd';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
+import WritingAnimation from '../WritingAnimation';
 
 const LandingPageCarousel: React.FC = () => {
 
@@ -21,7 +22,7 @@ const LandingPageCarousel: React.FC = () => {
       <div className={getClassNames("relative h-[500px]  flex items-center justify-center transition-all duration-300  cursor-grab active:cursor-grabbing w-[400px] select-none")}>
         <div className={getClassNames("flex  justify-center gap-16 p-6 m-6")}>
           <div className={getClassNames("text-center z-50 scale-110 md:w-2/5")}>
-            <h1 className={getClassNames("text-3xl font-bold mb-4 select-none")}>Welcome to Memo Ethiopia</h1>
+            <h1 className={getClassNames("text-3xl font-bold mb-4 select-none")}><WritingAnimation paragraph='Welcome to Memo Ethiopia' /></h1>
             <p className={getClassNames("")}>While jotting things down with pen and paper has always been a reliable method, we believe there’s a better, smarter way to manage your thoughts, tasks, and ideas. With Memo Ethiopia, you can take your productivity to the next level by turning your smartphone, tablet, or computer into a powerful digital notebook.
               <br />Embrace the future of note-taking with Memo Ethiopia where your ideas find their perfect digital</p>
           </div>
@@ -54,7 +55,7 @@ const LandingPageCarousel: React.FC = () => {
             }}
           ></div>
           <div className={getClassNames("text-center z-50 scale-110 md:w-2/5")}>
-            <h1 className={getClassNames("text-3xl font-bold mb-4 select-none ")}>Memo Ethiopia solutions</h1>
+            <h1 className={getClassNames("text-3xl font-bold mb-4 select-none ")}><WritingAnimation paragraph='Memo Ethiopia solutions' /></h1>
             <p className={getClassNames("")}>Welcome to Memo Ethiopia Solutions a smart, homegrown platform designed to revolutionize the way Ethiopians take notes, stay organized, and manage information.
               <br />
               <br />

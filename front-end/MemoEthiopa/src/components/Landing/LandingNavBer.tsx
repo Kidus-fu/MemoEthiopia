@@ -64,20 +64,20 @@ const LandingNavBar: React.FC = () => {
   const getClasses = (...classes: string[]) => {
     const border = borderTest ? "border border-red-700" : "";
     const themeStyles = theme === "dark"
-      ? "bg-[#363535] text-white p-2"
-      : "bg-[#e9e9e9]  text-black p-2";
+      ? "bg-[#363535] text-white "
+      : "bg-[#e9e9e9]  text-black";
     return [...classes, border, themeStyles].join(" ");
   };
 
   return (
-    <nav className={getClasses("sticky z-50 top-0   h-14")}>
-      <div className={getClasses("flex  justify-between items-center h-full px-6")}>
+    <nav className={getClasses(`sticky p-0 z-50 top-0 ${theme === "drak" ? "bg-black/25":"bg-black/5"}  backdrop-blur-2xl h-14`)}>
+      <div className={getClasses("flex  justify-between bg-transparent items-center h-full px-6")}>
         {/* Logo */}
         <Link to="/">
           <img
             src={EthioLogo}
             alt="MemoEthio Logo"
-            className={getClasses("h-14 w-14")}
+            className="h-14 w-14"
             title="Memo Ethiopia Logo"
             draggable={false}
             onDragStart={(e) => e.preventDefault()}
@@ -85,7 +85,7 @@ const LandingNavBar: React.FC = () => {
         </Link>
 
         {/* Desktop Menu */}
-        <ul className={getClasses("hidden lg:flex gap-3 items-center select-none ")}>
+        <ul className={getClasses("hidden bg-transparent lg:flex gap-3 items-center select-none ")}>
           <li
             className="relative group"
             onMouseEnter={() => setMenuOpen(1)}

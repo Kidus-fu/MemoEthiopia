@@ -1,13 +1,10 @@
-import React from 'react';
+import React  from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store'
-
-// ... import statements remain the same
 
 const Services: React.FC = () => {
     const theme = useSelector((state: RootState) => state.theam.theme);
     const DeveloperTest = useSelector((state: RootState) => state.developertest.border_test);
-
     const getClassNames = (base: string) => {
         const border = DeveloperTest ? 'border border-red-700' : '';
         const themeStyle = theme === 'dark'
@@ -37,7 +34,7 @@ const Services: React.FC = () => {
 
                     <div className={getClassNames("relative mx-auto max-w-7xl z-10  bg-transparent grid grid-cols-1 gap-10 pt-14 sm:grid-cols-2 lg:grid-cols-3")}>
                         {/* Feature Card 1 */}
-                        <div className={getClassNames(`rounded-md ${theme === 'dark' ? 'border-gray-700 shadow-[rgb(30,27,51)]' : ' border-gray-300'} shadow-2xl p-8 text-center border hover:scale-110 transition-transform duration-300 `)}>
+                        <div className={getClassNames(`rounded-md ${theme === 'dark' ? 'border-gray-700 shadow-[rgb(30,27,51)]' : ' border-gray-300'} shadow-2xl p-8 text-center border hover:scale-110 transition-transform duration-300 `)} >
                             <div
                                 className={getClassNames(" button-text mx-auto flex h-12 w-12 items-center justify-center rounded-md border ")}
                                 style={{
