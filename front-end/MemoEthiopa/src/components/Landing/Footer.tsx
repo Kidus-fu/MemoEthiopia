@@ -15,7 +15,7 @@ const Footer: React.FC = () => {
         return `${base} ${border} ${themeStyle}`;
     };
     return (
-        <footer className={getClassNames("py-10 ")} id="footer">
+        <footer className={getClassNames("relative py-10 ")} id="footer">
             <div className={getClassNames(`max-w-7xl mx-auto p-4 grid grid-cols-1 md:grid-cols-3 gap-8 border-t ${theme === "dark" ? "border-gray-800" : "border-gray-300"}`)}>
 
                 {/* Logo & Mission */}
@@ -55,6 +55,12 @@ const Footer: React.FC = () => {
                     <p className={getClassNames("text-xs mt-4")}>© {new Date().getFullYear()} MemoEthiopia. All rights reserved.</p>
                 </div>
             </div>
+            <div
+                className={getClassNames(`absolute top-0 right-0 z-0 h-1/2 w-1/6 blur-3xl ${theme === 'dark' ? "bg-gray-800" : "bg-black/10"} blur-2xl`)}
+            />
+            <div
+                className={getClassNames(`absolute bottom-0 left-0 z-0 h-1/2 w-1/6 blur-3xl ${theme === 'dark' ? "bg-gray-800" : "bg-black/10"} blur-2xl`)}
+            />
         </footer>
     );
 };

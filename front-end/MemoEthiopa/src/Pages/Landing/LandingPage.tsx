@@ -1,23 +1,20 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import LandingNavBar from '../../components/Landing/LandingNavBer';
 import ThemeSelector from '../../components/TheamSlecter';
 import logo from '../../assets/MemoEthio_logo_4.png';
-import { Popover, Spin } from 'antd';
+import {  Spin } from 'antd';
 import LandingPageCarousel from '../../components/Landing/Carousel';
 import Services from '../../components/Landing/Services';
-import { BugFilled, BugOutlined } from '@ant-design/icons';
-import { backToClentMode, changeToDeveloperMode } from '../../store/features/Developer_test';
 import Pricing from '../../components/Landing/Pricing';
 import Footer from '../../components/Landing/Footer';
 import FAQ from '../../components/Landing/FQA';
+import { useSelector } from 'react-redux';
 
 const LandingPage: React.FC = () => {
     const theme = useSelector((state: RootState) => state.theam.theme);
     const [loading, setLoading] = React.useState(true);
     const DeveloperTest = useSelector((state: RootState) => state.developertest.border_test);
-    const dispatch = useDispatch()
 
     const getClassNames = (base: string) => {
         const border = DeveloperTest ? 'border border-red-700' : '';
@@ -30,16 +27,10 @@ const LandingPage: React.FC = () => {
         document.title = 'Memo Ethiopia | Landing Page';
         const timer = setTimeout(() => {
             setLoading(false);
-        }, 2000); // Simulate loading for 2 seconds
-
+        }, 2000);
         return () => clearTimeout(timer);
     }, []);
-    const HandelerDeveloperTest = () => {
-        dispatch(changeToDeveloperMode())
-    }
-    const HandelerClient = () => {
-        dispatch(backToClentMode())
-    }
+    
 
     useEffect(() => {
         document.body.style.overflow = loading ? 'hidden' : 'auto';
@@ -70,11 +61,9 @@ const LandingPage: React.FC = () => {
                 </div>
             ) : (
                 <>
-                
                     <div className={getClassNames("min-h-screen flex flex-col")}>
                         <LandingNavBar />
                         <div className={getClassNames("")}>
-                        
                             <LandingPageCarousel />
                         </div>
                         <div className={getClassNames("")}>
@@ -87,19 +76,9 @@ const LandingPage: React.FC = () => {
                             <FAQ />
                         </div>
                         <Footer />
-
-                        <Popover title="1 Click to Off, Double Click to On">
-                            <button
-                                className={getClassNames("fixed bottom-0  text-xl border p-4 z-50 right-0 m-2 rounded-full border-red-800 ")}
-                                onDoubleClick={HandelerDeveloperTest}
-                                onClick={HandelerClient}
-                                onTouchStartCapture={HandelerDeveloperTest}
-                                onTouchEnd={HandelerClient}
-                            >
-                                <ThemeSelector />
-                                {DeveloperTest ? <BugFilled /> : <BugOutlined />}
-                            </button>
-                        </Popover>
+                        <div className="bg-transparent fixed bottom-0 left-0 right-0 z-10 flex justify-between items-center p-4">
+                            <ThemeSelector />
+                        </div>
                     </div>
                 </>
             )}

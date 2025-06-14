@@ -47,7 +47,8 @@ const FAQ: React.FC = () => {
         return `${base} ${border} ${themeStyle}`;
     };
     return (
-        <section className={getClassNames(" mt-1")}>
+        <section className={getClassNames("relative mt-1 z-50")}>
+            
             <div className={getClassNames("px-6 py-10 md:py-20 md:px-10 max-w-7xl mx-auto")}>
                 <h2 className={getClassNames("text-3xl font-bold text-center mb-8 ")}>Frequently Asked Questions</h2>
                 <div className="space-y-4">
@@ -68,7 +69,14 @@ const FAQ: React.FC = () => {
                         </div>
                     ))}
                 </div>
+                
             </div>
+            <div
+                className={getClassNames(`absolute bottom-50 top-50 left-0 z-0 h-1/2 w-1/12 blur-3xl ${theme === 'dark' ? "bg-gray-800" : "bg-black/10"} blur-2xl`)}
+            />
+            <div
+                className={getClassNames(`absolute  top-0 right-0 z-0 h-1/2 w-1/6 blur-3xl ${theme === 'dark' ? "bg-gray-800" : "bg-black/10"} blur-2xl`)}
+            />
         </section>
     );
 };

@@ -70,6 +70,8 @@ const LandingNavBar: React.FC = () => {
   };
 
   return (
+    <>
+    <div className={getClasses(`fixed z-30 bg-black/35 backdrop-blur-xs h-full w-full transition-all delay-500 ${openMobileMenu ? "block" : "hidden"}`)}></div>
     <nav className={getClasses(`sticky p-0 z-50 top-0 ${theme === "drak" ? "bg-black/25":"bg-black/5"}  backdrop-blur-2xl h-14`)}>
       <div className={getClasses("flex  justify-between bg-transparent items-center h-full px-6")}>
         {/* Logo */}
@@ -157,23 +159,23 @@ const LandingNavBar: React.FC = () => {
         {/* Mobile Toggle */}
         <button onClick={() => setOpenMobileMenu(true)} className="lg:hidden">☰</button>
       </div>
-
+            
       {/* Mobile Menu */}
       <div className={getClasses("fixed top-0 h-full z-50 transition-transform duration-500 ease-in-out",
         openMobileMenu ? "translate-x-0" : "-translate-x-full"
       )}>
         <div
           className={getClasses(
-            "relative top-0 left-0 z-50 h-screen w-80 transition-transform duration-500 ease-in-out",
+            "relative top-0 left-0 z-50 h-screen w-80  transition-transform duration-500 ease-in-out",
             openMobileMenu ? "translate-x-0" : "-translate-x-full"
           )}
           id="mobile-menu"
         >
-          <div className="p-7 flex justify-between items-center">
+          <div className="p-7 flex justify-between  items-center">
             <span className="text-lg font-semibold">Menu</span>
             <button
               onClick={() => setOpenMobileMenu(false)}
-              className="text-xl font-bold hover:text-red-500 transition-colors duration-300"
+              className="text-xl font-bold hover:text-red-500 transition-colors duration-150"
             >
               ✕
             </button>
@@ -228,6 +230,7 @@ const LandingNavBar: React.FC = () => {
         </div>
       </div>
     </nav>
+    </>
   );
 };
 
