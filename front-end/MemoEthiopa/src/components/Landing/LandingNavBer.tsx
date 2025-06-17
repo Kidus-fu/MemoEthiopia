@@ -27,7 +27,7 @@ const LandingNavBar: React.FC = () => {
     };
 
     const handleTouchMove = (e: TouchEvent) => {
-      e.preventDefault()
+      
       const endX = e.touches[0].clientX;
       if (startX - endX > 150) {
         setOpenMobileMenu(false);
@@ -71,7 +71,7 @@ const LandingNavBar: React.FC = () => {
 
   return (
     <>
-    <div className={getClasses(`fixed z-30 bg-black/35 backdrop-blur-xs h-full w-full transition-all delay-500 ${openMobileMenu ? "block" : "hidden"}`)}></div>
+    <div className={getClasses(`fixed z-40 bg-black/35 backdrop-blur-xs h-full w-full transition-all delay-500 ${openMobileMenu ? "block" : "hidden"}`)}></div>
     <nav className={getClasses(`sticky p-0 z-50 top-0 ${theme === "drak" ? "bg-black/25":"bg-black/5"}  backdrop-blur-2xl h-14`)}>
       <div className={getClasses("flex  justify-between bg-transparent items-center h-full px-6")}>
         {/* Logo */}

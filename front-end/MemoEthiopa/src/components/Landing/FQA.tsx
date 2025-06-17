@@ -47,7 +47,7 @@ const FAQ: React.FC = () => {
         return `${base} ${border} ${themeStyle}`;
     };
     return (
-        <section className={getClassNames("relative mt-1 z-50")}>
+        <section className={getClassNames("relative z-0 mt-1 ")}>
             
             <div className={getClassNames("px-6 py-10 md:py-20 md:px-10 max-w-7xl mx-auto")}>
                 <h2 className={getClassNames("text-3xl font-bold text-center mb-8 ")}>Frequently Asked Questions</h2>

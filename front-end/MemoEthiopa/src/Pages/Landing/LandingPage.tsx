@@ -3,13 +3,14 @@ import { RootState } from '../../store/store';
 import LandingNavBar from '../../components/Landing/LandingNavBer';
 import ThemeSelector from '../../components/TheamSlecter';
 import logo from '../../assets/MemoEthio_logo_4.png';
-import {  Spin } from 'antd';
+import { Spin } from 'antd';
 import LandingPageCarousel from '../../components/Landing/Carousel';
 import Services from '../../components/Landing/Services';
 import Pricing from '../../components/Landing/Pricing';
 import Footer from '../../components/Landing/Footer';
 import FAQ from '../../components/Landing/FQA';
 import { useSelector } from 'react-redux';
+import Chatbot from '../../components/Chatbot';
 
 const LandingPage: React.FC = () => {
     const theme = useSelector((state: RootState) => state.theam.theme);
@@ -30,11 +31,13 @@ const LandingPage: React.FC = () => {
         }, 2000);
         return () => clearTimeout(timer);
     }, []);
-    
+
 
     useEffect(() => {
         document.body.style.overflow = loading ? 'hidden' : 'auto';
     }, [loading]);
+
+    
 
     return (
         <>
@@ -75,10 +78,13 @@ const LandingPage: React.FC = () => {
                         <div className={getClassNames("")}>
                             <FAQ />
                         </div>
-                        <Footer />
+                        <div className="z-">
+                            <Footer />
+                        </div>
                         <div className="bg-transparent fixed bottom-0 left-0 right-0 z-10 flex justify-between items-center p-4">
                             <ThemeSelector />
                         </div>
+                        <Chatbot />
                     </div>
                 </>
             )}

@@ -32,9 +32,9 @@ const LandingPageCarousel: React.FC = () => {
               background: 'url(https://cdn.pixabay.com/photo/2017/04/10/20/15/sticky-notes-2219653_960_720.png)',
               backgroundSize: 'covrer',
               backgroundPosition: 'top',
-              width: '600px', // set a fixed width
-              height: '400px', // set a fixed height
-              borderRadius: '12px' // optional: for better look
+              width: '600px', 
+              height: '400px',
+              borderRadius: '12px' 
             }}
           ></div>
           <div
@@ -83,9 +83,9 @@ const LandingPageCarousel: React.FC = () => {
               background: 'url(https://cdn.pixabay.com/photo/2025/03/01/20/18/ai-generated-9440737_960_720.png)',
               backgroundSize: 'covrer',
               backgroundPosition: 'top',
-              width: '600px', // set a fixed width
-              height: '400px', // set a fixed height
-              borderRadius: '12px' // optional: for better look
+              width: '600px', 
+              height: '400px',
+              borderRadius: '12px' 
             }}
           ></div>
         </div>

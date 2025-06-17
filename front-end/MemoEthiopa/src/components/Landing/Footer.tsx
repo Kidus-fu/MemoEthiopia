@@ -15,7 +15,7 @@ const Footer: React.FC = () => {
         return `${base} ${border} ${themeStyle}`;
     };
     return (
-        <footer className={getClassNames("relative py-10 ")} id="footer">
+        <footer className={getClassNames("relative py-10  ")} id="footer">
             <div className={getClassNames(`max-w-7xl mx-auto p-4 grid grid-cols-1 md:grid-cols-3 gap-8 border-t ${theme === "dark" ? "border-gray-800" : "border-gray-300"}`)}>
 
                 {/* Logo & Mission */}
