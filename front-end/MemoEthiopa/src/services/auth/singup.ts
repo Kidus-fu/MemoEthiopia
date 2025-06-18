@@ -1,19 +1,19 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { singupType } from '../types';
+import { signupType } from '../types';
 
 
-export const singupAPI = createApi({
-    reducerPath: "singupAPI",
+export const signupAPI = createApi({
+    reducerPath: "signupAPI",
     baseQuery: fetchBaseQuery({
         baseUrl: "http://localhost:8000/api-v1/",
     }),
-    tagTypes: ["User"], 
+    tagTypes: [""], 
     endpoints: (builder) => ({
-        postsingup: builder.mutation({
-            query: ({ singupuser }: { singupuser: singupType }) => ({
+        postsignup: builder.mutation({
+            query: ({ signupuser }: { signupuser: signupType }) => ({
                 url: `register/`,
                 method: 'POST',
-                body: singupuser,
+                body: signupuser,
                 headers: {
                     'Content-Type': 'application/json',
                 }
@@ -23,4 +23,4 @@ export const singupAPI = createApi({
     }),
 })
 
-export const { usePostsingupMutation } = singupAPI ;
+export const { usePostsignupMutation } = signupAPI ;

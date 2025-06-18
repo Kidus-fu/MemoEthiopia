@@ -1,20 +1,28 @@
 import { FormProps } from "antd"
 import { useMessage } from "../components/useMessage"
-import { usePostsingupMutation } from "../services/auth/singup"
+import { usePostsignupMutation } from "../services/auth/singup"
 
-import { SingupType } from "../Pages/type"
+import { SignupType } from "../Pages/type"
 import { usePostloginMutation } from "../services/auth/login"
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../config"
 
-export const useSingupFrom = () => {
-    const [postsingup, { isLoading }] = usePostsingupMutation()
+export const useSignupForm = () => {
+    const [postsignup, { isLoading }] = usePostsignupMutation()
     const [postlogin] = usePostloginMutation()
-    const SingupisLoading = isLoading
+    const SignupisLoading = isLoading
     const showMessage = useMessage()
 
-    const SinguponFinish: FormProps<SingupType>['onFinish'] = async (values: any) => {
+    const SignupOnFinish: FormProps<SignupType>['onFinish'] = async (values: any) => {
+        let password = "";
+        let username = "";
+        if (values.password !== values.configpassword) {
+            showMessage("error", "Password and confirm password do not match")
+            return false
+        }
         try {
-            const password = values.password
+            password = values.password
+            username = values.username
+
             const clear_data = {
                 username: values.username,
                 email: values.email,
@@ -22,29 +30,47 @@ export const useSingupFrom = () => {
                 first_name: values.frist_name,
                 last_name: values.last_name
             }
-            const singupResponse = await postsingup({
-                singupuser: clear_data
+            const signupResponse = await postsignup({
+                signupuser: clear_data
             })
 
             if (
-                'error' in singupResponse &&
-                singupResponse.error &&
-                typeof (singupResponse.error as any).status !== "undefined" &&
-                (singupResponse.error as any).status === 400
+                'error' in signupResponse &&
+                signupResponse.error &&
+                typeof (signupResponse.error as any).status !== "undefined" &&
+                (signupResponse.error as any).status === 400
             ) {
-                showMessage("error", "Bad request check your form")
-            }
-
-            console.log(singupResponse)
-            if (singupResponse?.data) {
-                localStorage.setItem("userinfo", JSON.stringify(singupResponse.data));
-            }
-            const username = singupResponse.data.username
-            const login_data = {
+                // showMessage("error", "Bad request check your form")
+                let errorMessages: any = "Signup failed. Please try again.";
+                if (
+                    (signupResponse.error as any).data
+                ) {
+                    errorMessages = (signupResponse.error as any).data;
+                }
+                if (errorMessages.username) {
+                    showMessage("error", errorMessages.username[0]);
+                }
+                if (errorMessages.email) {
+                    showMessage("error", "Email already in use. Please use a different email.");
+                }
+                if (errorMessages.password) {
+                    showMessage("error", errorMessages.password[0]);
+                }
+                if (errorMessages.first_name) {
+                    showMessage("error", errorMessages.first_name[0]);
+                }
+                if (errorMessages.last_name) {
+                    showMessage("error", errorMessages.last_name[0]);
+                }
+                if (errorMessages.error) {
+                    showMessage("error", errorMessages.error);
+                }
+            } else {
+                showMessage("success","Starting login automatically, please wait...")
+                 const login_data = {
                 username: username,
                 password: password
             }
-            console.log(login_data);
 
             const singinResponse = await postlogin({
                 loginuser: login_data,
@@ -64,19 +90,22 @@ export const useSingupFrom = () => {
             localStorage.setItem(ACCESS_TOKEN, access_token)
             localStorage.setItem(REFRESH_TOKEN, resfresh_token)
             window.location.href = "/otp_verification"
+            }
+
+           
             return true
 
         } catch {
 
         }
     }
-    const SinguponFinishFailed: FormProps<SingupType>['onFinishFailed'] = (errorInfo) => {
+    const SignupOnFinishFailed: FormProps<SignupType>['onFinishFailed'] = (errorInfo) => {
         showMessage("warning", "Please fill all required fields.")
         console.log('Validation Failed:', errorInfo);
     };
     return {
-        SinguponFinish,
-        SinguponFinishFailed,
-        SingupisLoading,
+        SignupOnFinish,
+        SignupOnFinishFailed,
+        SignupisLoading,
     };
 }

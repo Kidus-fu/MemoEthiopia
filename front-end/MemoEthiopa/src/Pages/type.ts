@@ -3,7 +3,7 @@ export type SinginType = {
   password?: string;
 };
 
-export type SingupType = {
+export type SignupType = {
     email?: string;
     username?: string;
     frist_name?: string;

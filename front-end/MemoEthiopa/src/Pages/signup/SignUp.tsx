@@ -10,8 +10,8 @@ import SingUpImg from "./singin.png"
 import SingUpImg2 from "./MemoEthiop_singin.png"
 import { logout } from "../../store/features/users/Userinfo";
 import ThemeSelector from "../../components/TheamSlecter";
-import { SingupType } from "../type";
-import { useSingupFrom } from "../../hooks/useSingupForm";
+import { SignupType } from "../type";
+import { useSignupForm } from "../../hooks/useSingupForm";
 
 
 const SignUp: React.FC = () => {
@@ -19,7 +19,7 @@ const SignUp: React.FC = () => {
     const DeveloperTest = useSelector((state: RootState) => state.developertest.border_test);
     const dispatch = useDispatch()
     const [SelecteImg, setSelecteImg] = useState(SingUpImg)
-    const { SinguponFinish, SinguponFinishFailed, SingupisLoading } = useSingupFrom()
+    const { SignupOnFinish, SignupOnFinishFailed, SignupisLoading } = useSignupForm()
     const HandelBgChange = () => {
         if (SelecteImg == SingUpImg) {
             setSelecteImg(SingUpImg2)
@@ -131,32 +131,35 @@ const SignUp: React.FC = () => {
                                         <Form
                                             name="signup"
                                             layout="vertical"
-                                            onFinish={SinguponFinish}
-                                            onFinishFailed={SinguponFinishFailed}
+                                            onFinish={SignupOnFinish}
+                                            onFinishFailed={SignupOnFinishFailed}
                                             autoComplete="off"
-                                            disabled={SingupisLoading}
+                                            disabled={SignupisLoading}
                                         >
-                                            <Form.Item<SingupType> name="username" rules={[{ required: true, message: 'Please enter your username' }]}>
+                                            <Form.Item<SignupType> name="username" rules={[{ required: true, message: 'Please enter your username' }]}>
                                                 <Input placeholder="Username" />
                                             </Form.Item>
 
-                                            <Form.Item<SingupType> name="email" rules={[{ type: 'email', required: true, message: 'Enter a valid email' }]}>
+                                            <Form.Item<SignupType> name="email" rules={[{ type: 'email', required: true, message: 'Enter a valid email' }]}>
                                                 <Input placeholder="example@email.com" />
                                             </Form.Item>
 
                                             <div className="flex gap-4">
-                                                <Form.Item<SingupType> name="frist_name" className="w-1/2" rules={[{ required: true, message: 'Enter first name' }]}>
+                                                <Form.Item<SignupType> name="frist_name" className="w-1/2" rules={[{ required: true, message: 'Enter first name' }]}>
                                                     <Input placeholder="First Name" />
                                                 </Form.Item>
-                                                <Form.Item<SingupType> name="last_name" className="w-1/2" rules={[{ required: true, message: 'Enter last name' }]}>
+                                                <Form.Item<SignupType> name="last_name" className="w-1/2" rules={[{ required: true, message: 'Enter last name' }]}>
                                                     <Input placeholder="Last Name" />
                                                 </Form.Item>
                                             </div>
 
-                                            <Form.Item<SingupType> name="password" rules={[{ required: true, message: 'Enter your password' }]}>
-                                                <Input.Password placeholder="Password" />
+                                            <Form.Item<SignupType> name="password"  rules={[
+                                                { required: true, message: 'Enter your password' },
+                                                { min: 10, message: 'Password must be at least 10 characters long' }
+                                                ]}>
+                                                <Input.Password placeholder="Password"  />
                                             </Form.Item>
-                                            <Form.Item<SingupType> name="configpassword" dependencies={['password']} rules={[{
+                                            <Form.Item<SignupType> name="configpassword"  messageVariables={{ minLength: "10" }}  dependencies={['password']} rules={[{
                                                 required: true,
                                                 message: 'Confirm your password',
                                             }, ({ getFieldValue }) => ({
@@ -170,7 +173,7 @@ const SignUp: React.FC = () => {
                                                 <Input.Password placeholder="Confirm Password" />
                                             </Form.Item>
                                             <Form.Item>
-                                                <Button type="primary" htmlType="submit" block loading={SingupisLoading}>
+                                                <Button type="primary" htmlType="submit" block loading={SignupisLoading} >
                                                     Sign Up
                                                 </Button>
                                             </Form.Item>

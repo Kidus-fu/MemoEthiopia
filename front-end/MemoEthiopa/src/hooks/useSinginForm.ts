@@ -25,6 +25,8 @@ export const useSigninForm = () => {
           email: values.usernameoremail,
           password: values.password
         }
+        
+        
         const emailResponse = await postLogin({
           loginuser: data,
           methodLogin: "email",
@@ -49,6 +51,7 @@ export const useSigninForm = () => {
         username: values.usernameoremail,
         password: values.password
       }
+      console.log(data);
       const usernameResponse = await postLogin({
         loginuser: data,
         methodLogin: "username"

@@ -18,7 +18,7 @@ export type loginType = {
     password: string
 }
 
-export type singupType = {
+export type signupType = {
     username: string,
     email: string,
     password: string,

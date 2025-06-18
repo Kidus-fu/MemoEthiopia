@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import SinginImg from "./singin.png"
 import { validateUsernameEmail } from './FormValidaters';
-import { SingupType } from '../type';
+import { SinginType } from '../type';
 import { backToClentMode, changeToDeveloperMode } from '../../store/features/Developer_test';
 import { RootState } from '../../store/store';
 import MemoEthiopaLogo from "../../assets/MemoEthio_logo_4.png"
@@ -119,16 +119,19 @@ const SignIn: React.FC = () => {
                                                 className={getClassNames("")}
                                                 disabled={SinginisLoading}
                                             >
-                                                <Form.Item<SingupType>
-                                                    name="username"
+                                                <Form.Item<SinginType>
+                                                    name="usernameoremail"
                                                     rules={[{ required: true, message: 'Please input your username or email!', validator: validateUsernameEmail }]}
                                                 >
                                                     <Input prefix={<UserOutlined />} placeholder='username/email' />
                                                 </Form.Item>
 
-                                                <Form.Item<SingupType>
+                                                <Form.Item<SinginType>
                                                     name="password"
-                                                    rules={[{ required: true, message: 'Please input your password!' }]}
+                                                    rules={[
+                                                        { required: true, message: 'Please input your password!' },
+                                                        { min: 10 , message: 'Password must be at least 10 characters long'}
+                                                    ]}
                                                 >
                                                     <Input.Password prefix={<LockFilled />} placeholder='password' />
                                                 </Form.Item>

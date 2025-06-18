@@ -5,7 +5,7 @@ import { usersgetAPI } from '../services/usersget';
 import { notesgetAPI } from '../services/Notes/notesget';
 import theamReducer from "./features/Theam/theam"
 import { loginAPI } from '../services/auth/login';
-// import { singupAPI } from '../services/auth/singup';
+import { signupAPI } from '../services/auth/singup';
 import { userProfileAPI } from '../services/userprofile';
 
 const store = configureStore({
@@ -17,10 +17,16 @@ const store = configureStore({
         [userProfileAPI.reducerPath]: userProfileAPI.reducer,
         [notesgetAPI.reducerPath]: notesgetAPI.reducer,
         [loginAPI.reducerPath]: loginAPI.reducer,
-        // [singupAPI.reducerPath]: singupAPI.reducer,
+        [signupAPI.reducerPath]: signupAPI.reducer,
     },
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(usersgetAPI.middleware, notesgetAPI.middleware, loginAPI.middleware, userProfileAPI.middleware),
+        getDefaultMiddleware().concat(
+            usersgetAPI.middleware,
+            signupAPI.middleware,
+            notesgetAPI.middleware,
+            loginAPI.middleware,
+            userProfileAPI.middleware
+        ),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

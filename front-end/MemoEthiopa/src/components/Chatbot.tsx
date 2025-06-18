@@ -164,7 +164,6 @@ useEffect(() => {
       setChatOpen(false);
     }
   };
-
   const chatDiv = mobilechatdivRef.current;
 
   if (chatDiv) {
