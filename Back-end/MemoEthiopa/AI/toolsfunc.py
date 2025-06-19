@@ -7,6 +7,8 @@ from duckduckgo_search import DDGS
 from deep_translator import GoogleTranslator
 from langchain_core.documents import Document
 
+
+
 load_dotenv()
 
 # Testing

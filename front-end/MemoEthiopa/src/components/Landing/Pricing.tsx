@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store'
+import { ExportOutlined } from '@ant-design/icons';
 
 
 const Pricing: React.FC = () => {
@@ -20,6 +21,7 @@ const Pricing: React.FC = () => {
                 <div className={getClassNames("max-w-2xl mx-auto mb-16 text-center")}>
                     <span className={getClassNames("font-bold tracking-wider  uppercase ")}>Pricing</span>
                     <h2 className={getClassNames("text-4xl font-bold lg:text-5xl")}>Choose your best plan</h2>
+                    <p className='cursor-pointer'>Full price <ExportOutlined /></p>
                 </div>
                 <div className={getClassNames(" flex flex-wrap items-stretch -mx-4 z-50")}>
                     <div className={getClassNames(`flex w-full mb-8 sm:px-4 md:w-1/2 lg:w-1/3 lg:mb-0 border  ${theme === 'dark' ? 'border-gray-700 shadow-[rgb(30,27,51)]' : ' border-gray-300'} shadow-2xl`)}>

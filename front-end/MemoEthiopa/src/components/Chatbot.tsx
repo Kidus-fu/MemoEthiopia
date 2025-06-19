@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { InfoCircleOutlined, CheckOutlined, PlayCircleOutlined, StopOutlined, CopyOutlined, LikeOutlined, DislikeOutlined, } from "@ant-design/icons";
+import { InfoCircleOutlined, CheckOutlined, PlayCircleOutlined, StopOutlined, CopyOutlined, LikeOutlined, DislikeOutlined, CloseOutlined, LikeFilled } from "@ant-design/icons";
 import { useSelector } from 'react-redux';
 import { RootState } from '../../src/store/store';
 import BotLogo from "../../public/Bot.png"
@@ -25,6 +25,8 @@ const ChatBot: React.FC = () => {
   const [chat, setChat] = useState([
     { type: "bot", text: "Ready when you are.", time: "" },
   ]);
+  const [liked, setLiked] = useState(false);
+  const [disliked, setDisliked] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const getClassNames = (base: string) => {
@@ -140,44 +142,40 @@ const ChatBot: React.FC = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chat, botTyping]);
 
-useEffect(() => {
-  let startY = 0;
+  useEffect(() => {
+    let startY = 0;
 
-  const handleTouchStart = (e: TouchEvent) => {
-    startY = e.touches[0].clientY;
-  };
+    const handleTouchStart = (e: TouchEvent) => {
+      startY = e.touches[0].clientY;
+    };
 
-  const handleTouchMove = (e: TouchEvent) => {
-    const currentY = e.touches[0].clientY;
-    const deltaY = currentY - startY;
+    const handleTouchMove = (e: TouchEvent) => {
+      const currentY = e.touches[0].clientY;
+      const deltaY = currentY - startY;
 
-    
-    if (!mobilechatdivRef.current) return;
-    // Animate height shrink
-    const newHeight = Math.max(150, 700 - deltaY);
-    const newOpacity = Math.max(0.2, 1 - deltaY / 500);
-    mobilechatdivRef.current.style.height = `${newHeight}px`;
-    mobilechatdivRef.current.style.opacity = `${newOpacity}`;
-    
-    // Close threshold
-    if (deltaY > 300) {
-      setChatOpen(false);
-    }
-  };
-  const chatDiv = mobilechatdivRef.current;
 
-  if (chatDiv) {
-    chatDiv.addEventListener("touchstart", handleTouchStart, { passive: true });
-    chatDiv.addEventListener("touchmove", handleTouchMove, { passive: true });
-  }
+      if (!mobilechatdivRef.current) return;
 
-  return () => {
+
+      // Close threshold
+      if (deltaY > 300) {
+        setChatOpen(false);
+      }
+    };
+    const chatDiv = mobilechatdivRef.current;
+
     if (chatDiv) {
-      chatDiv.removeEventListener("touchstart", handleTouchStart);
-      chatDiv.removeEventListener("touchmove", handleTouchMove);
+      chatDiv.addEventListener("touchstart", handleTouchStart, { passive: true });
+      chatDiv.addEventListener("touchmove", handleTouchMove, { passive: true });
     }
-  };
-}, [chatOpen]);
+
+    return () => {
+      if (chatDiv) {
+        chatDiv.removeEventListener("touchstart", handleTouchStart);
+        chatDiv.removeEventListener("touchmove", handleTouchMove);
+      }
+    };
+  }, [chatOpen]);
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -186,12 +184,12 @@ useEffect(() => {
     }
   };
 
-  const handleCopy = (text: string, index: number,type:string) => {
+  const handleCopy = (text: string, index: number, type: string) => {
     copyToClipboard(text);
-    if (type === "ai"){
+    if (type === "ai") {
       setCopiedIndexai(index);
       setTimeout(() => setCopiedIndexai(null), 1000);
-    }else {
+    } else {
       setCopiedIndexuser(index);
       setTimeout(() => setCopiedIndexuser(null), 1000);
     }
@@ -244,7 +242,8 @@ useEffect(() => {
       <div className={`fixed z-50 bg-black/35  h-full w-full transition-all delay-500 ${chatOpen ? "block" : "hidden"}`} ></div>
       {chatOpen && (
         <>
-          <div className={getClassNames("fixed md:bottom-10 w-full h-2/3 mb-7 md:right-1.5 z-50 select-none  lg:w-[480px] lg:h-[700px] bottom-0  rounded-xl shadow-lg flex transition-all delay-500 ease flex-col overflow-hidden font-sans")} ref={mobilechatdivRef}>
+          {/* Aude r8 v10 rwd 5.2l 540hp */}
+          <div className={getClassNames(`fixed  w-full h-2/3 mb-7 md:right-2.5 z-50 select-none  lg:w-[490px] lg:h-[720px] bottom-0  rounded-xl shadow-lg flex transition-all delay-500 ease flex-col overflow-hidden font-sans `)} ref={mobilechatdivRef}>
             <p className="text-center" id="closeChat">________</p>
             {/* Header */}
             <div className={`flex items-center justify-between p-4 border-b ${theme === "dark" ? "border-gray-800" : "border-gray-300"}`}>
@@ -261,7 +260,17 @@ useEffect(() => {
                   <p className="text-green-500 text-xs">● Online</p>
                 </div>
               </div>
-              <InfoCircleOutlined className="text-xl " onClick={() => setIsModalOpen(true)} />
+              <div className="flex items-center gap-2">
+
+                <button className=" p-1 rounded-sm transition-all delay-300">
+                  <CloseOutlined className="text-xl cursor-pointer  " onClick={() => {
+                    setChatOpen(false);
+
+                    setVoiceEnabled(false)
+                    stopSpeaking()
+                  }} />
+                </button>
+              </div>
             </div>
 
             {/* Messages */}
@@ -285,23 +294,50 @@ useEffect(() => {
                     </div>
                   </div>
                   <div className="flex gap-1 justify-end">
-                      {copiedIndexuser === index && (
+                    {copiedIndexuser === index && (
                       <span className="text-xs  text-green-500"><CheckOutlined /> Copied!</span>
-                    )}  
-                          {msg.type === "user" && <CopyOutlined className="text-lg" onClick={() => handleCopy(msg.text, index,"user")} />}
+                    )}
+                    {msg.type === "user" && <CopyOutlined className="text-lg" onClick={() => handleCopy(msg.text, index, "user")} />}
                   </div>
                   <div className={`flex gap-1.5 ml-2`}>
                     {msg.type === "bot" && (
                       <>
-                        {voiceEnabled ?
-                          <StopOutlined className="text-lg" onClick={() => stopSpeaking()} /> :
+                        {voiceEnabled ? (
+                          <StopOutlined className="text-lg" onClick={() => stopSpeaking()} />
+                        ) : (
                           <PlayCircleOutlined className="text-lg" onClick={() => handlespeak(msg.text)} />
-                        }
-                        <CopyOutlined className="text-lg" onClick={() => handleCopy(msg.text, index,"ai")} />
-                        <LikeOutlined className="text-lg " onClick={(e) => e.currentTarget.className = "text-lg text-blue-500"} />
-                        <DislikeOutlined className="text-lg" />
+                        )}
 
-                      </>)}
+                        <CopyOutlined
+                          className="text-lg"
+                          onClick={() => handleCopy(msg.text, index, "ai")}
+                        />
+
+                        {/* Like / Dislike */}
+                        {liked ? (
+                          <LikeFilled className="text-lg text-blue-500"  />
+                        ) : (
+                          <>
+                          <LikeOutlined
+                            className="text-lg"
+                            onClick={() => {
+                              setLiked(true);
+                              setDisliked(false);
+                            }}
+                          />
+                          <DislikeOutlined
+                          className={`text-lg ${disliked ? "text-red-500" : ""}`}
+                          onClick={() => {
+                            setDisliked(!disliked);
+                            if (liked) setLiked(false);
+                          }}
+                        />
+                        </>
+                        )}
+
+                        
+                      </>
+                    )}
                     {copiedIndexai === index && (
                       <span className="text-xs  text-green-500"><CheckOutlined /> Copied!</span>
                     )}
@@ -354,6 +390,7 @@ useEffect(() => {
 
             {/* Footer */}
             <div className={`p-3 border-t border ${theme === "dark" ? "border-gray-800" : "border-gray-300"} flex items-center gap-2`}>
+              <InfoCircleOutlined className="text-xl " onClick={() => setIsModalOpen(true)} />
               <input
                 type="text"
                 placeholder="Type your message here..."
@@ -399,17 +436,7 @@ useEffect(() => {
             className="w-6 h-6 rounded-full"
           />
         </button>
-        <button
-          onClick={() => setChatOpen(false)}
-          className={`bg-violet-200/55 m-4 p-3 rounded-full shadow-lg text-white transition-all ${chatOpen ? 'block' : 'hidden'
-            }`}
-        >
-          <img
-            src={BotLogo}
-            alt="Bot"
-            className="w-6 h-6 rounded-full"
-          />
-        </button>
+
       </div>
     </>
   );

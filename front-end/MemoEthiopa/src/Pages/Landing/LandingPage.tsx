@@ -11,6 +11,7 @@ import Footer from '../../components/Landing/Footer';
 import FAQ from '../../components/Landing/FQA';
 import { useSelector } from 'react-redux';
 import Chatbot from '../../components/Chatbot';
+import ContactUs from '../../components/Landing/ContactUs';
 
 const LandingPage: React.FC = () => {
     const theme = useSelector((state: RootState) => state.theam.theme);
@@ -36,6 +37,7 @@ const LandingPage: React.FC = () => {
     useEffect(() => {
         document.body.style.overflow = loading ? 'hidden' : 'auto';
     }, [loading]);
+
 
     
 
@@ -78,6 +80,10 @@ const LandingPage: React.FC = () => {
                         <div className={getClassNames("")}>
                             <FAQ />
                         </div>
+                        <div className={getClassNames("")}>
+                            <ContactUs />
+                        </div>
+
                         <div className="z-">
                             <Footer />
                         </div>

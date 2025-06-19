@@ -98,7 +98,7 @@ const LandingNavBar: React.FC = () => {
           >
             <span className="cursor-pointer" title="Company">Company</span>
             {menuOpen === 1 && (
-              <div className={getClasses("absolute top-full  flex gap-6 shadow-md")}>
+              <div className={getClasses("absolute top-full  flex gap-6 p-2 shadow-md")}>
                 <div>
                   <Link to="/" className="block py-1" onMouseEnter={() => setSubMenuOpen(1)}>About</Link>
                   <Link to="/#footer" className="block py-1" onMouseEnter={() => setSubMenuOpen(2)}>Careers</Link>

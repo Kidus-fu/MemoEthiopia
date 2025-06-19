@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store/store';
 import { BulbOutlined, MoonOutlined, DesktopOutlined } from '@ant-design/icons';
@@ -24,46 +24,49 @@ const ThemeSelector: React.FC = () => {
             dispatch(setTheme(selectedTheme));
         }
     };
+    useEffect(() => {
+        document.body.className = `${theme === 'dark' ? 'bg-[#272727] text-white' : ' bg-[#f8f9fa]  text-black'}`;
+    }, [theme]);
 
-    return (
-        <ConfigProvider
-            theme={{
-                algorithm: theme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
-                token: {
-                    colorPrimary: '#1677ff',
-                    fontSize: 12,
-                },
-            }}
-        >
-            <div className="">
-                <Select
-                    value={theme}
-                    onChange={handleThemeChange}
-                    optionLabelProp="label"
-                    dropdownStyle={{ backgroundColor: theme === 'dark' ? '#141414' : '#fff' }}
-                    style={{ width: 90 }}
-                >
-                    {themes.map((t) => (
-                        <Option
-                            key={t.id}
-                            value={t.id}
-                            label={
-                                <div className="flex items-center gap-2">
-                                    {t.icon}
-                                    <span>{t.label}</span>
-                                </div>
-                            }
-                        >
+return (
+    <ConfigProvider
+        theme={{
+            algorithm: theme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
+            token: {
+                colorPrimary: '#f8f9fa',
+                fontSize: 12,
+            },
+        }}
+    >
+        <div className="">
+            <Select
+                value={theme}
+                onChange={handleThemeChange}
+                optionLabelProp="label"
+                dropdownStyle={{ backgroundColor: theme === 'dark' ? '#141414' : '#f8f9fa' }}
+                style={{ width: 90 }}
+            >
+                {themes.map((t) => (
+                    <Option
+                        key={t.id}
+                        value={t.id}
+                        label={
                             <div className="flex items-center gap-2">
                                 {t.icon}
                                 <span>{t.label}</span>
                             </div>
-                        </Option>
-                    ))}
-                </Select>
-            </div>
-        </ConfigProvider>
-    );
+                        }
+                    >
+                        <div className="flex items-center gap-2">
+                            {t.icon}
+                            <span>{t.label}</span>
+                        </div>
+                    </Option>
+                ))}
+            </Select>
+        </div>
+    </ConfigProvider>
+);
 };
 
 export default ThemeSelector;
