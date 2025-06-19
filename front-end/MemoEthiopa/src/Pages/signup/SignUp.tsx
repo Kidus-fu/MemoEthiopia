@@ -6,8 +6,8 @@ import { Link } from "react-router-dom";
 import { BugFilled, BugOutlined, CaretLeftOutlined, CaretRightOutlined, FacebookFilled, GoogleCircleFilled } from "@ant-design/icons";
 import { backToClentMode, changeToDeveloperMode } from "../../store/features/Developer_test";
 import MemoEthiopaLogo from "../../assets/MemoEthio_logo_4.png"
-import SingUpImg from "./singin.png"
-import SingUpImg2 from "./MemoEthiop_singin.png"
+import SignUpImg from "./singin.png"
+import SignUpImg2 from "./MemoEthiop_singin.png"
 import { logout } from "../../store/features/users/Userinfo";
 import ThemeSelector from "../../components/TheamSlecter";
 import { SignupType } from "../type";
@@ -18,13 +18,13 @@ const SignUp: React.FC = () => {
     const theme = useSelector((state: RootState) => state.theam.theme);
     const DeveloperTest = useSelector((state: RootState) => state.developertest.border_test);
     const dispatch = useDispatch()
-    const [SelecteImg, setSelecteImg] = useState(SingUpImg)
+    const [SelecteImg, setSelecteImg] = useState(SignUpImg)
     const { SignupOnFinish, SignupOnFinishFailed, SignupisLoading } = useSignupForm()
     const HandelBgChange = () => {
-        if (SelecteImg == SingUpImg) {
-            setSelecteImg(SingUpImg2)
+        if (SelecteImg == SignUpImg) {
+            setSelecteImg(SignUpImg2)
         } else {
-            setSelecteImg(SingUpImg)
+            setSelecteImg(SignUpImg)
         }
     }
     const HandelerDeveloperTest = () => {
@@ -73,7 +73,7 @@ const SignUp: React.FC = () => {
                                         <Button type="primary" key="home">
                                             <Link to="/">Go to Home</Link>
                                         </Button>
-                                        <Link to={"/singin"}>
+                                        <Link to={"/signin"}>
                                             <Button type="default" danger key="logout" onClick={() => dispatch(logout())}>
                                                 Logout
                                             </Button>
@@ -180,7 +180,7 @@ const SignUp: React.FC = () => {
 
                                             <p className="text-gray-400 text-center">
                                                 Already have an account?{' '}
-                                                <Link to="/singin" className="text-blue-500 hover:underline">
+                                                <Link to="/signin" className="text-blue-500 hover:underline">
                                                     Sign in
                                                 </Link>
                                             </p>

@@ -181,7 +181,7 @@ const SignIn: React.FC = () => {
                                                 </Badge.Ribbon>
                                                 <p className="text-gray-400 text-center">
                                                     Don't have any account?{' '}
-                                                    <Link to="/singup" className="text-blue-500 hover:underline">
+                                                    <Link to="/signup" className="text-blue-500 hover:underline">
                                                         Sign up
                                                     </Link>
                                                 </p>
