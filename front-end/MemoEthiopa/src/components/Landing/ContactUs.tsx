@@ -95,7 +95,6 @@ const ContactUs: React.FC = () => {
                         </div>
                         <div className={getClassNames("card h-fit max-w-6xl p-5 md:p-12")} id="form">
                             <h2 className={getClassNames("mb-4 text-2xl font-bold")}>Ready to Get Started?</h2>
-                            <form id="contactForm">
                                 <div className={getClassNames("mb-6")}>
                                     <div className={getClassNames("mx-0 mb-1 sm:mb-4")}>
                                         <div className={getClassNames("mx-0 mb-1 sm:mb-4")}>
@@ -110,9 +109,8 @@ const ContactUs: React.FC = () => {
                                     </div>
                                 </div>
                                 <div className={getClassNames("text-center ")}>
-                                    <button type="submit" className={getClassNames("w-full bg-blue-800 text-white px-6 py-3 font-xl rounded-md sm:mb-0")}>Send Message</button>
+                                    <button  className={getClassNames("w-full bg-blue-800 text-white px-6 py-3 font-xl rounded-md sm:mb-0")}>Send Message</button>
                                 </div>
-                            </form>
                         </div>
                     </div>
                 </div>
