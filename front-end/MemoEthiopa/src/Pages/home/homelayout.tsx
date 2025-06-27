@@ -327,7 +327,7 @@ const HomeLayout: React.FC = () => {
                     <div className={getClassNames("h-8 w-8 mt-2 rounded-full cursor-pointer  overflow-hidden flex items-center justify-center")}>
                     {user?.profile_picture ? (
                       <img
-                      src={`https://memoethiopia.onrender.com/${user.profile_picture}`}
+                      src={`https://memoethiopia.onrender.com${user.profile_picture}`}
                       alt="User Avatar"
                       className="h-full w-full object-cover"
                       />
