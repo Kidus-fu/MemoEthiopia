@@ -1,11 +1,11 @@
 import { ACCESS_TOKEN } from "./config"
 import axios from "axios"
 // in Test case
-// const Testendpoint = "http://localhost:8000/"
+const Testendpoint = "http://localhost:8000/"
 
-const endpoint = "https://memoethiopia.onrender.com/"
+// const endpoint = "https://memoethiopia.onrender.com/"
 const api = axios.create({
-    baseURL: endpoint,
+    baseURL: Testendpoint,
 })
 
 api.interceptors.request.use(

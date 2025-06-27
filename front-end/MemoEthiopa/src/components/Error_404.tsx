@@ -14,7 +14,7 @@ const Error404: React.FC = () => {
     const [suggestionClosed, setSuggestionClosed] = useState(false);
     const theme = useSelector((state: RootState) => state.theam.theme);
     const DeveloperTest = useSelector((state: RootState) => state.developertest.border_test);
-    const validRoutes = ['/signup', '/signin', '/otp_verification', '/dashboard'];
+    const validRoutes = ['/signup', '/signin', '/otp_verification', '/developerOptions',"/mynote" ];
     const { getSuggestion } = usePathSuggestion(validRoutes);
     const userPath = useLocation().pathname;
     const suggestion = getSuggestion(userPath);

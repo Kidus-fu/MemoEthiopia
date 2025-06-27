@@ -25,7 +25,7 @@ const ThemeSelector: React.FC = () => {
         }
     };
     useEffect(() => {
-        document.body.className = `${theme === 'dark' ? 'bg-[#272727] text-white' : ' bg-[#f8f9fa]  text-black'}`;
+        document.body.className = `${theme === 'dark' ? 'bg-[#1C1C1C] text-white' : ' bg-[#f8f9fa]  text-black'}`;
     }, [theme]);
 
 return (

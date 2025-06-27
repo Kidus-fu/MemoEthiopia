@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     "notes",
     'otp_auth',
     'AI',
-
 ]
 
 MIDDLEWARE = [

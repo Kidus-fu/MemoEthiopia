@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import userInfoReducer from "./features/users/Userinfo"
+import userReducer from "./features/users/User"
 import DeveloperTestReducer from "./features/Developer_test"
 import { usersgetAPI } from '../services/usersget';
 import { notesgetAPI } from '../services/Notes/notesget';
@@ -11,6 +12,7 @@ import { userProfileAPI } from '../services/userprofile';
 const store = configureStore({
     reducer: {
         userinfo: userInfoReducer,
+        user: userReducer,
         theam: theamReducer,
         developertest: DeveloperTestReducer,
         [usersgetAPI.reducerPath]: usersgetAPI.reducer,

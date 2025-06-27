@@ -1,9 +1,10 @@
 from django.urls import path , include
-from .views import  NoteViewtoUrl, UserCreateViewtoUrl, userinfoViewtoUrl ,EmailLoginView,CategoryViewURL ,NotificationViewURL, GetSharedNoteView, GetSherdNotes,TrashNoteURL,FavoritesURL,FolderURL,NoteOuttoTrashViewURL,ChangePasswordURL
+from .views import  NoteViewtoUrl, UserCreateViewtoUrl, userinfoViewtoUrl ,EmailLoginView,CategoryViewURL ,NotificationViewURL, GetSharedNoteView, GetSherdNotes,TrashNoteURL,FavoritesURL,FolderURL,NoteOuttoTrashViewURL,ChangePasswordURL,GetUser
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+
 urlpatterns = [
     path('shared-notes/', GetSherdNotes.as_view(), name="GetAllSharedNotes"),
     path("shared-notes/note/<uuid:uuid>/",GetSharedNoteView.as_view(), name="get-shared-notes"),
@@ -17,6 +18,7 @@ urlpatterns = [
     path("register/", UserCreateViewtoUrl, name="register"),
     path("users/", userinfoViewtoUrl, name="userinfo"),
     path("users/<uuid:uuid>/", userinfoViewtoUrl, name="userinfo-detail"),
+    path("userget/", GetUser.as_view(), name="userget"),
     path("categories/", CategoryViewURL, name="category-list"),
     path("categories/<int:pk>/", CategoryViewURL, name="category-detail"),
     path("otp/",include("otp_auth.urls")),

@@ -90,12 +90,12 @@ class NoteView(
             if user_name is not None:
                 try:
                     matched_user = User.objects.get(username=user_name)
-                    query = Note.objects.filter(user=matched_user, is_trashed=False)
+                    query = Note.objects.filter(user=matched_user, is_trashed=False).order_by('-pk')
                     return query
                 except user.DoesNotExist:
                     return Note.objects.none() # Return an empty queryset if user not found
         print(user)
-        query = Note.objects.filter(user=user,is_trashed=False)  # Filter notes by the user
+        query = Note.objects.filter(user=user,is_trashed=False).order_by('-pk')  # Filter notes by the user
         return query
 
     def get(self, request, *args, **kwargs):
@@ -146,7 +146,7 @@ class NoteOuttoTrashView(
     permission_classes = [permissions.IsAuthenticated]
     def get_queryset(self):
         user = self.request.user  # Get the currently authenticated user
-        query = Note.objects.filter(user=user,is_trashed=True)  
+        query = Note.objects.filter(user=user,is_trashed=True).order_by('-pk')
         return query
     def put(self, request, *args, **kwargs):
         request.data['user'] = request.user.id 
@@ -156,6 +156,19 @@ class NoteOuttoTrashView(
         return super().update(request, *args, **kwargs)
 NoteOuttoTrashViewURL = NoteOuttoTrashView.as_view()
     
+
+class GetUser(APIView):
+    parser_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            user = request.user.id
+            user_info = userInfo.objects.get(user=user)
+            serialized = userInfoSerializer(user_info)
+            return Response(serialized.data, status=200)
+        except userInfo.DoesNotExist:
+            return Response({"error": "User info not found"}, status=404)
+        
 
 class userinfoView(
     mixins.ListModelMixin,
@@ -187,7 +200,7 @@ class userinfoView(
             
             if user_id is not None:
                 # Filter by user_id if provided
-                query = userInfo.objects.all()
+                query = userInfo.objects.all().order_by('-pk')
                 return query
         query = userInfo.objects.all()
         return query
@@ -255,7 +268,7 @@ class CategoryView(
     permission_classes = [permissions.IsAuthenticated]
     def get_queryset(self):
         user = self.request.user  # Get the currently authenticated user
-        return Category.objects.filter(user=user)  # Filter notes by the user
+        return Category.objects.filter(user=user).order_by('-pk')  # Filter notes by the user
 
     def get(self, request, *args, **kwargs):
         pk = kwargs.get("pk", None)
@@ -313,7 +326,7 @@ class NotificationView(
 
     def get_queryset(self):
         user = self.request.user  # Get the currently authenticated user
-        return Notification.objects.filter(user=user,is_read=False)  # Filter share notes by the user
+        return Notification.objects.filter(user=user,is_read=False).order_by('-pk')  # Filter share notes by the user
 
     def get(self, request, *args, **kwargs):
         pk = kwargs.get("pk", None)
@@ -348,7 +361,7 @@ class FavoritesView (
 
     def get_queryset(self):
         user = self.request.user  # Get the currently authenticated user
-        return Favorite.objects.filter(user=user)  
+        return Favorite.objects.filter(user=user).order_by('-pk')  
 
     def get(self, request, *args, **kwargs):
         pk = kwargs.get("pk", None)
@@ -383,7 +396,7 @@ class TrashNoteView (
 
     def get_queryset(self):
         user = self.request.user  # Get the currently authenticated user
-        return Note.objects.filter(user=user,is_trashed=True)  
+        return Note.objects.filter(user=user,is_trashed=True).order_by('-pk')  
 
     def get(self, request, *args, **kwargs):
         pk = kwargs.get("pk", None)
@@ -401,37 +414,45 @@ class TrashNoteView (
         return Response({"message": "TrashNote deleted successfully"}, status=204)
 TrashNoteURL = TrashNoteView.as_view()
 
-class FolderView (
+from rest_framework import mixins, generics, permissions
+from rest_framework.response import Response
+
+class FolderView(
     mixins.ListModelMixin,
     mixins.RetrieveModelMixin,
     mixins.CreateModelMixin,
     mixins.DestroyModelMixin,
+    mixins.UpdateModelMixin,   # ✅ This is the missing piece
     generics.GenericAPIView
-    ):
-    """
-    Example to a JSOn format
-    ...
-    """
+):
+
     serializer_class = FolderSerializer
     lookup_field = "pk"
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
     def get_queryset(self):
-        user = self.request.user  # Get the currently authenticated user
-        return Folder.objects.filter(user=user)  
+        user = self.request.user
+        return Folder.objects.filter(user=user).order_by('-pk')
+    
 
     def get(self, request, *args, **kwargs):
         pk = kwargs.get("pk", None)
-        if pk is None:  
+        if pk is None:
             return self.list(request, *args, **kwargs)
         return self.retrieve(request, *args, **kwargs)
+
     def post(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
+        request.data['user'] = request.user.id  
+        return self.create(request, *args, **kwargs)
+
     def put(self, request, *args, **kwargs):
-        return super().update(request, *args, **kwargs)
+        return self.update(request, *args, **kwargs)
+
     def patch(self, request, *args, **kwargs):
-        return super().update(request, *args, **kwargs)
+        return self.partial_update(request, *args, **kwargs)
+
     def delete(self, request, *args, **kwargs):
-        super().destroy(request, *args, **kwargs)
+        self.destroy(request, *args, **kwargs)
         return Response({"message": "Folder deleted successfully"}, status=204)
+
 FolderURL = FolderView.as_view()
+

@@ -1,1 +1,18 @@
 @import "tailwindcss";
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+body {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+@layer base {
+  html, body {
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+}

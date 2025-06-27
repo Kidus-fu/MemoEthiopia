@@ -22,6 +22,7 @@ class AiChatSerializer(serializers.Serializer):
 class NoteSerializer(serializers.ModelSerializer):
     user_info = serializers.SerializerMethodField()
     absolute_url = serializers.SerializerMethodField()
+    folder = serializers.SerializerMethodField()
     class Meta:
         model = Note # serializers take model
         fields = [
@@ -45,6 +46,8 @@ class NoteSerializer(serializers.ModelSerializer):
 
     def get_absolute_url(self, obj):
         return obj.get_absolute_url()
+    def get_folder(self,obj):
+        return obj.folderGet()
     def get_user_info(self, obj):
         username = obj.user.username
         id = obj.user.id
@@ -114,10 +117,12 @@ class ChangePasswordSerializer(serializers.Serializer):
 
 class userInfoSerializer(serializers.ModelSerializer):
     usermore = serializers.SerializerMethodField()
+    is_superuser = serializers.SerializerMethodField()
     class Meta:
         model = userInfo # serializers take model 
         fields = [
             "bio",
+            "is_superuser",
             "id",
             "is_verified",
             "joined_at",
@@ -133,6 +138,8 @@ class userInfoSerializer(serializers.ModelSerializer):
             "social_links",
             "preferred_language"
         ]
+    def get_is_superuser(self,obj):
+        return obj.is_superuser()
     def get_usermore(self, obj):
         return {
             "email": obj.user.email,
@@ -333,12 +340,19 @@ class TrashNoteSerializer(serializers.ModelSerializer):
 class FolderSerializer(serializers.ModelSerializer):
     notes = serializers.SerializerMethodField()
     user_info = serializers.SerializerMethodField()
+    name = serializers.CharField(
+        required=True,
+        validators=[
+            UniqueValidator(queryset=Folder.objects.all(), message="Folder name is already taken.")
+        ]
+    )
 
     class Meta:
+        ordering = ['-id']
         model = Folder
         fields = ["id","name","user","created_at","notes","user_info"]
     def get_notes(self, obj):
-        notes = obj.notes.all()
+        notes = obj.notes.all().order_by('-pk')
         return NoteSerializer(notes, many=True).data
     def get_user_info(self, obj):
         username = obj.user.username

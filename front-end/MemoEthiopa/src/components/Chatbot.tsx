@@ -10,7 +10,15 @@ import { Button, ConfigProvider, Modal, theme as antdTheme } from "antd";
 
 
 
-const ChatBot: React.FC = () => {
+interface ChatBotProps {
+  name: string;
+  uuid: string;
+  plan: string;
+  bio: string;
+  location: string;
+}
+
+const ChatBot: React.FC<ChatBotProps> = ({ name, uuid, plan, bio, location }) => {
   const [message, setMessage] = useState("");
   const theme = useSelector((state: RootState) => state.theam.theme);
   const DeveloperTest = useSelector((state: RootState) => state.developertest.border_test);
@@ -114,12 +122,12 @@ const ChatBot: React.FC = () => {
     const data = {
       message: message,
       user_info: {
-        name: "",
-        bio: "",
+        name: name,
+        bio: bio,
         joined_at: date,
-        plan: "free",
-        location: '',
-        uuid: "",
+        plan: plan,
+        location: location,
+        uuid: uuid,
         is_verified: false,
       },
     };

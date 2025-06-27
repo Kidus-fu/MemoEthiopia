@@ -54,9 +54,9 @@ const LandingNavBar: React.FC = () => {
   }, []);
   useEffect(() => {
     if (openMobileMenu) {
-      document.body.style.overflow = "hidden"; // Prevent body scroll when menu is open
+      document.body.style.overflow = "hidden"; 
     } else {
-      document.body.style.overflow = "auto"; // Allow body scroll when menu is closed
+      document.body.style.overflow = "auto"; 
     }
   }
     , [openMobileMenu]);
@@ -136,12 +136,12 @@ const LandingNavBar: React.FC = () => {
             onMouseEnter={() => setMenuOpen(3)}
             onMouseLeave={() => setMenuOpen(null)}
           >
-            <span title="Developer Options">Developer Options</span>
+           <Link to={"/developerOptions"} ><span title="Developer Options">Developer Options</span></Link>
             {menuOpen === 3 && (
               <div className={getClasses("absolute top-full  p-3 shadow-md w-48")}>
-                <Link to="/" className="block py-1">Child Menu 1</Link>
-                <Link to="/" className="block py-1">Child Menu 2</Link>
-                <Link to="/" className="block py-1">Child Menu 3</Link>
+                <Link to="/developerOptions/front-end" className="block py-1">Front End</Link>
+                <Link to="/developerOptions/back-end" className="block py-1">Back End</Link>
+                <Link to="/developerOptions/ai-agent" className="block py-1">AI Agent</Link>
               </div>
             )}
           </li>

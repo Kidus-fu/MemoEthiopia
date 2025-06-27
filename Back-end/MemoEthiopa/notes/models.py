@@ -24,6 +24,10 @@ class userInfo(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.uuid}"
+    def is_superuser(self):
+        print(self.user.user_permissions)
+        return self.user.is_superuser
+
 
 class Favorite(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="favorites")
@@ -60,6 +64,8 @@ class Note(models.Model):
     is_trashed = models.BooleanField(default=False)  # To track if the note is in trash
     def __str__(self):
         return f"{self.title} - {self.user.username}"
+    def folderGet(self):
+        return self.folder.name if self.folder else None
     def get_absolute_url(self):
         URL = f"https://memoethiopia.onrender.com/api-v1/notes/{self.id}/"
         return URL
