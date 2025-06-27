@@ -15,7 +15,6 @@ import ContactUs from '../../components/Landing/ContactUs';
 
 const LandingPage: React.FC = () => {
     const theme = useSelector((state: RootState) => state.theam.theme);
-    const [loading, setLoading] = React.useState(true);
     const DeveloperTest = useSelector((state: RootState) => state.developertest.border_test);
 
     const getClassNames = (base: string) => {
@@ -27,23 +26,11 @@ const LandingPage: React.FC = () => {
     };
     useEffect(() => {
         document.title = 'Memo Ethiopia | Landing Page';
-        const timer = setTimeout(() => {
-            setLoading(false);
-        }, 2000);
-        return () => clearTimeout(timer);
     }, []);
-
-
-    useEffect(() => {
-        document.body.style.overflow = loading ? 'hidden' : 'auto';
-    }, [loading]);
-
-
-
 
     return (
         <>
-            {loading ? (
+            {false ? (
                 <div className={getClassNames('flex items-center justify-center h-screen transition-all duration-300 ease-in ')}>
                     <div className="flex flex-col items-center justify-center p-6 rounded-xl  animate-fadeIn space-y-4">
                         <img

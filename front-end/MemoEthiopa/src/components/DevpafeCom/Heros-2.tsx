@@ -28,7 +28,7 @@ const Heros2: React.FC = () => {
     };
 
     return (
-        <div className={getClassNames('relative mt-8 z-30')}>
+        <div className={getClassNames('relative mt-8 z-0')}>
             <div
                 className={getClassNames(`absolute top-0 left-0 z-0 h-1/4 w-1/6 blur-3xl ${theme === 'dark' ? "bg-gradient-to-b from-violet-900/50 to-blue-900/15" : "bg-black/10"} blur-2xl`)}
             />

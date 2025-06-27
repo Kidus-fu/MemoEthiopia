@@ -1,7 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
-import LandingNavBar from '../Landing/LandingNavBer';
 import bgImg from '../../../public/Contactbg-white.png';
 import { motion } from 'framer-motion';
 
@@ -18,7 +17,7 @@ const Heros1: React.FC = () => {
 
   return (
     <div className={getClassNames('relative z-10 mt-1')}>
-      <LandingNavBar />
+      
       <div className={getClassNames('p-2')}>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
 

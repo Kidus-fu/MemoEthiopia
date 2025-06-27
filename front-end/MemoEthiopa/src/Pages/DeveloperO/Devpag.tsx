@@ -5,7 +5,7 @@ import Heros1 from '../../components/DevpafeCom/Heros-1';
 import Heros2 from '../../components/DevpafeCom/Heros-2';
 import DocmRev from '../../components/DevpafeCom/DocmRev';
 import Footer from '../../components/Landing/Footer';
-import ThemeSelector from '../../components/TheamSlecter';
+import LandingNavBar from '../../components/Landing/LandingNavBer';
 
 const Devpag: React.FC = () => {
     const theme = useSelector((state: RootState) => state.theam.theme);
@@ -22,8 +22,8 @@ const Devpag: React.FC = () => {
 
     return (
         <div className={getClassNames('relative z-0 mt-1')}>
+            <LandingNavBar />
            <Heros1 />
-           <ThemeSelector />
            <Heros2 />
            <DocmRev />
            
