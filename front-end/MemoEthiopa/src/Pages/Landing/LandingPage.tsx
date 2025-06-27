@@ -39,7 +39,7 @@ const LandingPage: React.FC = () => {
     }, [loading]);
 
 
-    
+
 
     return (
         <>
@@ -90,7 +90,14 @@ const LandingPage: React.FC = () => {
                         <div className="bg-transparent fixed bottom-0 left-0 right-0 z-10 flex justify-between items-center p-4">
                             <ThemeSelector />
                         </div>
-                        <Chatbot />
+                        <Chatbot
+                            name="Guest"
+                            uuid="guest-uuid"
+                            plan="free"
+                            bio="Guest user"
+                            location="Unknown"
+                        />
+
                     </div>
                 </>
             )}
