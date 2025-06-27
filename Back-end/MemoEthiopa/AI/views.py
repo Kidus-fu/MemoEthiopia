@@ -72,7 +72,7 @@ class ChatSessionView(
     queryset = ChatSession.objects.all()
     serializer_class = ChatSessionSerializer
     lookup_field = "uuid"
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
     def get(self, request, *args, **kwargs):
         uuid = kwargs.get("uuid", None)
         if uuid is None:  # List all notes for the authenticated user

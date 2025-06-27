@@ -77,7 +77,7 @@ class NoteView(
     serializer_class = NoteSerializer
     lookup_field = "uuid"
     
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
     
     def get_queryset(self):
         user = self.request.user  # Get the currently authenticated user
@@ -322,7 +322,7 @@ class NotificationView(
     """
     serializer_class = NotificationSerializer
     lookup_field = "pk"
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user  # Get the currently authenticated user
@@ -357,7 +357,7 @@ class FavoritesView (
     """
     serializer_class = FavoriteSerializer
     lookup_field = "pk"
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user  # Get the currently authenticated user
@@ -392,7 +392,7 @@ class TrashNoteView (
     """
     serializer_class = NoteSerializer
     lookup_field = "pk"
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user  # Get the currently authenticated user
@@ -428,7 +428,7 @@ class FolderView(
 
     serializer_class = FolderSerializer
     lookup_field = "pk"
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
     def get_queryset(self):
         user = self.request.user
         return Folder.objects.filter(user=user).order_by('-pk')

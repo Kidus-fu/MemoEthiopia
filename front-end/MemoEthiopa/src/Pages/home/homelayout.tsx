@@ -22,6 +22,7 @@ interface FolderState {
 const HomeLayout: React.FC = () => {
   const theme = useSelector((state: RootState) => state.theam.theme);
   const user = useSelector((state: RootState) => state.user);  
+  const loggedIn = useSelector((state: RootState) => state.userinfo.loggedIn)
   const DeveloperTest = useSelector((state: RootState) => state.developertest.border_test);
   const [loading, setLoading] = useState(true)
   const [localoading, setLocaloading] = useState(false)
@@ -103,7 +104,10 @@ const HomeLayout: React.FC = () => {
     const themeStyle = theme === 'dark' ? ' bg-[#1C1C1C] text-white' : 'bg-[#F3F6FB] text-gray-600';
     return `${base} ${border} ${themeStyle}`;
   };
-  useEffect(() => {
+  useEffect(() => {    
+    if (!loggedIn){
+      window.location.href = "/"
+    }else{
     api.get("api-v1/folders/")
       .then(res => {
         const data = res.data.results
@@ -111,6 +115,7 @@ const HomeLayout: React.FC = () => {
         setLoading(false)
       })
       dispatch(fetchUserData())      
+    }
   }, [loading])
   const handelFolderDelete = (id: any) => {
     setLocaloading(true)
