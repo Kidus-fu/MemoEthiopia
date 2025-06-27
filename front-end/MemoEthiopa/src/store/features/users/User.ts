@@ -2,6 +2,13 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import api from "../../../api";
 
+interface UserMore {
+    email: string;
+    first_name: string;
+    last_name: string;
+    username: string;
+}
+
 interface UserState {
   bio?: string | null;
   id?: number | null;
@@ -10,7 +17,7 @@ interface UserState {
   paln?: string | null;
   profile_picture?: string | null;
   user?: number | null;
-  usermore?: object | null;
+  usermore?: UserMore | null;
   uuid?: string | null;
   phone_number?: string | null;
   location?: string | null;

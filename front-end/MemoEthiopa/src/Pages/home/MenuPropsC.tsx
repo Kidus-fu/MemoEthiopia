@@ -94,6 +94,7 @@ export const useUserMenuItems = (): MenuProps['items'] => {
 };
 export const useNoteItems = (): MenuProps['items'] => {
   const user = useSelector((state: RootState) => state.user);
+  
   const showMessage = useMessage()
   const copyToClipboard = async (text: string,mes:string) => {
     try {

@@ -322,7 +322,7 @@ const HomeLayout: React.FC = () => {
                   },
                 }}>
                    
-                <Dropdown menu={{ items: useritems }} trigger={["click"]}  placement="bottomCenter" 
+                <Dropdown menu={{ items: useritems }} trigger={["click"]}  placement="bottomLeft" 
                  overlayStyle={{ width: 220, height: 220 ,borderRadius : 20}}>
                     <div className={getClassNames("h-8 w-8 mt-2 rounded-full cursor-pointer  overflow-hidden flex items-center justify-center")}>
                     {user?.profile_picture ? (
