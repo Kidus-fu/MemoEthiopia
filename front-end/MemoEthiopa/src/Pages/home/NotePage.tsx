@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { RootState } from "../../store/store";
 import { useEffect, useState } from "react";
 import api from "../../api";
@@ -7,9 +7,8 @@ import dayjs from "dayjs";
 import { ConfigProvider, Dropdown, Spin, theme as antdTheme } from "antd";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { EllipsisOutlined, FolderFilled, ScheduleOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, EllipsisOutlined, FolderFilled, ScheduleOutlined } from "@ant-design/icons";
 import { useNoteItems } from "./MenuPropsC";
-
 export interface UserInfo {
   bio: string;
   email: string;
@@ -50,10 +49,9 @@ const NotePage = () => {
   const theme = useSelector((state: RootState) => state.theam.theme);
   const DeveloperTest = useSelector((state: RootState) => state.developertest.border_test);
   const noteitems = useNoteItems()
-
+  const navigate = useNavigate();
   const [note, setNote] = useState<NoteItem>();
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     setLoading(true);
     api(`api-v1/notes/${noteId}/`)
@@ -77,10 +75,14 @@ const NotePage = () => {
           <Spin fullscreen={true} />
         </div>
       ) : (
-        <div className={getClassNames("px-4 w-full")}>
-          <div className={getClassNames("md:sticky md:top-0 z-40 p-9 w-full")}>
+        <div className={getClassNames("h-screen  w-full")}>
+          
+          <div className={getClassNames("fixed md:sticky top-0 z-40 px-3 md:p-8 w-full")}>
             <div className="flex justify-between">
-              <h1 className="text-2xl md:text-5xl font-bold mb-2">{note?.title}</h1>
+              <div className="text-lg cursor-pointer" title="back" onClick={() => navigate('/feed')}>
+              <ArrowLeftOutlined />
+          </div>
+              <h1 className="text-2xl md:text-4xl font-bold mb-2">{note?.title}</h1>
               <div className="">
                 <ConfigProvider theme={{
                   algorithm: theme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
@@ -116,7 +118,7 @@ const NotePage = () => {
             <p className="underline">{note?.folder}</p>
           </div>
 
-          <div className={getClassNames("text-base whitespace-pre-line caption-top")}>
+          <div className={getClassNames("text-base p-4 whitespace-pre-line caption-top")}>
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{

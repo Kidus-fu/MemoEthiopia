@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../../store/store';
 import NoteList from './NoteList';
 import { Outlet, useMatch } from 'react-router-dom';
-import {  BugFilled, BugOutlined, ExportOutlined, FileTextOutlined, FolderAddFilled, FolderFilled, FolderOpenFilled, InboxOutlined,  MoreOutlined,  ReloadOutlined, RestOutlined, SearchOutlined, StarOutlined, UserOutlined } from '@ant-design/icons';
+import { BugFilled, BugOutlined, CloseOutlined, ExportOutlined, FileTextOutlined, FolderAddFilled, FolderFilled, FolderOpenFilled, InboxOutlined, MoreOutlined, ReloadOutlined, RestOutlined, SearchOutlined, StarOutlined, UserOutlined } from '@ant-design/icons';
 import ThemeSelector from '../../components/TheamSlecter';
 import api from '../../api';
-import {  ConfigProvider, Dropdown, Popover, Skeleton, Spin, theme as antdTheme } from 'antd';
+import { ConfigProvider, Dropdown, Popover, Skeleton, Spin, theme as antdTheme } from 'antd';
 import logo from '../../assets/MemoEthio_logo_4.png';
 import { backToClentMode, changeToDeveloperMode } from '../../store/features/Developer_test';
 import { Folderitems, useUserMenuItems } from "./MenuPropsC"
@@ -21,7 +21,7 @@ interface FolderState {
 
 const HomeLayout: React.FC = () => {
   const theme = useSelector((state: RootState) => state.theam.theme);
-  const user = useSelector((state: RootState) => state.user);  
+  const user = useSelector((state: RootState) => state.user);
   const loggedIn = useSelector((state: RootState) => state.userinfo.loggedIn)
   const DeveloperTest = useSelector((state: RootState) => state.developertest.border_test);
   const [loading, setLoading] = useState(true)
@@ -41,7 +41,7 @@ const HomeLayout: React.FC = () => {
   const [folderNameError, setFolderNameError] = useState(false)
   const match = useMatch("/feed/mynote/:uuid");
   const [mobileSidebar, setMobileSidebar] = useState(false)
-   const useritems = useUserMenuItems();
+  const useritems = useUserMenuItems();
   const handleOpenforder = (name: string) => {
     if (folders) {
       folders.map((folder) => {
@@ -104,17 +104,17 @@ const HomeLayout: React.FC = () => {
     const themeStyle = theme === 'dark' ? ' bg-[#1C1C1C] text-white' : 'bg-[#F3F6FB] text-gray-600';
     return `${base} ${border} ${themeStyle}`;
   };
-  useEffect(() => {    
-    if (!loggedIn){
+  useEffect(() => {
+    if (!loggedIn) {
       window.location.href = "/"
-    }else{
-    api.get("api-v1/folders/")
-      .then(res => {
-        const data = res.data.results
-        setFolders(data)
-        setLoading(false)
-      })
-      dispatch(fetchUserData())      
+    } else {
+      api.get("api-v1/folders/")
+        .then(res => {
+          const data = res.data.results
+          setFolders(data)
+          setLoading(false)
+        })
+      dispatch(fetchUserData())
     }
   }, [loading])
   const handelFolderDelete = (id: any) => {
@@ -272,7 +272,7 @@ const HomeLayout: React.FC = () => {
         </div>
       ) : (
         <>
-          <div className={`sticky hidden px-5 p-1 justify-between md:flex top-0 z-50 ${theme === "dark" ? "bg-[#1f1f1f]" : "bg-[#ffffff33]"} w-full`}
+          <div className={`sticky hidden  px-5 p-1 justify-between md:flex top-0 z-50 ${theme === "dark" ? "bg-[#1f1f1f]" : "bg-[#ffffff33]"} w-full`}
             onContextMenu={(e) => e.preventDefault()}
           >
             <div className="flex gap-2">
@@ -313,30 +313,30 @@ const HomeLayout: React.FC = () => {
               </div>
             </div>
             <div className="flex gap-2">
-                <ConfigProvider theme={{
-                  algorithm: theme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
-                  components: {
-                    Dropdown: {
-                      paddingBlock: 10,
-                    }
-                  },
-                }}>
-                   
-                <Dropdown menu={{ items: useritems }} trigger={["click"]}  placement="bottomLeft" 
-                 overlayStyle={{ width: 220, height: 220 ,borderRadius : 20}}>
-                    <div className={getClassNames("h-8 w-8 mt-2 rounded-full cursor-pointer  overflow-hidden flex items-center justify-center")}>
+              <ConfigProvider theme={{
+                algorithm: theme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
+                components: {
+                  Dropdown: {
+                    paddingBlock: 10,
+                  }
+                },
+              }}>
+
+                <Dropdown menu={{ items: useritems }} trigger={["click"]} placement="bottomLeft"
+                  overlayStyle={{ width: 220, height: 220, borderRadius: 20 }}>
+                  <div className={getClassNames("h-8 w-8 mt-2 rounded-full cursor-pointer  overflow-hidden flex items-center justify-center")}>
                     {user?.profile_picture ? (
                       <img
-                      src={`https://memoethiopia.onrender.com${user.profile_picture}`}
-                      alt="User Avatar"
-                      className="h-full w-full object-cover"
+                        src={`https://memoethiopia.onrender.com${user.profile_picture}`}
+                        alt="User Avatar"
+                        className="h-full w-full object-cover"
                       />
                     ) : (
                       <UserOutlined className={" text-2xl "} />
                     )}
-                    </div>
-                  </Dropdown>
-                </ConfigProvider>
+                  </div>
+                </Dropdown>
+              </ConfigProvider>
             </div>
           </div>
 
@@ -347,8 +347,8 @@ const HomeLayout: React.FC = () => {
             {localoading && <Spin fullscreen={true} tip='just a sec.' />}
             {/* Sidebar */}
             <aside className={getClassNames(` ${mobileSidebar ? 'fixed z-50 ease-in' : 'hidden'} lg:w-1/5  py-4 px-4 mb-3 h-screen lg:flex  flex-col transition-all delay-500 overflow-y-auto `)} style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-              <div className={getClassNames(`${mobileSidebar ? 'fixed  right-5  top-2' : 'hidden'}`)}>
-                <button className={getClassNames("")}>X</button>
+              <div className={getClassNames(`${mobileSidebar ? 'flex justify-end items-end  right-5  top-2' : 'hidden'}`)}>
+                <button className={getClassNames("text-xl")} onClick={() => setMobileSidebar(false)}><CloseOutlined /></button>
               </div>
               <div
                 onClick={() => {
@@ -473,8 +473,10 @@ const HomeLayout: React.FC = () => {
                                     }}
                                     className={getClassNames("bg-transparent")}
                                     onTouchStart={() => {
-                                      setMobileSidebar(false)
                                       handleOpenforder(folder.name)
+                                      setTimeout(() => {
+                                        setMobileSidebar(false)
+                                      }, 3000);
                                       setNewfoldercreate(false)
                                       setNewFoldersNameC("")
                                     }}
@@ -531,7 +533,7 @@ const HomeLayout: React.FC = () => {
                   <div className="text-md mb-2 cursor-pointer">
                     <RestOutlined /> Tarsh
                   </div>
-                  
+
 
                   <div className="">
 
@@ -539,8 +541,13 @@ const HomeLayout: React.FC = () => {
                 </div>
               </div>
             </aside >
-            {/* Notes List */}
-            < NoteList foldernotes={openForder} />
+            <div className="relative  h-screen">
+              <div className="absolute h-screen inset-0 bg-white"></div>
+               <NoteList foldernotes={openForder} />
+              
+            </div>
+
+
 
             {/* Note content */}
             < main
@@ -556,9 +563,9 @@ const HomeLayout: React.FC = () => {
                 </div>
               )}
             </main>
-              <div className={getClassNames(`fixed top - 0 left - 0 right - 0 bottom - 0 p - 6 h - screen overflow - y - auto lg:static lg: h - auto lg: flex`)}>
-                  <Outlet />
-                </div>
+            <div className={getClassNames(`fixed top - 0 left - 0 right - 0 bottom - 0 p - 6 h - screen overflow - y - auto lg:static lg: h - auto lg: flex`)}>
+              <Outlet />
+            </div>
 
             <Popover title="1 Click to Off, Double Click to On">
               <button

@@ -40,7 +40,7 @@ const NoteList: React.FC<FoldernotesState> = ({ foldernotes }) => {
     <>
       {foldernotes ? (
         <div
-          className={getClassNames(`md:h-screen w-auto  `)}
+          className={getClassNames(`h-screen w-auto  `)}
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           <section className={getClassNames("w-full  overflow-y-auto py-8 ")}>
@@ -122,7 +122,7 @@ const NoteList: React.FC<FoldernotesState> = ({ foldernotes }) => {
         </div>
       ) : (
         <div
-          className={getClassNames("hidden w-90 md:block h-screen overflow-auto")}
+          className={getClassNames("w-full md:w-90 h-screen overflow-auto")}
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
           <section className={getClassNames(" overflow-y-auto py-8")}>
             <div className={getClassNames("h-full mt-40 flex items-center justify-center")}>

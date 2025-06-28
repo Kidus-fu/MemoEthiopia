@@ -110,22 +110,28 @@ export const useNoteItems = (): MenuProps['items'] => {
     {
       key: '1',
       className:"p-2",
+      label: "Edit",
+      icon: <EditOutlined />,
+    },
+    {
+      key: '2',
+      className:"p-2",
       label: "Add to favorites",
       icon: <StarOutlined />,
       onClick: () => {copyToClipboard(`User-${user?.uuid}`,"Copied your User ID to clipboard")}
     },
     {
-      key: '2',
+      key: '3',
       className:`p-2`,
       label: "Archived",
       icon: <InboxOutlined />
     },
     {
-      key:'3',
+      key:'4',
       type:'divider'
     },
     {
-      key: '4',
+      key: '5',
       label: 'Add to Trash',
       icon: <DeleteOutlined />,
       danger: true,
