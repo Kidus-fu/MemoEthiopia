@@ -352,7 +352,7 @@ class FolderSerializer(serializers.ModelSerializer):
         model = Folder
         fields = ["id","name","user","created_at","notes","user_info"]
     def get_notes(self, obj):
-        notes = obj.notes.all().order_by('-pk')
+        notes = obj.notes.filter(is_trashed=False).order_by('-pk')
         return NoteSerializer(notes, many=True).data
     def get_user_info(self, obj):
         username = obj.user.username

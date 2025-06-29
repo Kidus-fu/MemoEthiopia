@@ -94,7 +94,6 @@ class NoteView(
                     return query
                 except user.DoesNotExist:
                     return Note.objects.none() # Return an empty queryset if user not found
-        print(user)
         query = Note.objects.filter(user=user,is_trashed=False).order_by('-pk')  # Filter notes by the user
         return query
 

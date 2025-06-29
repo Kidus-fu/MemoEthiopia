@@ -52,9 +52,47 @@ const NoteList: React.FC<FoldernotesState> = ({ foldernotes }) => {
         "is_archived": !note_isarchived
       }
     )
+      .then(() => {
+        showMessage("success", `${note_isarchived ? 'unArchived ' + notetitle : 'Archived ' + notetitle}`)
+      })
+      .catch((err) => {
+        console.log(err);
+        
+      })
+      .finally(() => {
+        api.get("api-v1/folders/")
+          .then(res => {
+            if (res.status === 200) {
+              const data = res.data.results
+              const newdata = data.filter((folder: any) => folder.name.toLowerCase().includes(foldernotes.name.toLowerCase()))
+
+              const sortedNotes = [...newdata[0].notes].sort((a, b) => {
+                if (a.is_pinned && !b.is_pinned) return -1;
+                if (!a.is_pinned && b.is_pinned) return 1;
+                return 0; // retain original order otherwise
+              });
+
+              setNotes(sortedNotes);
+              setLocaloading(false)
+            } else {
+              console.error("get error to fauch a notes")
+            }
+          })
+        setLoading(false)
+      })
+  }
+  const handelTrash = (noteuuid: string, notecontent: string, notetitle: string) => {
+    setLocaloading(true)
+    api.patch(`api-v1/notes/${noteuuid}/`,
+      {
+        'content': notecontent,
+        'title': notetitle,
+        "is_trashed": true
+      }
+    )
       .then((res) => {
         console.log(res);
-        showMessage("success", `${note_isarchived ? 'unArchived ' + notetitle : 'Archived ' + notetitle}`)
+        showMessage("success", `Note ${notetitle} is go to trash`)
       })
       .finally(() => {
         api.get("api-v1/folders/")
@@ -139,17 +177,16 @@ const NoteList: React.FC<FoldernotesState> = ({ foldernotes }) => {
                               className: "p-2 ",
                               label: "Open",
                               icon: <EyeFilled />,
-                              onClick : () => {
-                            setSelect(note.uuid);
-                            navigate(`/feed/mynote/${note.uuid}`);
-                          }   
+                              onClick: () => {
+                                setSelect(note.uuid);
+                                navigate(`/feed/mynote/${note.uuid}`);
+                              }
                             },
                             {
                               key: '3',
                               className: "p-2 ",
                               label: "Detiles",
                               icon: <InfoCircleOutlined />,
-                              
                             },
                             {
                               key: '4',
@@ -167,6 +204,10 @@ const NoteList: React.FC<FoldernotesState> = ({ foldernotes }) => {
                               label: 'Add to Trash',
                               icon: <DeleteOutlined />,
                               danger: true,
+                              onClick: () => {
+                                handelTrash(note.uuid, note.content, note.title)
+                                navigate(`/feed/`);
+                              }
                             }
                           ],
                         }}
