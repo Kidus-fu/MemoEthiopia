@@ -3,12 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../../store/store';
 import NoteList from './NoteList';
 import { Outlet, useMatch } from 'react-router-dom';
-import { BugFilled, BugOutlined, CloseOutlined, ExportOutlined, FileTextOutlined, FolderAddFilled, FolderFilled, FolderOpenFilled, InboxOutlined, MoreOutlined, ReloadOutlined, RestOutlined, SearchOutlined, StarOutlined, UserOutlined } from '@ant-design/icons';
+import { AlignLeftOutlined, CloseOutlined, ExportOutlined, FileTextOutlined, FolderAddFilled, FolderFilled, FolderOpenFilled, InboxOutlined, MoreOutlined, ReloadOutlined, RestOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
 import ThemeSelector from '../../components/TheamSlecter';
 import api from '../../api';
-import { ConfigProvider, Dropdown, Popover, Skeleton, Spin, theme as antdTheme } from 'antd';
+import { ConfigProvider, Dropdown,  Skeleton, Spin, theme as antdTheme } from 'antd';
 import logo from '../../assets/MemoEthio_logo_4.png';
-import { backToClentMode, changeToDeveloperMode } from '../../store/features/Developer_test';
 import { Folderitems, useUserMenuItems } from "./MenuPropsC"
 import { fetchUserData } from '../../store/features/users/User';
 
@@ -51,12 +50,6 @@ const HomeLayout: React.FC = () => {
       })
     }
   };
-  const HandelerDeveloperTest = () => {
-    dispatch(changeToDeveloperMode())
-  }
-  const HandelerClient = () => {
-    dispatch(backToClentMode())
-  }
   useEffect(() => {
     document.title = `Memo Ethiopia | my Notes`;
 
@@ -272,7 +265,7 @@ const HomeLayout: React.FC = () => {
         </div>
       ) : (
         <>
-          <div className={`sticky hidden  px-5 p-1 justify-between md:flex top-0 z-50 ${theme === "dark" ? "bg-[#1f1f1f]" : "bg-[#ffffff33]"} w-full`}
+          <div className={`sticky  hidden  px-5 justify-between md:flex top-0 z-50 ${theme === "dark" ? "bg-[#1f1f1f]" : "bg-[#ffffff33]"} w-full`}
             onContextMenu={(e) => e.preventDefault()}
           >
             <div className="flex gap-2">
@@ -341,12 +334,12 @@ const HomeLayout: React.FC = () => {
           </div>
 
 
-          <div className={getClassNames("md:flex  h-screen   overflow-y-auto")}
+          <div className={getClassNames("md:flex  h-screen  w-full overflow-y-auto")}
             onContextMenu={(e) => e.preventDefault()}
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {localoading && <Spin fullscreen={true} tip='just a sec.' />}
             {/* Sidebar */}
-            <aside className={getClassNames(` ${mobileSidebar ? 'fixed z-50 ease-in' : 'hidden'} lg:w-1/5  py-4 px-4 mb-3 h-screen lg:flex  flex-col transition-all delay-500 overflow-y-auto `)} style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+            <aside className={getClassNames(` ${mobileSidebar ? 'fixed z-50 ease-in' : 'hidden'}   py-4 px-4 mb-3 h-screen lg:flex  flex-col transition-all delay-500 overflow-y-auto `)} style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
               <div className={getClassNames(`${mobileSidebar ? 'flex justify-end items-end  right-5  top-2' : 'hidden'}`)}>
                 <button className={getClassNames("text-xl")} onClick={() => setMobileSidebar(false)}><CloseOutlined /></button>
               </div>
@@ -358,7 +351,7 @@ const HomeLayout: React.FC = () => {
                   setNewfoldercreate(false)
                   setNewFoldersNameC("")
                 }}>
-                <div className="flex justify-between">
+                <div className="flex mt-2 justify-between">
                   <h1 className="text-md font-bold mb-4">MemoEthiopia</h1>
                   <SearchOutlined />
                 </div>
@@ -528,56 +521,37 @@ const HomeLayout: React.FC = () => {
                     <InboxOutlined /> Archived
                   </div>
                   <div className="text-md mb-2 cursor-pointer">
-                    <StarOutlined /> Favorites
-                  </div>
-                  <div className="text-md mb-2 cursor-pointer">
                     <RestOutlined /> Tarsh
                   </div>
-
-
                   <div className="">
 
                   </div>
                 </div>
               </div>
             </aside >
-            <div className="relative  h-screen">
-              <div className="absolute h-screen inset-0 bg-white"></div>
+            <div className={`${!mobileSidebar ? 'fixed text-2xl p-0 z-0 top-0.5 left-1.5':'hidden'}`} 
+            onClick={() => setMobileSidebar(true)}
+            >
+              <AlignLeftOutlined />
+          </div>
                <NoteList foldernotes={openForder} />
-              
-            </div>
-
-
-
             {/* Note content */}
             < main
               className={getClassNames(`h-screen hidden overflow-y-auto mdflex ${inOutlet ? "" : "items-center"} justify - center`)}
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
               {inOutlet ? (
-                <div className={getClassNames(`fixed top - 0 left - 0 right - 0 bottom - 0 p - 6 h - screen overflow - y - auto lg:static lg: h - auto lg: flex`)}>
+                <div className={getClassNames(`hidden fixed top-0 left-0 p-0 right-0 bottom-0 h-screen overflow-y-auto lg:static lg:h-auto lg:flex`)}>
                   <Outlet />
                 </div>
               ) : (
-                <div className={getClassNames("w-full ms-52 h-full flex items-center justify-center")}>
+                <div className={getClassNames("hidden md:flex w-full ms-52 h-full  items-center justify-center")}>
                 </div>
               )}
             </main>
-            <div className={getClassNames(`fixed top - 0 left - 0 right - 0 bottom - 0 p - 6 h - screen overflow - y - auto lg:static lg: h - auto lg: flex`)}>
+            <div className={getClassNames(`${inOutlet ? "":"bg-amber-50"}fixed top-0 left-0 right-0 bottom-0  h-screen overflow-y-auto lg:static lg:h-auto lg:flex w-full`)}>
               <Outlet />
             </div>
-
-            <Popover title="1 Click to Off, Double Click to On">
-              <button
-                className={getClassNames("fixed bottom-0  text-xl border p-4 right-0 m-2 rounded-full border-red-800 ")}
-                onDoubleClick={HandelerDeveloperTest}
-                onClick={HandelerClient}
-                onTouchStartCapture={HandelerDeveloperTest}
-                onTouchEnd={HandelerClient}
-              >
-                {DeveloperTest ? <BugFilled /> : <BugOutlined />}
-              </button>
-            </Popover>
           </div>
         </>
       )}

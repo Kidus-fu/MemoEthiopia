@@ -93,18 +93,10 @@ export const useUserMenuItems = (): MenuProps['items'] => {
   ];
 };
 export const useNoteItems = (): MenuProps['items'] => {
-  const user = useSelector((state: RootState) => state.user);
+  // const user = useSelector((state: RootState) => state.user);
+
+  // const showMessage = useMessage()
   
-  const showMessage = useMessage()
-  const copyToClipboard = async (text: string,mes:string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      showMessage('success',mes)
-      
-    } catch (err) {
-      console.error("Failed to copy:", err);
-    }
-  };
   
   return [
     {
@@ -118,7 +110,6 @@ export const useNoteItems = (): MenuProps['items'] => {
       className:"p-2",
       label: "Add to favorites",
       icon: <StarOutlined />,
-      onClick: () => {copyToClipboard(`User-${user?.uuid}`,"Copied your User ID to clipboard")}
     },
     {
       key: '3',

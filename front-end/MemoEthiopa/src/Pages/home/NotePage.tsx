@@ -66,94 +66,133 @@ const NotePage = () => {
   };
 
   return (
-    <div
-      className="fixed md:relative top-0 w-full h-full m-0 overflow-y-auto"
-      style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-    >
-      {loading ? (
-        <div className={getClassNames("h-screen w-full flex items-center justify-center")}>
-          <Spin fullscreen={true} />
-        </div>
-      ) : (
-        <div className={getClassNames("h-screen  w-full")}>
-          
-          <div className={getClassNames("fixed md:sticky top-0 z-40 px-3 md:p-8 w-full")}>
-            <div className="flex justify-between">
-              <div className="text-lg cursor-pointer" title="back" onClick={() => navigate('/feed')}>
-              <ArrowLeftOutlined />
+   <div
+  className="fixed md:relative top-0 w-full h-full m-0 overflow-auto overflow-x-hidden"
+  style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+>
+  {loading ? (
+    <div className={getClassNames("h-screen w-full flex items-center justify-center")}>
+      <Spin fullscreen={true} />
+    </div>
+  ) : (
+    <div className={getClassNames("min-h-screen w-full")}>
+      {/* Header */}
+      <div className={getClassNames("sticky top-0 z-40 w-full ")}>
+        <div className="flex justify-between items-center p-2">
+          <div
+            className="text-lg cursor-pointer"
+            title="back"
+            onClick={() => navigate('/feed')}
+          >
+            <ArrowLeftOutlined />
           </div>
-              <h1 className="text-2xl md:text-4xl font-bold mb-2">{note?.title}</h1>
-              <div className="">
-                <ConfigProvider theme={{
-                  algorithm: theme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
-                  components: {
-                    Dropdown: {
-                      paddingBlock: 10,
-                    }
-                  },
-                }}>
-                  <Dropdown menu={{ items: noteitems }}
-                    overlayStyle={{ width: 180, height: 250 }}
-                    trigger={["click"]} placement="bottomLeft" >
-                    <div className="rounded-full flex justify-center cursor-pointer">
-                      <EllipsisOutlined className="text-2xl" />
-                    </div>
-                  </Dropdown>
-                </ConfigProvider>
-              </div>
-            </div>
-          </div>
-
-          <div className={`text-sm m-2 flex gap-10 p-5 border-b ${theme === "dark" ? "border-gray-800" : "border-gray-300"}`}>
-            <div className="flex gap-2 items-center">
-              <ScheduleOutlined /> <p>Date</p>
-            </div>
-            <p className="underline" title={note?.created_at}>{dayjs(note?.created_at).format("DD/MM/YYYY")}</p>
-          </div>
-
-          <div className={`text-sm m-2 flex gap-10 p-5 border-b ${theme === "dark" ? "border-gray-800" : "border-gray-300"}`}>
-            <div className="flex gap-2 items-center">
-              <FolderFilled /> <p>Folder</p>
-            </div>
-            <p className="underline">{note?.folder}</p>
-          </div>
-
-          <div className={getClassNames("text-base p-4 whitespace-pre-line caption-top")}>
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              components={{
-                h1: ({ node, ...props }) => <h1 className="text-3xl font-bold" {...props} />,
-                h2: ({ node, ...props }) => <h2 className="text-2xl font-bold mt-6 mb-2" {...props} />,
-                h3: ({ node, ...props }) => <h3 className="text-xl font-semibold mt-4 mb-1" {...props} />,
-                p: ({ node, ...props }) => <p className={getClassNames("text-base leading-6 my-2")} {...props} />,
-                hr: ({ node, ...props }) => (
-                  <hr className={`my-7 border-t ${theme === "dark" ? "border-gray-700" : "border-gray-300"}`} {...props} />
-                ),
-                code: (props) => {
-                  // props has 'inline' property when using ReactMarkdown's type
-                  // @ts-ignore
-                  const { inline, children, ...rest } = props as any;
-                  return !inline ? (
-                    <pre className={`my-4 p-4 rounded overflow-x-auto ${theme === "dark" ? "bg-[#272727]" : "bg-[#eff2f3]"}`}>
-                      <code className="text-sm font-mono">{children}</code>
-                    </pre>
-                  ) : (
-                    <code className={`px-1 py-0.5 rounded font-mono text-sm ${theme === "dark" ? "bg-gray-700 text-white" : "bg-gray-200 text-black"}`} {...rest}>
-                      {children}
-                    </code>
-                  );
-                },
-                a: ({ node, ...props }) => (
-                  <a className="text-blue-600 underline hover:text-blue-800" target="_blank" rel="noreferrer" {...props} />
-                )
+          <h1 className="text-xl md:text-3xl font-bold text-center truncate max-w-[60%]">
+            {note?.title}
+          </h1>
+          <div>
+            <ConfigProvider
+              theme={{
+                algorithm: theme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
+                components: { Dropdown: { paddingBlock: 10 } },
               }}
             >
-              {note?.content || ""}
-            </ReactMarkdown>
+              <Dropdown
+                menu={{ items: noteitems }}
+                overlayStyle={{ width: 180, height: 250 }}
+                trigger={["click"]}
+                placement="bottomLeft"
+              >
+                <div className="rounded-full flex justify-center cursor-pointer">
+                  <EllipsisOutlined className="text-2xl" />
+                </div>
+              </Dropdown>
+            </ConfigProvider>
           </div>
         </div>
-      )}
+      </div>
+
+      {/* Created Date */}
+      <div
+        className={`text-sm m-2 flex flex-wrap gap-4 md:gap-10 p-5 border-b ${
+          theme === "dark" ? "border-gray-800" : "border-gray-300"
+        }`}
+      >
+        <div className="flex gap-2 items-center">
+          <ScheduleOutlined /> <p>Date</p>
+        </div>
+        <p className="underline" title={note?.created_at}>
+          {dayjs(note?.created_at).format("DD/MM/YYYY")}
+        </p>
+      </div>
+
+      {/* Folder */}
+      <div
+        className={`text-sm m-2 flex flex-wrap gap-4 md:gap-10 p-5 border-b ${
+          theme === "dark" ? "border-gray-800" : "border-gray-300"
+        }`}
+      >
+        <div className="flex gap-2 items-center">
+          <FolderFilled /> <p>Folder</p>
+        </div>
+        <p className="underline">{note?.folder}</p>
+      </div>
+
+      {/* Markdown Content */}
+      <div className={getClassNames("text-base w-full whitespace-pre-line break-words caption-top p-4")}>
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          components={{
+            h1: ({ node, ...props }) => <h1 className="text-3xl font-bold mt-6 mb-3" {...props} />,
+            h2: ({ node, ...props }) => <h2 className="text-2xl font-bold mt-5 mb-2" {...props} />,
+            h3: ({ node, ...props }) => <h3 className="text-xl font-semibold mt-4 mb-2" {...props} />,
+            p: ({ node, ...props }) => (
+              <p className="text-base leading-6 my-2 break-words" {...props} />
+            ),
+            hr: ({ node, ...props }) => (
+              <hr
+                className={`my-7 border-t ${
+                  theme === "dark" ? "border-gray-700" : "border-gray-300"
+                }`}
+                {...props}
+              />
+            ),
+            code: ({ inline, children, ...rest }) => {
+              return !inline ? (
+                <pre
+                  className={`my-4 p-4 rounded overflow-x-auto text-sm font-mono ${
+                    theme === "dark" ? "bg-[#272727] text-white" : "bg-[#eff2f3] text-black"
+                  }`}
+                >
+                  <code>{children}</code>
+                </pre>
+              ) : (
+                <code
+                  className={`px-1 py-0.5 rounded font-mono text-sm ${
+                    theme === "dark" ? "bg-gray-700 text-white" : "bg-gray-200 text-black"
+                  }`}
+                  {...rest}
+                >
+                  {children}
+                </code>
+              );
+            },
+            a: ({ node, ...props }) => (
+              <a
+                className="text-blue-600 underline hover:text-blue-800 break-all"
+                target="_blank"
+                rel="noreferrer"
+                {...props}
+              />
+            ),
+          }}
+        >
+          {note?.content || ""}
+        </ReactMarkdown>
+      </div>
     </div>
+  )}
+</div>
+
   );
 };
 

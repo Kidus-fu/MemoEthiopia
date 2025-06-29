@@ -318,10 +318,10 @@ class SharedNoteSerializer(serializers.ModelSerializer):
             "uuid": user_info.uuid if user_info.uuid else "Not Loger Have UUID"
             }
     
-class NotificationSerializer(serializers.Serializer):
+class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
-        fields = "__all__"
+        fields = ['id','user','message','is_read','created_at','updated_at']
 
 class FavoriteSerializer(serializers.ModelSerializer):
     notes = serializers.SerializerMethodField()
