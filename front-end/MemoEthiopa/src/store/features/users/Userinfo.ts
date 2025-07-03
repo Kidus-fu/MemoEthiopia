@@ -30,6 +30,7 @@ const userInfoSlice = createSlice({
       state.token = null;
       localStorage.removeItem(ACCESS_TOKEN); // Remove token
       localStorage.removeItem(REFRESH_TOKEN); // Remove token
+      window.location.href = '/signin'
     },
     now_otp_ready(state) {
         state.otp_ready = true

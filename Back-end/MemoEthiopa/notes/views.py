@@ -86,7 +86,6 @@ class NoteView(
             # Decode the query data
             decoded_data = decode_query_data(urlquery)
             user_name = decoded_data.get("user_name")
-            print(user_name)
             if user_name is not None:
                 try:
                     matched_user = User.objects.get(username=user_name)
@@ -104,6 +103,7 @@ class NoteView(
         return self.retrieve(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        print(request)
         request.data['user'] = request.user.id  
         return super().create(request, *args, **kwargs)
 

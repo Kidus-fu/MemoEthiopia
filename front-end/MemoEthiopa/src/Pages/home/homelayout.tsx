@@ -2,14 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../../store/store';
 import NoteList from './NoteList';
-import { Outlet, useMatch } from 'react-router-dom';
+import { Outlet, useMatch, useNavigate, useParams } from 'react-router-dom';
 import { AlignLeftOutlined, CloseOutlined, ExportOutlined, FileTextOutlined, FolderAddFilled, FolderFilled, FolderOpenFilled, InboxOutlined, MoreOutlined, ReloadOutlined, RestOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
-import ThemeSelector from '../../components/TheamSlecter';
 import api from '../../api';
-import { ConfigProvider, Dropdown,  Skeleton, Spin, theme as antdTheme } from 'antd';
+import { ConfigProvider, Dropdown, Skeleton, Spin, theme as antdTheme } from 'antd';
 import logo from '../../assets/MemoEthio_logo_4.png';
 import { Folderitems, useUserMenuItems } from "./MenuPropsC"
 import { fetchUserData } from '../../store/features/users/User';
+import AddNoteForm from './NewNoteForm';
 
 interface FolderState {
   created_at: string;
@@ -22,6 +22,7 @@ const HomeLayout: React.FC = () => {
   const theme = useSelector((state: RootState) => state.theam.theme);
   const user = useSelector((state: RootState) => state.user);
   const loggedIn = useSelector((state: RootState) => state.userinfo.loggedIn)
+  const navigate = useNavigate();
   const DeveloperTest = useSelector((state: RootState) => state.developertest.border_test);
   const [loading, setLoading] = useState(true)
   const [localoading, setLocaloading] = useState(false)
@@ -40,16 +41,21 @@ const HomeLayout: React.FC = () => {
   const [folderNameError, setFolderNameError] = useState(false)
   const match = useMatch("/feed/mynote/:uuid");
   const [mobileSidebar, setMobileSidebar] = useState(false)
+  const { foldername } = useParams()
   const useritems = useUserMenuItems();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const handleOpenforder = (name: string) => {
     if (folders) {
       folders.map((folder) => {
         if (folder.name === name) {
           setOpenForder(folder);
+          navigate(`/feed/${folder.name}`)
         }
       })
     }
   };
+
   useEffect(() => {
     document.title = `Memo Ethiopia | my Notes`;
 
@@ -92,6 +98,34 @@ const HomeLayout: React.FC = () => {
 
     setInOutlet(match ? true : false)
   }, [match])
+  const handelnewNote = (values: any) => {
+    setLocaloading(true)
+    let uuid: string | undefined;
+    api.post('api-v1/notes/', values)
+      .then(res => {
+        uuid = res.data.uuid
+      })
+      .finally(() => {
+        api.get("api-v1/folders/")
+          .then(res => {
+            if (res.status === 200) {
+              const data = res.data.results
+              setFolders(data)
+              const foldernow = data.find((folderq: any) => folderq.id === values?.folder);
+              navigate(`/feed/${foldernow.name}/${uuid}`)
+              setOpenForder(foldernow)
+              setLocaloading(false)
+
+            } else {
+              console.error("get error to fauch a notes")
+            }
+          })
+      })
+      .catch((err: any) => {
+        console.error(err);
+        setLocaloading(false)
+      })
+  }
   const getClassNames = (base: string) => {
     const border = DeveloperTest ? 'border border-red-700' : '';
     const themeStyle = theme === 'dark' ? ' bg-[#1C1C1C] text-white' : 'bg-[#F3F6FB] text-gray-600';
@@ -105,9 +139,15 @@ const HomeLayout: React.FC = () => {
         .then(res => {
           const data = res.data.results
           setFolders(data)
+
+          if (foldername) {
+            const newdata = data.filter((folder: any) => folder.name.toLowerCase().includes(foldername.toLowerCase()))
+            setOpenForder(newdata[0]);
+          }
+
           setLoading(false)
+          dispatch(fetchUserData())
         })
-      dispatch(fetchUserData())
     }
   }, [loading])
   const handelFolderDelete = (id: any) => {
@@ -268,7 +308,7 @@ const HomeLayout: React.FC = () => {
           <div className={`sticky  hidden  px-5 justify-between md:flex top-0 z-50 ${theme === "dark" ? "bg-[#1f1f1f]" : "bg-[#ffffff33]"} w-full`}
             onContextMenu={(e) => e.preventDefault()}
           >
-            <div className="flex gap-2">
+            <div className={getClassNames(`flex gap-2 ${theme === "dark" ? "bg-[#1f1f1f]" : "bg-[#ffffff33]"}`)}>
               <div className=" p-1 cursor-pointer">
                 Blog
               </div>
@@ -301,7 +341,9 @@ const HomeLayout: React.FC = () => {
               <div className=" p-1 opacity-35 cursor-pointer" title='Chat'>
                 Chat
               </div>
-              <div className=" p-1 cursor-pointer" title='Reload'>
+              <div className=" p-1 cursor-pointer" title='Reload' onClick={() => {
+                window.location.reload()
+              }}>
                 <ReloadOutlined />
               </div>
             </div>
@@ -333,13 +375,12 @@ const HomeLayout: React.FC = () => {
             </div>
           </div>
 
-
           <div className={getClassNames("md:flex  h-screen  w-full overflow-y-auto")}
             onContextMenu={(e) => e.preventDefault()}
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {localoading && <Spin fullscreen={true} tip='just a sec.' />}
             {/* Sidebar */}
-            <aside className={getClassNames(` ${mobileSidebar ? 'fixed z-50 ease-in' : 'hidden'}   py-4 px-4 mb-3 h-screen lg:flex  flex-col transition-all delay-500 overflow-y-auto `)} style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+            <aside className={getClassNames(` ${mobileSidebar ? 'fixed z-50 ease-in' : 'hidden'}   py-4 px-4 mb-3 h-screen lg:flex  flex-col overflow-y-auto `)} style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
               <div className={getClassNames(`${mobileSidebar ? 'flex justify-end items-end  right-5  top-2' : 'hidden'}`)}>
                 <button className={getClassNames("text-xl")} onClick={() => setMobileSidebar(false)}><CloseOutlined /></button>
               </div>
@@ -351,12 +392,14 @@ const HomeLayout: React.FC = () => {
                   setNewfoldercreate(false)
                   setNewFoldersNameC("")
                 }}>
-                <div className="flex mt-2 justify-between">
+                <div className="flex  justify-between">
                   <h1 className="text-md font-bold mb-4">MemoEthiopia</h1>
                   <SearchOutlined />
                 </div>
-
-                <button className={getClassNames(`px-4 py-2.5 cursor-pointer w-full rounded mt-2 mb-4 text-center ${theme === "dark" ? "bg-[#3D3939]" : "bg-[#ffff]"} `)}>+ New Note</button>
+                <AddNoteForm onClose={() => setIsModalOpen(false)} folders={folders} theme={theme} open={isModalOpen} user={user} onSumbit={handelnewNote} />
+                <button className={getClassNames(`px-4 py-2.5 cursor-pointer w-full rounded mt-2 mb-4 text-center ${theme === "dark" ? "bg-[#3D3939]" : "bg-[#ffff]"} `)}
+                  onClick={() => setIsModalOpen(true)}
+                >+ New Note</button>
               </div>
               <div className={getClassNames("flex-1 overflow-y-auto space-y-2 mb-3 overflow-x-auto w-auto ")}
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
@@ -529,33 +572,27 @@ const HomeLayout: React.FC = () => {
                 </div>
               </div>
             </aside >
-            <div className={`${!mobileSidebar ? 'fixed text-2xl p-0 z-0 top-0.5 left-1.5':'hidden'}`} 
-            onClick={() => setMobileSidebar(true)}
+
+            <div className={`block md:hidden ${!mobileSidebar ? 'fixed text-2xl p-0 z-0 top-0.5 left-1.5' : 'hidden'}`}
+              onClick={() => setMobileSidebar(true)}
             >
-              <AlignLeftOutlined />
-          </div>
-               <NoteList foldernotes={openForder} />
+              <AlignLeftOutlined className="" />
+
+            </div>
+            <NoteList foldernotes={openForder} />
             {/* Note content */}
             < main
               className={getClassNames(`h-screen hidden overflow-y-auto mdflex ${inOutlet ? "" : "items-center"} justify - center`)}
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
-              {inOutlet ? (
-                <div className={getClassNames(`hidden fixed top-0 left-0 p-0 right-0 bottom-0 h-screen overflow-y-auto lg:static lg:h-auto lg:flex`)}>
-                  <Outlet />
-                </div>
-              ) : (
-                <div className={getClassNames("hidden md:flex w-full ms-52 h-full  items-center justify-center")}>
-                </div>
-              )}
             </main>
-            <div className={getClassNames(`${inOutlet ? "":"bg-amber-50"}fixed top-0 left-0 right-0 bottom-0  h-screen overflow-y-auto lg:static lg:h-auto lg:flex w-full`)}>
+
+            <div className={getClassNames(`${inOutlet ? "" : `${theme === "dark" ? "bg-[#242424]" : "bg-[#ffffff33]"}`}  fixed top-0 left-0 right-0 bottom-0  h-screen overflow-y-auto lg:static lg:h-auto lg:flex w-full`)}>
               <Outlet />
             </div>
           </div>
         </>
       )}
-      <ThemeSelector />
     </>
 
   );

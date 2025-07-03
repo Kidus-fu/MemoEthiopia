@@ -22,7 +22,8 @@ class AiChatSerializer(serializers.Serializer):
 class NoteSerializer(serializers.ModelSerializer):
     user_info = serializers.SerializerMethodField()
     absolute_url = serializers.SerializerMethodField()
-    folder = serializers.SerializerMethodField()
+    folder = serializers.PrimaryKeyRelatedField(queryset=Folder.objects.all(), required=False, allow_null=True)
+    folder_name = serializers.SerializerMethodField()
     class Meta:
         model = Note # serializers take model
         fields = [
@@ -33,6 +34,7 @@ class NoteSerializer(serializers.ModelSerializer):
             "created_at",
             "file",
             "folder",
+            "folder_name",
             "is_trashed",
             "id",
             "image",
@@ -43,10 +45,13 @@ class NoteSerializer(serializers.ModelSerializer):
             "user_info",
             "uuid",
         ]
-
+    def create(self, validated_data):
+        user = self.context['request'].user
+        note = Note.objects.create(user=user, **validated_data)
+        return note
     def get_absolute_url(self, obj):
         return obj.get_absolute_url()
-    def get_folder(self,obj):
+    def get_folder_name(self,obj):
         return obj.folderGet()
     def get_user_info(self, obj):
         username = obj.user.username

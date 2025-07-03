@@ -25,12 +25,14 @@ createRoot(document.getElementById('root')!).render(
           <Route path='/signup' element={<SignUp />} />
           <Route path='/otp_verification' element={<OTP />} />
           <Route path='*' element={<Error404 />} />
-          <Route path='/feed' element={<HomeLayout />} >
-          <Route path="mynote/:noteId" element={<NotePage />} />
+          <Route path='/feed' element={<HomeLayout />} />
+          <Route path='/feed/:foldername' element={<HomeLayout />} >
+            <Route path=":noteId" element={<NotePage />} />
           </Route>
+
           <Route path="/developerOptions" element={<Devpag />} />
           <Route path="/developerOptions/backend" element={<>Hi Back end</>} />
-          
+
         </Routes>
       </BrowserRouter>
     </Provider>

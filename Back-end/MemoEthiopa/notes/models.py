@@ -25,7 +25,6 @@ class userInfo(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.uuid}"
     def is_superuser(self):
-        print(self.user.user_permissions)
         return self.user.is_superuser
 
 

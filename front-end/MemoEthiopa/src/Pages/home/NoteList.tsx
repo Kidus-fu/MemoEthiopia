@@ -1,9 +1,9 @@
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { RootState } from "../../store/store";
 import React, { useEffect, useState } from "react";
 import { ConfigProvider, Dropdown, Result, Spin, theme as antdTheme } from "antd";
-import { DeleteOutlined, EditOutlined, EyeFilled, FolderOpenFilled, InboxOutlined, InfoCircleOutlined, PushpinFilled } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, EyeFilled, FolderOpenFilled, InboxOutlined, PushpinFilled } from "@ant-design/icons";
 import api from "../../api";
 import { useMessage } from "../../components/useMessage";
 
@@ -20,6 +20,7 @@ const NoteList: React.FC<FoldernotesState> = ({ foldernotes }) => {
   const DeveloperTest = useSelector((state: RootState) => state.developertest.border_test);
   const [localoading, setLocaloading] = useState(false)
   const showMessage = useMessage()
+  
 
   const getClassNames = (base: string) => {
     const border = DeveloperTest ? "border border-red-700" : "";
@@ -27,11 +28,10 @@ const NoteList: React.FC<FoldernotesState> = ({ foldernotes }) => {
       theme === "dark" ? " bg-[#1f1f1f] text-white" : "bg-[#ECEEF0] text-black";
     return `${base} ${border} ${themeStyle}`;
   };
+  
 
   useEffect(() => {
     if (foldernotes) {
-      console.log(foldernotes.notes);
-
       // Sort notes so that pinned notes appear first
       const sortedNotes = [...foldernotes.notes].sort((a, b) => {
         if (a.is_pinned && !b.is_pinned) return -1;
@@ -57,7 +57,7 @@ const NoteList: React.FC<FoldernotesState> = ({ foldernotes }) => {
       })
       .catch((err) => {
         console.log(err);
-        
+
       })
       .finally(() => {
         api.get("api-v1/folders/")
@@ -161,8 +161,12 @@ const NoteList: React.FC<FoldernotesState> = ({ foldernotes }) => {
                         components: {
                           Dropdown: { paddingBlock: 10 },
                         },
+                        token: {
+                          colorBgMask: "rgb(1, 1, 1,0.7)"
+                        }
                       }}
                     >
+
                       <Dropdown
                         menu={{
                           items: [
@@ -179,15 +183,10 @@ const NoteList: React.FC<FoldernotesState> = ({ foldernotes }) => {
                               icon: <EyeFilled />,
                               onClick: () => {
                                 setSelect(note.uuid);
-                                navigate(`/feed/mynote/${note.uuid}`);
+                                navigate(`/feed/${foldernotes.name}/${note.uuid}`);
                               }
                             },
-                            {
-                              key: '3',
-                              className: "p-2 ",
-                              label: "Detiles",
-                              icon: <InfoCircleOutlined />,
-                            },
+
                             {
                               key: '4',
                               className: `p-2`,
@@ -230,8 +229,9 @@ const NoteList: React.FC<FoldernotesState> = ({ foldernotes }) => {
                           onContextMenu={(e) => e.preventDefault()}
                           onClick={() => {
                             setSelect(note.uuid);
-                            navigate(`/feed/mynote/${note.uuid}`);
+                            navigate(`/feed/${foldernotes.name}/${note.uuid}`);
                           }}
+                          title={`${note.title} ${note.is_pinned ? '~ Pinned' : ''}`}
                         >
                           <p className="font-medium  text-lg flex items-center gap-2">
                             {note.is_pinned && (

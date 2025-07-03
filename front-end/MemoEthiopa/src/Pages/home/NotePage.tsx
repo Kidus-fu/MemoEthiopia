@@ -4,11 +4,12 @@ import { RootState } from "../../store/store";
 import { useEffect, useState } from "react";
 import api from "../../api";
 import dayjs from "dayjs";
-import { ConfigProvider, Dropdown, Spin, theme as antdTheme } from "antd";
+import {  ConfigProvider, Dropdown, Modal, Spin, theme as antdTheme } from "antd";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { ArrowLeftOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, FolderFilled, InboxOutlined, InfoCircleOutlined, ScheduleOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, CloseOutlined,  DeleteOutlined, EditOutlined, EllipsisOutlined, FolderFilled, InboxOutlined, InfoCircleOutlined, ScheduleOutlined } from "@ant-design/icons";
 import { useMessage } from "../../components/useMessage";
+import NoteDetail from "./NoteDetail";
 
 export interface UserInfo {
   bio: string;
@@ -34,6 +35,7 @@ export interface NoteItem {
   created_at: string;
   file: string | null;
   folder: number;
+  folder_name: string;
   is_trashed: boolean;
   id: number;
   image: string | null;
@@ -52,6 +54,7 @@ const NotePage = () => {
   const navigate = useNavigate();
   const [note, setNote] = useState<NoteItem>();
   const [loading, setLoading] = useState(true);
+  const [Notedetail, setNotedetail] = useState(false);
   const showMessage = useMessage()
   useEffect(() => {
     setLoading(true);
@@ -82,7 +85,7 @@ const NotePage = () => {
       .catch((err) => {
         console.log(err);
         setLoading(false)
-        
+
       })
   }
   const handelTrash = (noteuuid: any, notecontent: any, notetitle: any) => {
@@ -99,8 +102,9 @@ const NotePage = () => {
         showMessage("success", `Note ${notetitle} is go to trash`)
         setLoading(false)
       })
-      .catch((err) => {
+      .catch((err: any) => {
         setLoading(false)
+        console.error(err)
       })
   }
 
@@ -110,156 +114,181 @@ const NotePage = () => {
       style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
     >
       {loading ? (
-        <div className={getClassNames("h-screen w-full flex items-center justify-center")}>
+        <div className={getClassNames("h-screen w-full cursor-progress flex items-center justify-center")} title="wait a min">
           <Spin fullscreen={true} />
         </div>
       ) : (
-        <div className={getClassNames("min-h-screen w-full")}>
-          {/* Header */}
-          <div className={getClassNames("sticky top-0 z-40 w-full ")}>
-            <div className="flex justify-between items-center p-2">
-              <div
-                className="text-lg cursor-pointer"
-                title="back"
-                onClick={() => navigate('/feed')}
-              >
-                <ArrowLeftOutlined />
-              </div>
-              <h1 className="text-xl md:text-3xl font-bold text-center truncate max-w-[60%]">
-                {note?.title}
-              </h1>
-              <div>
-                <ConfigProvider
-                  theme={{
-                    algorithm: theme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
-                    components: { Dropdown: { paddingBlock: 10 } },
-                  }}
-                >
-                  <Dropdown
-                    menu={{
-                      items: [
-                        {
-                          key: '1',
-                          className: "p-2 opacity-35",
-                          label: "Edit",
-                          icon: <EditOutlined />,
-                        },
-                        {
-                          key: '3',
-                          className: "p-2 ",
-                          label: "Detiles",
-                          icon: <InfoCircleOutlined />,
-                        },
-                        {
-                          key: '4',
-                          className: `p-2`,
-                          label: `${note?.is_archived ? 'unArchived' : 'Archived'}`,
-                          icon: note?.is_archived ? <InboxOutlined className="opacity-20" /> : <InboxOutlined />,
-                          onClick: () => handelArchived(note?.uuid, note?.is_archived, note?.content, note?.title)
-                        },
-                        {
-                          key: '5',
-                          type: 'divider'
-                        },
-                        {
-                          key: '6',
-                          label: 'Add to Trash',
-                          icon: <DeleteOutlined />,
-                          danger: true,
-                          onClick: () => {
-                            handelTrash(note?.uuid, note?.content, note?.title)
-                            navigate(`/feed/`);
-                          }
-                        }
-                      ],
-                    }}
-                    overlayStyle={{ width: 180, height: 250 }}
-                    trigger={["click"]}
-                    placement="bottomLeft"
-                  >
-                    <div className="rounded-full flex justify-center cursor-pointer">
-                      <EllipsisOutlined className="text-2xl" />
-                    </div>
-                  </Dropdown>
-                </ConfigProvider>
-              </div>
-            </div>
-          </div>
-
-          {/* Created Date */}
-          <div
-            className={`text-sm m-2 flex flex-wrap gap-4 md:gap-10 p-5 border-b ${theme === "dark" ? "border-gray-800" : "border-gray-300"
-              }`}
-          >
-            <div className="flex gap-2 items-center">
-              <ScheduleOutlined /> <p>Date</p>
-            </div>
-            <p className="underline" title={note?.created_at}>
-              {dayjs(note?.created_at).format("DD/MM/YYYY")}
-            </p>
-          </div>
-
-          {/* Folder */}
-          <div
-            className={`text-sm m-2 flex flex-wrap gap-4 md:gap-10 p-5 border-b ${theme === "dark" ? "border-gray-800" : "border-gray-300"
-              }`}
-          >
-            <div className="flex gap-2 items-center">
-              <FolderFilled /> <p>Folder</p>
-            </div>
-            <p className="underline">{note?.folder}</p>
-          </div>
-
-          {/* Markdown Content */}
-          <div className={getClassNames("text-base w-full whitespace-pre-line break-words caption-top p-4")}>
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              components={{
-                h1: ({ node, ...props }) => <h1 className="text-3xl font-bold mt-6 mb-3" {...props} />,
-                h2: ({ node, ...props }) => <h2 className="text-2xl font-bold mt-5 mb-2" {...props} />,
-                h3: ({ node, ...props }) => <h3 className="text-xl font-semibold mt-4 mb-2" {...props} />,
-                p: ({ node, ...props }) => (
-                  <p className="text-base leading-6 my-2 break-words" {...props} />
-                ),
-                hr: ({ node, ...props }) => (
-                  <hr
-                    className={`my-7 border-t ${theme === "dark" ? "border-gray-700" : "border-gray-300"
-                      }`}
-                    {...props}
-                  />
-                ),
-                code: ({ inline, children, ...rest }) => {
-                  return !inline ? (
-                    <pre
-                      className={`my-4 p-4 rounded overflow-x-auto text-sm font-mono ${theme === "dark" ? "bg-[#272727] text-white" : "bg-[#eff2f3] text-black"
-                        }`}
-                    >
-                      <code>{children}</code>
-                    </pre>
-                  ) : (
-                    <code
-                      className={`px-1 py-0.5 rounded font-mono text-sm ${theme === "dark" ? "bg-gray-700 text-white" : "bg-gray-200 text-black"
-                        }`}
-                      {...rest}
-                    >
-                      {children}
-                    </code>
-                  );
-                },
-                a: ({ node, ...props }) => (
-                  <a
-                    className="text-blue-600 underline hover:text-blue-800 break-all"
-                    target="_blank"
-                    rel="noreferrer"
-                    {...props}
-                  />
-                ),
-              }}
+        <>
+          <ConfigProvider theme={{
+            algorithm: theme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
+            components: {},
+            token: {
+              colorBgMask: "rgb(1, 1, 1,0.7)"
+            }
+          }}>
+            <Modal
+              title="Detail"
+              closable={{ 'aria-label': 'Custom Close Button' }}
+              open={Notedetail}
+               
+              onClose={() => setNotedetail(false)}           
+              closeIcon={<CloseOutlined onClick={() => setNotedetail(false)} />}
+              width={550}
+              footer={
+                null 
+              }
             >
-              {note?.content || ""}
-            </ReactMarkdown>
+              <NoteDetail note={note} />
+            </Modal>
+          </ConfigProvider>
+          <div className={getClassNames("min-h-screen w-full")}>
+            {/* Header */}
+            <div className={getClassNames("sticky top-0 z-40 w-full ")}>
+              <div className="flex justify-between items-center p-2">
+                <div
+                  className="text-lg cursor-pointer"
+                  title="back"
+                  onClick={() => navigate(`/feed/${note?.folder}`)}
+                >
+                  <ArrowLeftOutlined />
+                </div>
+                <h1 className="text-xl md:text-3xl font-bold text-center truncate max-w-[60%]">
+                  {note?.title}
+                </h1>
+                <div>
+                  <ConfigProvider
+                    theme={{
+                      algorithm: theme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
+                      components: { Dropdown: { paddingBlock: 10 } },
+                    }}
+                  >
+                    <Dropdown
+                      menu={{
+                        items: [
+                          {
+                            key: '1',
+                            className: "p-2 opacity-35",
+                            label: "Edit",
+                            icon: <EditOutlined />,
+                          },
+                          {
+                            key: '3',
+                            className: "p-2 ",
+                            label: "Detiles",
+                            icon: <InfoCircleOutlined />,
+                            onClick: () => setNotedetail(true)
+                          },
+                          {
+                            key: '4',
+                            className: `p-2`,
+                            label: `${note?.is_archived ? 'unArchived' : 'Archived'}`,
+                            icon: note?.is_archived ? <InboxOutlined className="opacity-20" /> : <InboxOutlined />,
+                            onClick: () => handelArchived(note?.uuid, note?.is_archived, note?.content, note?.title)
+                          },
+                          {
+                            key: '5',
+                            type: 'divider'
+                          },
+                          {
+                            key: '6',
+                            label: 'Add to Trash',
+                            icon: <DeleteOutlined />,
+                            danger: true,
+                            onClick: () => {
+                              handelTrash(note?.uuid, note?.content, note?.title)
+                              navigate(`/feed/`);
+                            }
+                          }
+                        ],
+                      }}
+                      overlayStyle={{ width: 180, height: 250 }}
+                      trigger={["click"]}
+                      placement="bottomLeft"
+                    >
+                      <div className="rounded-full flex justify-center cursor-pointer">
+                        <EllipsisOutlined className="text-2xl" />
+                      </div>
+                    </Dropdown>
+                  </ConfigProvider>
+                </div>
+              </div>
+            </div>
+
+            {/* Created Date */}
+            <div
+              className={`text-sm m-2 flex flex-wrap gap-4 md:gap-10 p-5 border-b ${theme === "dark" ? "border-gray-800" : "border-gray-300"
+                }`}
+            >
+              <div className="flex gap-2 items-center">
+                <ScheduleOutlined /> <p>Date</p>
+              </div>
+              <p className="underline" title={note?.created_at}>
+                {dayjs(note?.created_at).format("DD/MM/YYYY")}
+              </p>
+            </div>
+
+            {/* Folder */}
+            <div
+              className={`text-sm m-2 flex flex-wrap gap-4 md:gap-10 p-5 border-b ${theme === "dark" ? "border-gray-800" : "border-gray-300"
+                }`}
+            >
+              <div className="flex gap-2 items-center">
+                <FolderFilled /> <p>Folder</p>
+              </div>
+              <p className="underline">{note?.folder_name}</p>
+            </div>
+
+            {/* Markdown Content */}
+            <div className={getClassNames("text-base w-full whitespace-pre-line break-words caption-top p-4")}>
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  h1: ({ node, ...props }) => <h1 className="text-3xl font-bold mt-6 mb-3" {...props} />,
+                  h2: ({ node, ...props }) => <h2 className="text-2xl font-bold mt-5 mb-2" {...props} />,
+                  h3: ({ node, ...props }) => <h3 className="text-xl font-semibold mt-4 mb-2" {...props} />,
+                  p: ({ node, ...props }) => (
+                    <p className="text-base leading-6 my-2 break-words" {...props} />
+                  ),
+                  hr: ({ node, ...props }) => (
+                    <hr
+                      className={`my-7 border-t ${theme === "dark" ? "border-gray-700" : "border-gray-300"
+                        }`}
+                      {...props}
+                    />
+                  ),
+                  code: ({ inline, children, ...rest }) => {
+                    return !inline ? (
+                      <pre
+                        className={`my-4 p-4 rounded overflow-x-auto text-sm font-mono ${theme === "dark" ? "bg-[#272727] text-white" : "bg-[#eff2f3] text-black"
+                          }`}
+                      >
+                        <code>{children}</code>
+                      </pre>
+                    ) : (
+                      <code
+                        className={`px-1 py-0.5 rounded font-mono text-sm ${theme === "dark" ? "bg-gray-700 text-white" : "bg-gray-200 text-black"
+                          }`}
+                        {...rest}
+                      >
+                        {children}
+                      </code>
+                    );
+                  },
+                  a: ({ node, ...props }) => (
+                    <a
+                      className="text-blue-600 underline hover:text-blue-800 break-all"
+                      target="_blank"
+                      rel="noreferrer"
+                      {...props}
+                    />
+                  ),
+                }}
+              >
+                {note?.content || ""}
+              </ReactMarkdown>
+            </div>
           </div>
-        </div>
+        </>
       )}
     </div>
 
