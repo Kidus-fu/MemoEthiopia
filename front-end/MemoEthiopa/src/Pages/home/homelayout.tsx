@@ -9,7 +9,7 @@ import { ConfigProvider, Dropdown, Skeleton, Spin, theme as antdTheme } from 'an
 import logo from '../../assets/MemoEthio_logo_4.png';
 import { Folderitems, useUserMenuItems } from "./MenuPropsC"
 import { fetchUserData } from '../../store/features/users/User';
-import AddNoteForm from './NewNoteForm';
+// import AddNoteForm from './NewNoteForm';
 import NotificationList from './NotificationList';
 
 interface FolderState {
@@ -45,7 +45,7 @@ const HomeLayout: React.FC = () => {
   const [mobileSidebar, setMobileSidebar] = useState(false)
   const { foldername } = useParams()
   const useritems = useUserMenuItems();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenforder = (name: string) => {
     if (folders) {
@@ -100,34 +100,34 @@ const HomeLayout: React.FC = () => {
 
     setInOutlet(match ? true : false)
   }, [match])
-  const handelnewNote = (values: any) => {
-    setLocaloading(true)
-    let uuid: string | undefined;
-    api.post('api-v1/notes/', values)
-      .then(res => {
-        uuid = res.data.uuid
-      })
-      .finally(() => {
-        api.get("api-v1/folders/")
-          .then(res => {
-            if (res.status === 200) {
-              const data = res.data.results
-              setFolders(data)
-              const foldernow = data.find((folderq: any) => folderq.id === values?.folder);
-              navigate(`/feed/${foldernow.name}/${uuid}`)
-              setOpenForder(foldernow)
-              setLocaloading(false)
+  // const handelnewNote = (values: any) => {
+  //   setLocaloading(true)
+  //   let uuid: string | undefined;
+  //   api.post('api-v1/notes/', values)
+  //     .then(res => {
+  //       uuid = res.data.uuid
+  //     })
+  //     .finally(() => {
+  //       api.get("api-v1/folders/")
+  //         .then(res => {
+  //           if (res.status === 200) {
+  //             const data = res.data.results
+  //             setFolders(data)
+  //             const foldernow = data.find((folderq: any) => folderq.id === values?.folder);
+  //             navigate(`/feed/${foldernow.name}/${uuid}`)
+  //             setOpenForder(foldernow)
+  //             setLocaloading(false)
 
-            } else {
-              console.error("get error to fauch a notes")
-            }
-          })
-      })
-      .catch((err: any) => {
-        console.error(err);
-        setLocaloading(false)
-      })
-  }
+  //           } else {
+  //             console.error("get error to fauch a notes")
+  //           }
+  //         })
+  //     })
+  //     .catch((err: any) => {
+  //       console.error(err);
+  //       setLocaloading(false)
+  //     })
+  // }
   const getClassNames = (base: string) => {
     const border = DeveloperTest ? 'border border-red-700' : '';
     const themeStyle = theme === 'dark' ? ' bg-[#1C1C1C] text-white' : 'bg-[#F3F6FB] text-gray-600';
@@ -420,9 +420,10 @@ const HomeLayout: React.FC = () => {
                   <h1 className="text-md font-bold mb-4">MemoEthiopia</h1>
                   <SearchOutlined />
                 </div>
-                <AddNoteForm onClose={() => setIsModalOpen(false)} folders={folders} theme={theme} open={isModalOpen} user={user} onSumbit={handelnewNote} />
+
+                {/* <AddNoteForm onClose={() => setIsModalOpen(false)} folders={folders} theme={theme} open={isModalOpen} user={user} onSumbit={handelnewNote} /> */}
                 <button className={getClassNames(`px-4 py-2.5 cursor-pointer w-full rounded mt-2 mb-4 text-center ${theme === "dark" ? "bg-[#3D3939]" : "bg-[#ffff]"} `)}
-                  onClick={() => setIsModalOpen(true)}
+                  // onClick={() => setIsModalOpen(true)}
                 >+ New Note</button>
               </div>
               <div className={getClassNames("flex-1 overflow-y-auto space-y-2 mb-3 overflow-x-auto w-auto ")}
