@@ -324,10 +324,29 @@ class SharedNoteSerializer(serializers.ModelSerializer):
             }
     
 class NotificationSerializer(serializers.ModelSerializer):
+    user_name = serializers.SerializerMethodField()
     class Meta:
         model = Notification
-        fields = ['id','user','message','is_read','created_at','updated_at']
-
+        fields = ['id','user','message','is_read','user_name','created_at','updated_at']
+    def get_user_name(self, obj):
+        username = obj.user.username
+        id = obj.user.id
+        email = obj.user.email
+        user_info = getattr(obj.user, 'userInfo', None)  # Get userInfo object safely
+        user_data = {
+                "bio": user_info.bio if user_info and user_info.bio else "No bio available",
+                "email": email,
+                "profile_picture": user_info.profile_picture.url if user_info and user_info.profile_picture else None,
+                "username": username,
+                "uuid": user_info.uuid if user_info and user_info.uuid else "Not Loger Have UUID",
+                "phone_number": user_info.phone_number if user_info and user_info.phone_number else "Not Provided",
+                "location": user_info.location if user_info and user_info.location else "Unknown",
+                "date_of_birth": user_info.date_of_birth.isoformat() if user_info and user_info.date_of_birth else "Not Set",
+                "gender": user_info.gender if user_info and user_info.gender else "Not Specified",
+                "social_links": user_info.social_links if user_info and user_info.social_links else [],
+                "preferred_language": user_info.preferred_language if user_info and user_info.preferred_language else "en"
+            }
+        return user_data
 class FavoriteSerializer(serializers.ModelSerializer):
     notes = serializers.SerializerMethodField()
 

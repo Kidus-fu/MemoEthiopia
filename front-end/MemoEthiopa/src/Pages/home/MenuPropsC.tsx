@@ -58,8 +58,48 @@ export const useUserMenuItems = (): MenuProps['items'] => {
       label: "Update",
       icon: <CiOutlined />,
     },
+     {
+  label: 'Help',
+  key: '3',
+  icon: <GlobalOutlined />,
+  type: 'submenu',
+  children: [
     {
-      key: '3',
+      key: "4-1",
+      label: "What is GashaAI?",
+      icon: <ExclamationCircleOutlined />,
+      onClick: () => {
+        showMessage('success',"GashaAI is your personal Ethiopian AI Agent for note-taking, reminders, and smart assistance inside MemoEthiopia.");
+      }
+    },
+    {
+      key: "4-2",
+      label: "How to use GashaAI?",
+      icon: <ExclamationCircleOutlined />,
+      onClick: () => {
+       showMessage('success',"To use GashaAI, click the agent icon inside your notes app, type your request (like 'Summarize this note' or 'Translate to Amharic'), and get instant smart help.");
+      }
+    },
+    {
+      key: "4-3",
+      label: "Is GashaAI free?",
+      icon: <ExclamationCircleOutlined />,
+      onClick: () => {
+       showMessage('success',"GashaAI is free for basic use on MemoEthiopia, with premium features coming soon.");
+      }
+    },
+    {
+      key: "4-4",
+      label: "How can I give feedback?",
+      icon: <ExclamationCircleOutlined />,
+      onClick: () => {
+       showMessage('success',"You can send feedback via Telegram @MemoEthiopia or email seeh51593@gmail.com to help improve GashaAI.");
+      }
+    }
+  ]
+},
+    {
+      key: '4',
       label: 'Setting',
       className : '',
       icon: <SettingFilled />,
@@ -82,7 +122,7 @@ export const useUserMenuItems = (): MenuProps['items'] => {
         },
         {
           key: '3-4',
-          className: `p-2`,
+          className: ``,
           label: "Themes",
           type: 'submenu',
           children: [
@@ -115,26 +155,6 @@ export const useUserMenuItems = (): MenuProps['items'] => {
       ]
     },
     {
-      label: 'Help',
-      key: '4',
-      icon: <GlobalOutlined />,
-      type: 'submenu',
-      children: [
-        {
-          key: "4-1",
-          label: "what is GashaAI?",
-          icon: <ExclamationCircleOutlined />,
-          onClick: () => { alert("ii") }
-        },
-        {
-          key: "4-2",
-          label: "what is GashaAI?",
-          icon: <ExclamationCircleOutlined />,
-          onClick: () => { alert("ii") }
-        },
-      ]
-    },
-    {
       key: '5',
       type: 'divider'
     },
@@ -149,6 +169,7 @@ export const useUserMenuItems = (): MenuProps['items'] => {
     }
   ];
 };
+
 export const useNoteItems = (): MenuProps['items'] => {
   // const user = useSelector((state: RootState) => state.user);
 

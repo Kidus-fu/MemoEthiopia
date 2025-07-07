@@ -10,6 +10,7 @@ import logo from '../../assets/MemoEthio_logo_4.png';
 import { Folderitems, useUserMenuItems } from "./MenuPropsC"
 import { fetchUserData } from '../../store/features/users/User';
 import AddNoteForm from './NewNoteForm';
+import NotificationList from './NotificationList';
 
 interface FolderState {
   created_at: string;
@@ -38,6 +39,7 @@ const HomeLayout: React.FC = () => {
   const folderinput = useRef<HTMLInputElement>(null)
   const folderinputnew = useRef<HTMLInputElement>(null)
   const [notificationCount, setnotificationCount]: any = useState()
+  const [notifications, setNotifications]: any = useState()
   const [folderNameError, setFolderNameError] = useState(false)
   const match = useMatch("/feed/mynote/:uuid");
   const [mobileSidebar, setMobileSidebar] = useState(false)
@@ -271,6 +273,8 @@ const HomeLayout: React.FC = () => {
     api.get('api-v1/notification/')
       .then(res => {
         const data = res.data.results
+        setNotifications(data);
+
         setnotificationCount(data.length)
       })
   }, [])
@@ -278,6 +282,17 @@ const HomeLayout: React.FC = () => {
     folderinputnew.current?.focus();
     folderinputnew.current?.select();
   }, [newfoldercreate]);
+ const handelNotificationopen = () => {
+  notifications.map((notifi:any) => {
+    console.log(notifi.id);
+    api.patch(`api-v1/notification/${notifi.id}/`,{is_read:true})
+    .then(res => {
+      console.log(res);
+      
+    })
+  })
+  setnotificationCount(0)
+ }
 
 
   return (
@@ -318,19 +333,28 @@ const HomeLayout: React.FC = () => {
               <div className="p-1 cursor-pointer">
                 {notificationCount ? (
                   <>
-                    <div className="relative inline-block">
-                      <button className={"text-md cursor-pointer border border-transparent"} title='notfication' >
-                        Notification
-                      </button>
-                      <span className="absolute -top-1 -right-2 bg-red-600 text-white text-xs px-1.5 py-0.5 rounded-full" title={notificationCount}>
-                        {notificationCount}
-                      </span>
-                    </div>
-
+                    <Dropdown
+                      trigger={["click"]}
+                      placement="bottomRight"
+                      dropdownRender={() => <NotificationList notifications={notifications} theme={theme} />}>
+                      <div className="relative inline-block" onClick={handelNotificationopen}>
+                        <button className={"text-md cursor-pointer border border-transparent"} title='notfication' >
+                          Notification
+                        </button>
+                        <span className="absolute -top-1 -right-2 bg-red-600 text-white text-xs px-1.5 py-0.5 rounded-full" title={notificationCount}>
+                          {notificationCount}
+                        </span>
+                      </div>
+                    </Dropdown>
                   </>
                 ) : (
                   <>
-                    <button className='text-md cursor-pointer border border-transparent' title='notfication'>Notfication</button>
+                    <Dropdown
+                      trigger={["click"]}
+                      placement="bottomRight"
+                      dropdownRender={() => <NotificationList notifications={notifications} theme={theme} />}>
+                      <button className='text-md cursor-pointer border border-transparent' title='notfication'>Notification</button>
+                    </Dropdown>
                   </>
                 )}
               </div>
@@ -402,9 +426,7 @@ const HomeLayout: React.FC = () => {
                 >+ New Note</button>
               </div>
               <div className={getClassNames("flex-1 overflow-y-auto space-y-2 mb-3 overflow-x-auto w-auto ")}
-                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-
-              >
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                 <div onClick={() => {
                   if (renamid !== 0) {
                     setRenameid(0)
@@ -454,7 +476,6 @@ const HomeLayout: React.FC = () => {
                           {
                             folderNameError && <small className={`text-center ms-5 transition-all delay-300 ease-in ${theme === 'dark' ? "text-red-500" : "text-red-800"} `}>Folder name already taken.</small>
                           }
-
                         </p>
                       </div>}
                       {folders.map((folder) => (
@@ -493,7 +514,6 @@ const HomeLayout: React.FC = () => {
                                         }
                                       }}
                                     />
-
                                   </p>
                                 ) : (
                                   <p
@@ -547,8 +567,7 @@ const HomeLayout: React.FC = () => {
                     if (renamid !== 0) {
                       setRenameid(0)
                     }
-                  }}
-                >
+                  }}>
                   <h2 className={getClassNames("mt-4 text-sm font-semibold  text-gray-400")}>More</h2>
                 </div>
                 <div className={getClassNames("space-y-1 text-md overflow-hidden mb-3 p-4 ")}
@@ -558,44 +577,35 @@ const HomeLayout: React.FC = () => {
                     if (renamid !== 0) {
                       setRenameid(0)
                     }
-                  }}
-                >
+                  }}>
                   <div className="text-md mb-2 cursor-pointer flex gap-1.5">
                     <InboxOutlined /> Archived
                   </div>
                   <div className="text-md mb-2 cursor-pointer">
                     <RestOutlined /> Tarsh
                   </div>
-                  <div className="">
-
-                  </div>
                 </div>
               </div>
             </aside >
 
             <div className={`block md:hidden ${!mobileSidebar ? 'fixed text-2xl p-0 z-0 top-0.5 left-1.5' : 'hidden'}`}
-              onClick={() => setMobileSidebar(true)}
-            >
+              onClick={() => setMobileSidebar(true)}>
               <AlignLeftOutlined className="" />
-
             </div>
+
             <NoteList foldernotes={openForder} />
-            {/* Note content */}
             < main
               className={getClassNames(`h-screen hidden overflow-y-auto mdflex ${inOutlet ? "" : "items-center"} justify - center`)}
-              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-            >
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             </main>
-
             <div className={getClassNames(`${inOutlet ? "" : `${theme === "dark" ? "bg-[#242424]" : "bg-[#ffffff33]"}`}  fixed top-0 left-0 right-0 bottom-0  h-screen overflow-y-auto lg:static lg:h-auto lg:flex w-full`)}>
               <Outlet />
             </div>
           </div>
         </>
-      )}
-    </>
-
-  );
+      )
+      }
+    </>);
 };
 
 export default HomeLayout;

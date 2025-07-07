@@ -4,10 +4,10 @@ import { RootState } from "../../store/store";
 import { useEffect, useState } from "react";
 import api from "../../api";
 import dayjs from "dayjs";
-import {  ConfigProvider, Dropdown, Modal, Spin, theme as antdTheme } from "antd";
+import { ConfigProvider, Dropdown, Modal, Spin, theme as antdTheme } from "antd";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { ArrowLeftOutlined, CloseOutlined,  DeleteOutlined, EditOutlined, EllipsisOutlined, FolderFilled, InboxOutlined, InfoCircleOutlined, ScheduleOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, CloseOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, FolderFilled, InboxOutlined, InfoCircleOutlined, ScheduleOutlined } from "@ant-design/icons";
 import { useMessage } from "../../components/useMessage";
 import NoteDetail from "./NoteDetail";
 
@@ -130,15 +130,14 @@ const NotePage = () => {
               title="Detail"
               closable={{ 'aria-label': 'Custom Close Button' }}
               open={Notedetail}
-               
-              onClose={() => setNotedetail(false)}           
+              onClose={() => setNotedetail(false)}
               closeIcon={<CloseOutlined onClick={() => setNotedetail(false)} />}
               width={550}
               footer={
-                null 
+                null
               }
             >
-              <NoteDetail note={note} />
+              {note && <NoteDetail note={note} />}
             </Modal>
           </ConfigProvider>
           <div className={getClassNames("min-h-screen w-full")}>
@@ -148,7 +147,7 @@ const NotePage = () => {
                 <div
                   className="text-lg cursor-pointer"
                   title="back"
-                  onClick={() => navigate(`/feed/${note?.folder}`)}
+                  onClick={() => navigate(`/feed/${note?.folder_name}`)}
                 >
                   <ArrowLeftOutlined />
                 </div>
@@ -243,28 +242,23 @@ const NotePage = () => {
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{
-                  h1: ({ node, ...props }) => <h1 className="text-3xl font-bold mt-6 mb-3" {...props} />,
-                  h2: ({ node, ...props }) => <h2 className="text-2xl font-bold mt-5 mb-2" {...props} />,
-                  h3: ({ node, ...props }) => <h3 className="text-xl font-semibold mt-4 mb-2" {...props} />,
-                  p: ({ node, ...props }) => (
+                  h1: (props) => <h1 className="text-3xl font-bold mt-6 mb-3" {...props} />,
+                  h2: (props) => <h2 className="text-2xl font-bold mt-5 mb-2" {...props} />,
+                  h3: (props) => <h3 className="text-xl font-semibold mt-4 mb-2" {...props} />,
+                  p: (props) => (
                     <p className="text-base leading-6 my-2 break-words" {...props} />
                   ),
-                  hr: ({ node, ...props }) => (
+                  hr: (props) => (
                     <hr
                       className={`my-7 border-t ${theme === "dark" ? "border-gray-700" : "border-gray-300"
                         }`}
                       {...props}
                     />
                   ),
-                  code: ({ inline, children, ...rest }) => {
-                    return !inline ? (
-                      <pre
-                        className={`my-4 p-4 rounded overflow-x-auto text-sm font-mono ${theme === "dark" ? "bg-[#272727] text-white" : "bg-[#eff2f3] text-black"
-                          }`}
-                      >
-                        <code>{children}</code>
-                      </pre>
-                    ) : (
+                  code: (props) => {
+                    const { className, children, ...rest } = props as any;
+                    const inline = !className;
+                    return inline ? (
                       <code
                         className={`px-1 py-0.5 rounded font-mono text-sm ${theme === "dark" ? "bg-gray-700 text-white" : "bg-gray-200 text-black"
                           }`}
@@ -272,9 +266,16 @@ const NotePage = () => {
                       >
                         {children}
                       </code>
+                    ) : (
+                      <pre
+                        className={`my-4 p-4 rounded overflow-x-auto text-sm font-mono ${theme === "dark" ? "bg-[#272727] text-white" : "bg-[#eff2f3] text-black"
+                          }`}
+                      >
+                        <code>{children}</code>
+                      </pre>
                     );
                   },
-                  a: ({ node, ...props }) => (
+                  a: (props) => (
                     <a
                       className="text-blue-600 underline hover:text-blue-800 break-all"
                       target="_blank"
@@ -286,6 +287,7 @@ const NotePage = () => {
               >
                 {note?.content || ""}
               </ReactMarkdown>
+
             </div>
           </div>
         </>

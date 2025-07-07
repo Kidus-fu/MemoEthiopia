@@ -11,7 +11,6 @@ class userInfo(models.Model):
     joined_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False,unique=True)
     is_verified = models.BooleanField(blank=True, null=True, default=False)
-
     phone_number = models.CharField(max_length=20, blank=True, null=True)
     location = models.TextField(blank=True, null=True)
     date_of_birth = models.DateField(blank=True, null=True)
@@ -61,6 +60,7 @@ class Note(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     folder = models.ForeignKey("Folder", on_delete=models.SET_NULL, null=True, blank=True, related_name="notes",)
     is_trashed = models.BooleanField(default=False)  # To track if the note is in trash
+    
     def __str__(self):
         return f"{self.title} - {self.user.username}"
     def folderGet(self):

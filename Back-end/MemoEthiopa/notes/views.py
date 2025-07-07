@@ -337,6 +337,7 @@ class NotificationView(
     def put(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs)
     def patch(self, request, *args, **kwargs):
+        request.data['user'] = request.user.id 
         return super().update(request, *args, **kwargs)
     def delete(self, request, *args, **kwargs):
         super().destroy(request, *args, **kwargs)

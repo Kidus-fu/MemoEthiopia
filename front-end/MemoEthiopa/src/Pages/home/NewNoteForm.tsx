@@ -44,17 +44,13 @@ const AddNoteForm: React.FC<AddNoteFormProps> = ({ open, onClose, folders, theme
             token: {
                 colorBgMask: "rgb(1, 1, 1,0.7)",
                 colorPrimary: "rgb(23, 34, 241)"
-
-            }
-        }}>
+            }}}>
             <Modal
                 keyboard
-
                 open={open}
-                title="New Note"
+                title="New Note Just a test"
                 closeIcon={<CloseOutlined onClick={() => setIsColse(true)} />}
-                footer={null}
-            >
+                footer={null}>
                 <Modal
                     centered
                     open={isClose}
@@ -62,20 +58,16 @@ const AddNoteForm: React.FC<AddNoteFormProps> = ({ open, onClose, folders, theme
                     footer={null}
                     width={280}
                     styles={{
-                        body: { padding: 16, borderRadius: 12 },
+                        body: { padding: 4, borderRadius: 12 },
                         content: { borderRadius: 12 },
                         mask: { backdropFilter: "blur(5px)" }
-                    }}
-
-                >
-
-                    <div className="flex flex-col gap-6 justify-center items-center md:h-40 h-36">
-                        <p className="text-center text-base md:text-md font-medium ">
+                    }}>
+                    <div className="flex flex-col gap-3 justify-center items-center md:h-40 h-36 ">
+                        <p className={`text-center text-base md:text-md font-medium border-b p-2 ${theme === "dark" ? "border-gray-800" : "border-gray-300"}`}>
                             Are you sure you want to mark this as discovered?
                         </p>
-
                         <div className="w-full flex flex-col gap-3">
-                            <Button type='text' block danger={true} style={{ padding: 10 }} onClick={() => {
+                            <Button type='text' block danger={true} style={{ padding: 5 }} onClick={() => {
                                 setIsColse(false)
                                 setTimeout(() => {
                                     handelDiscover()
@@ -83,7 +75,7 @@ const AddNoteForm: React.FC<AddNoteFormProps> = ({ open, onClose, folders, theme
                             }}>
                                 Discoverd
                             </Button>
-                            <Button type='text' block style={{ padding: 10 }} onClick={() => setIsColse(false)}>
+                            <Button type='text' block style={{ padding: 5 }} onClick={() => setIsColse(false)}>
                                 Cancel
                             </Button>
                         </div>
@@ -93,8 +85,7 @@ const AddNoteForm: React.FC<AddNoteFormProps> = ({ open, onClose, folders, theme
                     form={form}
                     layout="vertical"
                     onFinish={handleFinish}
-                    className="space-y-4 select-none"
-                >
+                    className="space-y-4 select-none">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <Form.Item name="title" label="Title" rules={[{ required: true, message: 'Please enter the title' }]}>
                             <Input className="bg-transparent border border-gray-600" style={{ border: 'none' }} />
@@ -104,21 +95,16 @@ const AddNoteForm: React.FC<AddNoteFormProps> = ({ open, onClose, folders, theme
                         </Form.Item>
                         <Form.Item name="folder" label="Folder" rules={[{ required: true, message: 'Please select a folder' }]}>
                             <Select className="bg-transparent" placeholder="Select folder" style={{ border: 'none' }}>
-                                {folders.map(folder => (
+                                {folders.map((folder: any) => (
                                     <Select.Option value={folder.id} key={folder.id} >{folder.name}</Select.Option>
                                 ))}
                             </Select>
                         </Form.Item>
                     </div>
-
-                    {/* <Form.Item name="content" label="Content" rules={[{ required: true, message: 'Please enter the content' }]}>
-                        <Input.TextArea rows={6} className="bg-transparent border border-gray-600 resize-none" style={{ resize: 'none', border: 'none' }} />
-                    </Form.Item> */}
                     <Form.Item
                         name="content"
                         label="Content"
-                        rules={[{ required: true, message: "Please enter the content" }]}
-                    >
+                        rules={[{ required: true, message: "Please enter the content" }]}>
                         <ReactMde
                             value={content}
                             onChange={setContent}
@@ -127,10 +113,8 @@ const AddNoteForm: React.FC<AddNoteFormProps> = ({ open, onClose, folders, theme
                             generateMarkdownPreview={(markdown: any) =>
                                 Promise.resolve(converter.makeHtml(markdown))
                             }
-                            minEditorHeight={150}
-                        />
+                            minEditorHeight={150}/>
                     </Form.Item>
-
                     <div className='flex justify-end items-end'>
                         <Button type='primary' htmlType='submit'>Save</Button>
                     </div>

@@ -27,7 +27,8 @@ interface Note {
     content: string;
     created_at: string;
     file: string | null;
-    folder: string;
+    folder: number;
+    folder_name: string;
     is_trashed: boolean;
     id: number;
     image: string | null;
@@ -56,7 +57,7 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ note }) => {
             <h1 className={getClassNames("text-3xl font-bold text-center")}>{note.title}</h1>
 
             <div className={getClassNames("flex flex-wrap justify-center gap-4 text-sm")}>
-                <span><FolderFilled className='me-2'/>Folder: {note.folder}</span>
+                <span><FolderFilled className='me-2'/>Folder: {note.folder_name}</span>
                 <span><ScheduleFilled className='me-1' /> Created: {dayjs(note.created_at).format('DD MMM YYYY')}</span>
                 <span><IdcardFilled className='me-1' /> ID: {note.id}</span>
             </div>
