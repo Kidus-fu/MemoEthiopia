@@ -814,7 +814,7 @@ const HomeLayout: React.FC = () => {
               className={getClassNames(`h-screen hidden overflow-y-auto mdflex ${inOutlet ? "" : "items-center"} justify - center`)}
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             </main>
-            <div className={getClassNames(`${inOutlet ? "" : `${theme === "dark" ? "bg-[#242424]" : "bg-[#ffffff33]"}`}  fixed top-0 left-0 right-0 bottom-0  h-screen overflow-y-auto lg:static lg:h-auto lg:flex w-full`)}>
+            <div className={getClassNames(`${inOutlet ? "" : `${theme === "dark" ? "bg-[#242424]" : "bg-[#ffffff33]"}`}   top-0 left-0 right-0 bottom-0  h-screen overflow-y-auto lg:static lg:h-auto lg:flex w-full`)}>
               <Outlet />
             </div>
           </div>
