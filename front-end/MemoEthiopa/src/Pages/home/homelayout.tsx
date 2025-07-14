@@ -3,14 +3,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../../store/store';
 import NoteList from './NoteList';
 import { Outlet, useMatch, useNavigate, useParams } from 'react-router-dom';
-import { AlignLeftOutlined, CloseOutlined, ExportOutlined, FileTextOutlined, FolderAddFilled, FolderFilled, FolderOpenFilled, InboxOutlined, MoreOutlined, ReloadOutlined, RestOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
+import { AlignLeftOutlined, CloseOutlined, ExportOutlined, FileDoneOutlined, FileTextOutlined, FolderAddFilled, FolderFilled, FolderOpenFilled, InboxOutlined, MoreOutlined, ReloadOutlined, RestOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
 import api from '../../api';
-import { ConfigProvider, Dropdown, Skeleton, Spin, theme as antdTheme } from 'antd';
+import { Button, ConfigProvider, Drawer, Dropdown, Empty, Skeleton, Spin, theme as antdTheme } from 'antd';
 import logo from '../../assets/MemoEthio_logo_4.png';
 import { Folderitems, useUserMenuItems } from "./MenuPropsC"
 import { fetchUserData } from '../../store/features/users/User';
 // import AddNoteForm from './NewNoteForm';
 import NotificationList from './NotificationList';
+import { useMessage } from '../../components/useMessage';
 
 interface FolderState {
   created_at: string;
@@ -24,11 +25,13 @@ const HomeLayout: React.FC = () => {
   const user = useSelector((state: RootState) => state.user);
   const loggedIn = useSelector((state: RootState) => state.userinfo.loggedIn)
   const navigate = useNavigate();
+  const showMessage = useMessage()
   const DeveloperTest = useSelector((state: RootState) => state.developertest.border_test);
   const [loading, setLoading] = useState(true)
   const [localoading, setLocaloading] = useState(false)
   const [openForder, setOpenForder]: any = useState(undefined);
   const [folders, setFolders] = useState<FolderState[]>([])
+  const [trashedNotes, setTrashedNotes] = useState([])
   const [foldersName, setFoldersName]: any = useState()
   const [newFoldersName, setNewFoldersName]: any = useState()
   const [newFoldersNameC, setNewFoldersNameC]: any = useState()
@@ -41,6 +44,8 @@ const HomeLayout: React.FC = () => {
   const [notificationCount, setnotificationCount]: any = useState()
   const [notifications, setNotifications]: any = useState()
   const [folderNameError, setFolderNameError] = useState(false)
+  const [Trashopen, setTrashopen] = useState(false)
+  const [TrashedLoad, setTrashedLoad] = useState(false)
   const match = useMatch("/feed/mynote/:uuid");
   const [mobileSidebar, setMobileSidebar] = useState(false)
   const { foldername } = useParams()
@@ -141,12 +146,10 @@ const HomeLayout: React.FC = () => {
         .then(res => {
           const data = res.data.results
           setFolders(data)
-
           if (foldername) {
             const newdata = data.filter((folder: any) => folder.name.toLowerCase().includes(foldername.toLowerCase()))
             setOpenForder(newdata[0]);
           }
-
           setLoading(false)
           dispatch(fetchUserData())
         })
@@ -157,7 +160,7 @@ const HomeLayout: React.FC = () => {
     api.delete(`api-v1/folders/${id}/`)
       .then((resp) => {
         if (resp.status === 200) {
-          console.log("deleted");
+          showMessage("success", `Successfuly deleted`)
         }
       }).finally(() => {
         api.get("api-v1/folders/")
@@ -216,7 +219,6 @@ const HomeLayout: React.FC = () => {
       setRenameid(id)
       setFoldersName(name)
       setNewFoldersName(name)
-
       return null
     }
     // Deleting key 4
@@ -240,8 +242,8 @@ const HomeLayout: React.FC = () => {
     } else {
       setFolderNameError(false)
     }
-
   }, [newFoldersNameC])
+
   const handelnewfolderC = (name: string) => {
     setLocaloading(true)
     api.post('api-v1/folders/', { name: name })
@@ -274,7 +276,6 @@ const HomeLayout: React.FC = () => {
       .then(res => {
         const data = res.data.results
         setNotifications(data);
-
         setnotificationCount(data.length)
       })
   }, [])
@@ -282,19 +283,103 @@ const HomeLayout: React.FC = () => {
     folderinputnew.current?.focus();
     folderinputnew.current?.select();
   }, [newfoldercreate]);
- const handelNotificationopen = () => {
-  notifications.map((notifi:any) => {
-    console.log(notifi.id);
-    api.patch(`api-v1/notification/${notifi.id}/`,{is_read:true})
-    .then(res => {
-      console.log(res);
-      
+
+  const handelNotificationopen = () => {
+    setnotificationCount(0)
+    notifications.map((notifi: any) => {
+      api.patch(`api-v1/notification/${notifi.id}/`,
+        {
+          message: notifi.message,
+          is_read: true
+        })
     })
-  })
-  setnotificationCount(0)
- }
+  }
+  const handelTrashopen = () => {
+    setTrashedLoad(true)
+    api.get('api-v1/notes/outtrash/')
+      .then((res: any) => {
+        setTrashedNotes(res.data.results)
+        setTrashedLoad(false)
+      })
+      .catch((error: any) => console.log(error))
+    setTrashopen(true)
+  }
+  const handelNoteTrashOut = (note: any, idx: number) => {
+    const updatedNotes = trashedNotes.filter((_, index) => index !== idx);
+    setTrashedNotes(updatedNotes);
 
+    api.patch(`/api-v1/notes/outtrash/${note.uuid}/`,
+      {
+        content: note.content,
+        title: note.title,
+        is_trashed: false,
+      })
+      .then(() => {
+        showMessage("success", `Note sueccesfuly Restore ${note.title}`)
+        api.get("api-v1/folders/")
+          .then(res => {
+            if (res.status === 200) {
+              const data = res.data.results
+              setFolders(data)
+            } else {
+              showMessage("error", "something went wrong try again")
+            }
+          })
+      })
+  }
+  const handelNoteTrashDel = (note: any, idx: number) => {
+    const updatedNotes = trashedNotes.filter((_, index) => index !== idx);
+    setTrashedNotes(updatedNotes);
+    api.delete(`/api-v1/notes/outtrash/${note.uuid}/`)
+      .then((res) => {
+        if (res.status === 204) {
+          showMessage("success", `Successfuly deleted ${note.title}`)
+          api.get("api-v1/folders/")
+            .then(res => {
+              if (res.status === 200) {
+                const data = res.data.results
+                setFolders(data)
+              } else {
+                showMessage("error", "something went wrong try again")
+              }
+            })
+        } else {
+          showMessage("error", "something went wrong try again")
+        }
+      })
+  }
+  const handelTrashRestor = () => {
+    setTrashedNotes([]);
+    api.post('api-v1/notes/outtrash/?restore_all=true')
+      .then((res) => {
+        if (res.status === 200) {
+          showMessage("success", "Restore all notes")
+          api.get("api-v1/folders/")
+            .then(res => {
+              if (res.status === 200) {
+                const data = res.data.results
+                setFolders(data)
+              } else {
+                showMessage("error", "something went wrong try again")
+              }
+            })
+        } else {
+          showMessage("error", 'Something went wrong try again')
+        }
+      })
+  }
+  const handelTrashClear = () => {
+    setTrashedNotes([]);
+    api.delete('api-v1/notes/outtrash/?all_delete=true')
+      .then((res) => {
+        if (res.status === 200) {
+          showMessage("success", "Restore all notes")
+        } else {
+          showMessage("error", 'Something went wrong try again')
+        }
+      })
 
+  }
   return (
     <>
       {loading ? (
@@ -423,7 +508,7 @@ const HomeLayout: React.FC = () => {
 
                 {/* <AddNoteForm onClose={() => setIsModalOpen(false)} folders={folders} theme={theme} open={isModalOpen} user={user} onSumbit={handelnewNote} /> */}
                 <button className={getClassNames(`px-4 py-2.5 cursor-pointer w-full rounded mt-2 mb-4 text-center ${theme === "dark" ? "bg-[#3D3939]" : "bg-[#ffff]"} `)}
-                  // onClick={() => setIsModalOpen(true)}
+                // onClick={() => setIsModalOpen(true)}
                 >+ New Note</button>
               </div>
               <div className={getClassNames("flex-1 overflow-y-auto space-y-2 mb-3 overflow-x-auto w-auto ")}
@@ -582,7 +667,137 @@ const HomeLayout: React.FC = () => {
                   <div className="text-md mb-2 cursor-pointer flex gap-1.5">
                     <InboxOutlined /> Archived
                   </div>
-                  <div className="text-md mb-2 cursor-pointer">
+                  <ConfigProvider
+                    theme={{
+                      algorithm: theme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
+                      token: {
+                        colorPrimary: '#f8f9fa',
+                        fontSize: 12,
+                      },
+                    }}
+                  >
+                    <Drawer
+                      title="Trased notes"
+                      placement="left"
+                      width={420}
+                      onClose={() => setTrashopen(false)}
+                      open={Trashopen}
+                      closable={true}
+                      bodyStyle={{ padding: "1rem", overflowY: "auto" }}
+                    >
+                      <div className={`flex justify-end items-end text-sm my-1  `}>
+                        <Button type='text' className={`${TrashedLoad || trashedNotes.length === 0 ? "cursor-not-allowed opacity-30" : " opacity-100"}`}
+                          onClick={() => handelTrashRestor()}>
+                          <FileDoneOutlined /> Restor all item</Button>
+                        <Button danger={true} type='text' className={` ${TrashedLoad || trashedNotes.length === 0 ? "cursor-not-allowed opacity-30" : "cursor-pointer opacity-100"}`}
+                          onClick={() => handelTrashClear()}
+                        ><RestOutlined /> Clear All</Button>
+                      </div>
+                      {
+                        TrashedLoad ?
+                          // <Skeleton.Node  />
+                          <ul className="space-y-2 px-1">
+                            {Array.from({ length: 5 }).map((_, idx) => (
+                              <li
+                                key={idx}
+                                className={` ${theme === "dark" ? "bg-[#2e2c2c]" : "bg-[#f3f1f1]"} p-4 rounded-lg animate-pulse  flex flex-col gap-2`}
+                              >
+                                <div className={`h-4 w-2/3 rounded-md`} />
+                                <div className={`h-4 w-2/3 rounded-md`} />
+                                <div className={`h-4 w-2/3 rounded-md`} />
+                              </li>
+                            ))}
+                          </ul>
+                          :
+                          trashedNotes.length ?
+                            (
+                              <ul className="space-y-3 px-1 w-auto">
+                                {trashedNotes.map((note: any, idx: number) => (
+                                  <Dropdown
+                                    menu={{
+                                      items: [
+                                        {
+                                          key: '1',
+                                          className: "p-2 ",
+                                          label: "Restor",
+                                          onClick: () => {
+                                            handelNoteTrashOut(note, idx)
+                                          },
+                                          icon: <ReloadOutlined />,
+                                        },
+                                        {
+                                          key: '2',
+                                          className: "p-2 ",
+                                          label: "Delete",
+                                          danger: true,
+                                          onClick: () => {
+                                            handelNoteTrashDel(note, idx)
+                                          },
+                                          icon: <RestOutlined />,
+                                        },
+                                      ],
+                                    }}
+                                    overlayStyle={{ width: 150, height: 260 }}
+                                    trigger={["contextMenu"]}
+                                    placement="bottomLeft"
+                                  >
+                                    <li
+                                      key={note.uuid}
+                                      className={getClassNames(
+                                        `p-6 rounded cursor-pointer  ${theme === "dark" ? "bg-[#1d1c1c]" : "bg-[#fdf8f8]"}`)}>
+                                      <p className="font-medium  text-lg flex items-center gap-2">
+                                        {note.title}
+                                      </p>
+                                      <div className="flex gap-2.5 mt-2 text-xs text-gray-400">
+                                        <div className="flex-1">
+                                          <p className="truncate w-60">{note.content}</p>
+                                        </div>
+                                        <Dropdown
+                                          menu={{
+                                            items: [
+                                              {
+                                                key: '1',
+                                                className: "p-2 ",
+                                                label: "Restor",
+                                                onClick: () => {
+                                                  handelNoteTrashOut(note, idx)
+                                                },
+                                                icon: <ReloadOutlined />,
+                                              },
+                                              {
+                                                key: '2',
+                                                className: "p-2 ",
+                                                label: "Delete",
+                                                danger: true,
+                                                onClick: () => {
+                                                  handelNoteTrashDel(note, idx)
+                                                },
+                                                icon: <RestOutlined />,
+                                              },
+                                            ],
+                                          }}
+                                          overlayStyle={{ width: 150, height: 260 }}
+                                          trigger={["click"]}
+                                          placement="bottomLeft"
+                                        >
+                                          <MoreOutlined className='text-lg' />
+                                        </Dropdown>
+                                      </div>
+                                    </li>
+                                  </Dropdown>
+                                ))}
+                              </ul>
+                            )
+                            :
+                            (
+                              <Empty description={"empty trash"} />
+                            )}
+
+                    </Drawer>
+                  </ConfigProvider>
+                  <div className="text-md mb-2 cursor-pointer"
+                    onClick={() => handelTrashopen()}
+                  >
                     <RestOutlined /> Tarsh
                   </div>
                 </div>

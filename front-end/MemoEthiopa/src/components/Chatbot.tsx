@@ -5,7 +5,7 @@ import { RootState } from '../../src/store/store';
 import BotLogo from "../../public/Bot.png"
 import api from "../api";
 import { motion } from "framer-motion";
-import { Button, ConfigProvider, Modal, theme as antdTheme } from "antd";
+import { Button, ConfigProvider,  Modal, theme as antdTheme } from "antd";
 
 
 
@@ -30,8 +30,9 @@ const ChatBot: React.FC<ChatBotProps> = ({ name, uuid, plan, bio, location }) =>
   const [copiedIndexai, setCopiedIndexai] = useState<number | null>(null);
   const [copiedIndexuser, setCopiedIndexuser] = useState<number | null>(null);
   const mobilechatdivRef = useRef<HTMLDivElement>(null);
-  const [chat, setChat] = useState([
-    { type: "bot", text: "Ready when you are.", time: "" },
+  type ChatMessage = { type: "user" | "bot"; text: string; time: string };
+  const [chat, setChat] = useState<ChatMessage[]>([
+    { type: 'bot', text: 'Ready when you are.', time: '' }
   ]);
   const [liked, setLiked] = useState(false);
   const [disliked, setDisliked] = useState(false);
@@ -73,6 +74,27 @@ const ChatBot: React.FC<ChatBotProps> = ({ name, uuid, plan, bio, location }) =>
         stopSpeaking()
       }
     };
+    const data = {
+      message: 'Hi',
+      user_info: {
+        name: name,
+        bio: bio,
+        joined_at: null,
+        plan: plan,
+        location: location,
+        uuid: uuid,
+        is_verified: false,
+      },
+    };
+
+    api.post("memoai/otcb/", data)
+      .then(() => {
+        null
+      })
+      .catch((err) => console.error(err))
+      .finally(() => {
+        setBotTyping(false); // Hide typing
+      });
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
@@ -113,7 +135,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ name, uuid, plan, bio, location }) =>
     const now = new Date();
     const time = now.toLocaleTimeString();
 
-    const userMessage = { type: "user", text: message, time: time };
+    const userMessage: ChatMessage = { type: "user", text: message, time: time };
     setChat(prev => [...prev, userMessage]);
     setMessage("");
     setBotTyping(true);
@@ -250,6 +272,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ name, uuid, plan, bio, location }) =>
       <div className={`fixed z-50 bg-black/35  h-full w-full transition-all delay-500 ${chatOpen ? "block" : "hidden"}`} ></div>
       {chatOpen && (
         <>
+
           {/* Aude r8 v10 rwd 5.2l 540hp */}
           <div className={getClassNames(`fixed  w-full h-2/3 mb-7 md:right-2.5 z-50 select-none  lg:w-[490px] lg:h-[720px] bottom-0  rounded-xl shadow-lg flex transition-all delay-500 ease flex-col overflow-hidden font-sans `)} ref={mobilechatdivRef}>
             <p className="text-center" id="closeChat">________</p>
@@ -269,6 +292,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ name, uuid, plan, bio, location }) =>
                 </div>
               </div>
               <div className="flex items-center gap-2">
+                
 
                 <button className=" p-1 rounded-sm transition-all delay-300">
                   <CloseOutlined className="text-xl cursor-pointer  " onClick={() => {
@@ -323,27 +347,27 @@ const ChatBot: React.FC<ChatBotProps> = ({ name, uuid, plan, bio, location }) =>
 
                         {/* Like / Dislike */}
                         {liked ? (
-                          <LikeFilled className="text-lg text-blue-500"  />
+                          <LikeFilled className="text-lg text-blue-500" />
                         ) : (
                           <>
-                          <LikeOutlined
-                            className="text-lg"
-                            onClick={() => {
-                              setLiked(true);
-                              setDisliked(false);
-                            }}
-                          />
-                          <DislikeOutlined
-                          className={`text-lg ${disliked ? "text-red-500" : ""}`}
-                          onClick={() => {
-                            setDisliked(!disliked);
-                            if (liked) setLiked(false);
-                          }}
-                        />
-                        </>
+                            <LikeOutlined
+                              className="text-lg"
+                              onClick={() => {
+                                setLiked(true);
+                                setDisliked(false);
+                              }}
+                            />
+                            <DislikeOutlined
+                              className={`text-lg ${disliked ? "text-red-500" : ""}`}
+                              onClick={() => {
+                                setDisliked(!disliked);
+                                if (liked) setLiked(false);
+                              }}
+                            />
+                          </>
                         )}
 
-                        
+
                       </>
                     )}
                     {copiedIndexai === index && (

@@ -100,7 +100,9 @@ python manage.py runserver
 ### Notes Endpoints
 
 * **`GET /api-v1/notes/`** → List all notes
+* **`GET /api-v1/notes/?is_archived=true`** → List all Archived notes
 * **`POST /api-v1/notes/`** → Create a note
+* **`POST /api-v1/notes/?is_archived=true`** → Restore all archived note
 * **`GET /api-v1/notes/{uuid}/`** → Retrieve a note
 * **`PUT /api-v1/notes/{uuid}/`** → Update a note
 * **`PUT /api-v1/notes/outtrash/{uuid}/`** → Update Trash a note
@@ -137,11 +139,12 @@ python manage.py runserver
 
 ## TrashNote 
 
-* **`GET /api-v1/trashNotes/`** → List all trashNotes
-* **`POST /api-v1/trashNotes/`** → Create a trashNotes
-* **`GET /api-v1/trashNotes/{id}/`** → Retrieve a trashNotes
-* **`PUT /api-v1/trashNotes/{id}/`** → Update a trashNotes
-* **`DELETE /api-v1/trashNotes/{id}/`** → Delete a trashNotes
+* **`GET /api-v1/notes/outtrash/`** → List all trashNotes
+* **`POST /api-v1/notes/outtrash/?restore_all=true`** → Restore all trashNotes
+* **`GET /api-v1/notes/outtrash/<uuid:uuid>/`** → Retrieve a trashNotes
+* **`PUT /api-v1/notes/outtrash/<uuid:uuid>/`** → Update a trashNotes
+* **`DELETE /api-v1/notes/outtrash/<uuid:uuid>/`** → Delete a trashNotes
+* **`DELETE /api-v1/notes/outtrash/?all_delete=true`** → Delete all trashNotes
 
 ## Favorites 
 

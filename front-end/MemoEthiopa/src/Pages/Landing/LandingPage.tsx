@@ -3,7 +3,7 @@ import { RootState } from '../../store/store';
 import LandingNavBar from '../../components/Landing/LandingNavBer';
 import ThemeSelector from '../../components/TheamSlecter';
 import logo from '../../assets/MemoEthio_logo_4.png';
-import { Spin } from 'antd';
+import { Badge, Spin } from 'antd';
 import LandingPageCarousel from '../../components/Landing/Carousel';
 import Services from '../../components/Landing/Services';
 import Pricing from '../../components/Landing/Pricing';
@@ -58,8 +58,13 @@ const LandingPage: React.FC = () => {
                         <div className={getClassNames("")}>
                             <LandingPageCarousel />
                         </div>
-                        <div className={getClassNames("")}>
-                            <Services />
+                        <div className='fixed right-1 top-20  z-50'>
+                            <Badge.Ribbon text="MVP Vision" >
+                                
+                            </Badge.Ribbon>
+                        </div>
+                        <div className={getClassNames("")}>                            
+                                <Services />
                         </div>
                         <div className={getClassNames("")}>
                             <Pricing />

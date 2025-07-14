@@ -255,13 +255,13 @@ const NoteList: React.FC<FoldernotesState> = ({ foldernotes }) => {
         </div >
       ) : (
         <div
-          className={getClassNames("w-full md:w-90 h-screen overflow-auto")}
+          className={getClassNames("w-full md:w-96 h-screen overflow-auto")}
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          <section className={getClassNames("overflow-y-auto py-8")}>
+          <section className={getClassNames("overflow-y-auto ")}>
             <div
               className={getClassNames(
-                "h-full mt-40 flex items-center justify-center"
+                "h-full mt-20 flex items-center justify-center"
               )}
             >
               <Result

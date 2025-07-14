@@ -14,7 +14,7 @@ from rest_framework import status
 
 from rest_framework import permissions
 #serializers 
-from .serializers import NoteSerializer , userInfoSerializer , UserCreateSerializer ,EmailLoginSerializer,CategorySerializer  , NotificationSerializer, SharedNoteSerializer, ShardNoteSerializer,FavoriteSerializer,FolderSerializer,ChangePasswordSerializer,AiChatSerializer
+from .serializers import NoteSerializer , userInfoSerializer , UserCreateSerializer ,EmailLoginSerializer,CategorySerializer  , NotificationSerializer, SharedNoteSerializer, ShardNoteSerializer,FavoriteSerializer,FolderSerializer,ChangePasswordSerializer 
 
 # permission 
 
@@ -80,20 +80,12 @@ class NoteView(
     permission_classes = [permissions.IsAuthenticated]
     
     def get_queryset(self):
-        user = self.request.user  # Get the currently authenticated user
-        urlquery = self.request.query_params.get("query", None)
-        if urlquery is not None:
-            # Decode the query data
-            decoded_data = decode_query_data(urlquery)
-            user_name = decoded_data.get("user_name")
-            if user_name is not None:
-                try:
-                    matched_user = User.objects.get(username=user_name)
-                    query = Note.objects.filter(user=matched_user, is_trashed=False).order_by('-pk')
-                    return query
-                except user.DoesNotExist:
-                    return Note.objects.none() # Return an empty queryset if user not found
-        query = Note.objects.filter(user=user,is_trashed=False).order_by('-pk')  # Filter notes by the user
+        finde_archived = self.request.query_params.get("is_archived")
+        user = self.request.user  
+        if finde_archived == "true":
+            query = Note.objects.filter(user=user,is_trashed=False,is_archived=True).order_by('-pk')      
+            return query
+        query = Note.objects.filter(user=user,is_trashed=False,is_archived=False).order_by('-pk')  
         return query
 
     def get(self, request, *args, **kwargs):
@@ -103,7 +95,18 @@ class NoteView(
         return self.retrieve(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        print(request)
+        finde_archived = request.query_params.get("is_archived")
+        if finde_archived == 'true':
+            request.data['user'] = request.user.id  
+            queryset = self.get_queryset()
+            item_count = queryset.count()
+
+            queryset.update(is_trashed=False)
+
+            return Response({
+                "message": f"{item_count} Archived notes have been restored successfully."
+            }, status=200)
+        
         request.data['user'] = request.user.id  
         return super().create(request, *args, **kwargs)
 
@@ -120,6 +123,10 @@ class NoteView(
 NoteViewtoUrl = NoteView.as_view()
 
 class NoteOuttoTrashView(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
     mixins.UpdateModelMixin,
     generics.GenericAPIView,
     ):
@@ -140,19 +147,55 @@ class NoteOuttoTrashView(
     model = Note
     serializer_class = NoteSerializer
     lookup_field = "uuid"
-
-
     permission_classes = [permissions.IsAuthenticated]
+
     def get_queryset(self):
         user = self.request.user  # Get the currently authenticated user
         query = Note.objects.filter(user=user,is_trashed=True).order_by('-pk')
         return query
+    def get(self, request, *args, **kwargs):
+        uuid = kwargs.get("uuid", None)
+        if uuid is None:  # List all notes for the authenticated user
+            return self.list(request, *args, **kwargs)
+        return self.retrieve(request, *args, **kwargs)
+    
+    def post(self, request, *args, **kwargs):
+        restoreall = request.query_params.get("restore_all")
+        request.data['user'] = request.user.id
+
+        if restoreall == 'true':
+            queryset = self.get_queryset()
+            item_count = queryset.count()
+            # Bulk update all matching objects
+            queryset.update(is_trashed=False)
+
+            return Response({
+                "message": f"{item_count} trashed notes have been restored successfully."
+            }, status=200)
+        return Response({
+            "message": f"Method Not Allowed"
+        },status=405)
+    
     def put(self, request, *args, **kwargs):
         request.data['user'] = request.user.id 
         return super().update(request, *args, **kwargs)
     def patch(self, request, *args, **kwargs):
         request.data['user'] = request.user.id 
         return super().update(request, *args, **kwargs)
+    
+    def delete(self, request, *args, **kwargs):
+        all_delete = request.query_params.get("all_delete")
+        if all_delete == "true":
+            queryset = self.get_queryset()
+            deleted_count = queryset.count()
+            queryset.delete()
+            return Response(
+                {"message": f"Deleted {deleted_count} trashed notes."},
+                status=status.HTTP_204_NO_CONTENT
+            )
+        # default single delete with pk
+        super().delete(request, *args, **kwargs)
+        return Response({"message": "Note deleted successfully"}, status=204)
 NoteOuttoTrashViewURL = NoteOuttoTrashView.as_view()
     
 
@@ -312,6 +355,7 @@ class NotificationView(
     mixins.ListModelMixin,
     mixins.RetrieveModelMixin,
     mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
     mixins.DestroyModelMixin,
     generics.GenericAPIView
     ):

@@ -1,5 +1,3 @@
-// import { useState } from 'react'
-
 import { useEffect } from 'react'
 import './App.css'
 import { useSelector } from 'react-redux'
@@ -15,11 +13,12 @@ function App() {
     document.title = "Memo Ethiopa | Checking .."
     if (loggedIn) {
       window.location.href = "/feed"
+    }else {
+      document.title = "Memo Ethiopa"
     }
   })
 
   return (
-
     <>
       {
         loggedIn ? <Spin fullscreen={true} size='large' /> : <LandingPage />
