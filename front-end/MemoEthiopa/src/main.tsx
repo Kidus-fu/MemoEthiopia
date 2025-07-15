@@ -12,6 +12,7 @@ import HomeLayout from './Pages/home/homelayout.tsx';
 import SignUp from './Pages/signup/SignUp.tsx';
 import Devpag from './Pages/DeveloperO/Devpag.tsx';
 import NotePage from './Pages/home/NotePage.tsx';
+import Upgrade from './Pages/payment/Upgrade.tsx';
 
 
 createRoot(document.getElementById('root')!).render(
@@ -30,6 +31,7 @@ createRoot(document.getElementById('root')!).render(
             <Route path=":noteId" element={<NotePage />} />
           </Route>
 
+          <Route path="/upgrade" element={<Upgrade />} />
           <Route path="/developerOptions" element={<Devpag />} />
           <Route path="/developerOptions/backend" element={<>Hi Back end</>} />
 

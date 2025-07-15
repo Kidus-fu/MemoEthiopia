@@ -28,6 +28,7 @@ const HomeLayout: React.FC = () => {
   const showMessage = useMessage()
   const DeveloperTest = useSelector((state: RootState) => state.developertest.border_test);
   const [loading, setLoading] = useState(true)
+  const [forlderloading, setForlderLoading] = useState(true)
   const [localoading, setLocaloading] = useState(false)
   const [openForder, setOpenForder]: any = useState(undefined);
   const [folders, setFolders] = useState<FolderState[]>([])
@@ -139,17 +140,22 @@ const HomeLayout: React.FC = () => {
     return `${base} ${border} ${themeStyle}`;
   };
   useEffect(() => {
+    setForlderLoading(true);
+    console.log(folders.length);
+    console.log(forlderloading);
     if (!loggedIn) {
       window.location.href = "/"
     } else {
+      setForlderLoading(true)
       api.get("api-v1/folders/")
-        .then(res => {
-          const data = res.data.results
-          setFolders(data)
-          if (foldername) {
-            const newdata = data.filter((folder: any) => folder.name.toLowerCase().includes(foldername.toLowerCase()))
-            setOpenForder(newdata[0]);
-          }
+      .then(res => {
+        const data = res.data.results
+        setFolders(data)
+        if (foldername) {
+          const newdata = data.filter((folder: any) => folder.name.toLowerCase().includes(foldername.toLowerCase()))
+          setOpenForder(newdata[0]);
+        }
+          setForlderLoading(false)
           setLoading(false)
           dispatch(fetchUserData())
         })
@@ -246,6 +252,7 @@ const HomeLayout: React.FC = () => {
 
   const handelnewfolderC = (name: string) => {
     setLocaloading(true)
+    
     api.post('api-v1/folders/', { name: name })
       .then(() => {
         folderinputnew.current?.blur();
@@ -410,7 +417,7 @@ const HomeLayout: React.FC = () => {
           >
             <div className={getClassNames(`flex gap-2 ${theme === "dark" ? "bg-[#1f1f1f]" : "bg-[#ffffff33]"}`)}>
               <div className=" p-1 cursor-pointer">
-                Blog
+                Blog <ExportOutlined />
               </div>
               <div className=" p-1 cursor-pointer">
                 Shop <ExportOutlined />
@@ -564,6 +571,21 @@ const HomeLayout: React.FC = () => {
                           }
                         </p>
                       </div>}
+                      {
+                        forlderloading  && (
+                          <ConfigProvider theme={{
+                            algorithm: theme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
+                            components: {
+                              Dropdown: {
+                                paddingBlock: 10,
+                              }
+                            },
+                          }}>
+                          <Skeleton />
+                          <Skeleton />
+                          </ConfigProvider>
+                        )
+                      }
                       {folders.map((folder) => (
                         <>
                           <ConfigProvider theme={{
@@ -808,19 +830,15 @@ const HomeLayout: React.FC = () => {
               onClick={() => setMobileSidebar(true)}>
               <AlignLeftOutlined className="" />
             </div>
-
-            <NoteList foldernotes={openForder} />
-            < main
-              className={getClassNames(`h-screen hidden overflow-y-auto mdflex ${inOutlet ? "" : "items-center"} justify - center`)}
-              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-            </main>
-            <div className={getClassNames(`${inOutlet ? "" : `${theme === "dark" ? "bg-[#242424]" : "bg-[#ffffff33]"}`}   top-0 left-0 right-0 bottom-0  h-screen overflow-y-auto lg:static lg:h-auto lg:flex w-full`)}>
+            <div className="z-50">
+              <NoteList foldernotes={openForder} />
+            </div>
+            <div className={getClassNames(`${inOutlet ? "" : `${theme === "dark" ? "bg-[#242424]" : "bg-[#ffffff33]"}`}   top-0 left-0 z-0 right-0 bottom-0 overflow-y-auto lg:static lg:h-auto lg:flex w-full h-auto`)}>
               <Outlet />
             </div>
           </div>
         </>
-      )
-      }
+      )}
     </>);
 };
 

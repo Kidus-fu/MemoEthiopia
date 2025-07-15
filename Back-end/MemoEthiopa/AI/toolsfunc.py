@@ -6,8 +6,11 @@ from datetime import datetime
 from duckduckgo_search import DDGS
 from deep_translator import GoogleTranslator
 from langchain_core.documents import Document
-
-
+from notes.serializers import userInfoSerializer
+from notes.models import *
+from rest_framework.response import Response
+from rest_framework import status
+from django.shortcuts import get_object_or_404
 
 load_dotenv()
 
@@ -17,52 +20,29 @@ aiendpoint = "http://localhost:8000/memoai/"
 # production 
 # endpoint = "https://memoethiopia.onrender.com/api-v1/"
 
-def GetUserInfo(User_uuid):
+
+
+def GetUserInfo(user_uuid):
     """
     Get user information from the database using the user UUID.
     """
-    user_uuid = User_uuid.strip()
-
-    url = f"{endpoint}users/{user_uuid}/"
-    response = requests.get(url)
-    if response.status_code == 200:
-        data =  response.json()
-        return {
-            "bio": data.get("bio"),
-            "id":data.get('id'),
-            "is_verified": data.get("is_verified"),
-            "joined_at": data.get("joined_at"),
-            "paln": data.get("paln"),
-            "profile_picture": data.get("profile_picture"),
-            "user": data.get("user"),
-            "usermore": {
-                "email" :data.get("email"),
-                "first_name":data.get("first_name"),
-                "last_name": data.get("last_name"),
-                "username" :data.get("username")
-            },
-            "uuid": data.get("uuid"),
-            "phone_number": data.get("phone_number"),
-            "location": data.get("location"),
-            "date_of_birth": data.get("date_of_birth"),
-            "gender": data.get("gender"),
-            "social_links": data.get("social_links"),
-            "preferred_language": data.get("preferred_language")
-        }
-    else:
-        return None
+    user_uuid = user_uuid.strip()
+    user_info = get_object_or_404(userInfo, uuid=user_uuid)
+    serializer = userInfoSerializer(instance=user_info)
+    if serializer.data:
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return "Someting went wrong"
 def getuserInfos(*args,**kwargs):
     """
     Get users information from the database .
     """
-    url = f"{endpoint}users/"
-    print(url)
-    response = requests.get(url)
-    print(response.status_code)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        return None
+    query = userInfo.objects.all()
+    serializer = userInfoSerializer(instance=query,many=True)
+    print(serializer.data)
+    if serializer.data:
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return "Someting went wrong"
+
     
 def GetUserNotes(User_name:str):
     """

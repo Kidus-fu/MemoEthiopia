@@ -110,7 +110,7 @@ const NotePage = () => {
 
   return (
     <div
-      className="fixed md:relative top-0 w-full h-full m-0 overflow-auto overflow-x-hidden"
+      className="fixed md:relative top-0 w-full z-0 h-full m-0 overflow-auto overflow-x-hidden"
       style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
     >
       {loading ? (

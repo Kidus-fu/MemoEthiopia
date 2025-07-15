@@ -46,7 +46,7 @@ class LangChainAgentView(APIView):
             return Response({"error": "Missing 'input' in request data."}, status=status.HTTP_400_BAD_REQUEST)
         chat_session_uuid = chat_session.get("uuid","no uuid pass")
             # more staf here 
-        clear_prompt = f"You are a AI Assemant in MemoEthiopia answer user quertion simple way  user prompt is {user_prompt} "        
+        clear_prompt = f"You are a AI Assemant in MemoEthiopia answer user quertion simple way  user prompt is {user_prompt} uuid is {user_uuid}"        
 
         try:
             result = agent_executor.invoke({"input": clear_prompt})

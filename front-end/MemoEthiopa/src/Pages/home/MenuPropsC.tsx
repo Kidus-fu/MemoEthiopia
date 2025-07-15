@@ -6,6 +6,7 @@ import { RootState } from "../../store/store";
 import { useMessage } from "../../components/useMessage";
 import { getSystemTheme, setTheme } from "../../store/features/Theam/theam";
 import { logout } from "../../store/features/users/Userinfo";
+import { useNavigate } from "react-router-dom";
 export const Folderitems: MenuProps['items'] = [
   {
     label: 'Open a folder',
@@ -34,6 +35,7 @@ export const useUserMenuItems = (): MenuProps['items'] => {
   const user = useSelector((state: RootState) => state.user);
   const showMessage = useMessage()
   const dispatch = useDispatch();
+   const navigate = useNavigate();
   const copyToClipboard = async (text: string, mes: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -55,7 +57,10 @@ export const useUserMenuItems = (): MenuProps['items'] => {
     {
       key: '2',
       className: `p-2 ${user?.paln === "free" ? "opacity-40" : ""}`,
-      label: "Update",
+      label: "Upgrade",
+      onClick : () => {
+        navigate('/upgrade')
+      },
       icon: <CiOutlined />,
     },
      {
