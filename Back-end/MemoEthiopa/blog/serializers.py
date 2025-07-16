@@ -23,10 +23,7 @@ class CommentSerializer(serializers.ModelSerializer):
         return user_infos
 
 
-class CategoriesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = "__all__"
+
     
 class BlogPostSerializer(serializers.ModelSerializer):
     comments = CommentSerializer(many=True, read_only=True)  
@@ -78,3 +75,9 @@ class BlogPostSerializer(serializers.ModelSerializer):
             for category in obj.categories.all()
         ]
 
+class CategoriesSerializer(serializers.ModelSerializer):
+    posts = BlogPostSerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = Category
+        fields = ['id', 'title', 'slug', 'posts']

@@ -19,7 +19,10 @@ class Category(models.Model):
             # On create
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
-
+    
+    def get_all_posts(self):
+        return self.posts.all()
+    
     def __str__(self):
         return self.title
 
