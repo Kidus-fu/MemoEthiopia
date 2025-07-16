@@ -21,3 +21,4 @@ duckduckgo-search
 langchain-community
 groq
 deep-translator
+django-filter

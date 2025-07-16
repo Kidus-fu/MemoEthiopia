@@ -13,4 +13,5 @@ urlpatterns = [
     path("api-v1/",include("notes.urls")),
     path("Docs/",include("notes.docurl")),
     path("memoai/",include("AI.url")),
+    path("blog/",include("blog.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

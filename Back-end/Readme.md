@@ -156,6 +156,7 @@ python manage.py runserver
 
 ## OTCB (One Time Chat Bot)
 * **`POST /memoai/otcb/`** → Send a message to the user
+
 ## AI Agent Chat session 
 * **`GET /memoai/chat-session/`** → List all chat-session
 * **`POST /memoai/chat-session/`** → Create a chat-session
@@ -168,6 +169,29 @@ python manage.py runserver
 * **`POST /api-v1/chat-message/`** → Create a chat-message
 * **`GET /api-v1/chat-message/{id}/`** → Retrieve a chat-message
 * **`DELETE /memoai/chat-message/{uuid}/`** → Delete a chat-message
+
+## Blog 
+* **`GET /blog/posts/`** → List all blog posts
+* **`GET /blog/posts/?search=keyword`** → searching by title and description
+* **`GET /blog/posts/?category_title=Productivity`** → Filtering  category title
+* **`GET /blog/posts/{slug}`** → Retrieve a blog 
+* **`POST /blog/posts/`** → Create a Blog
+* **`PUT /blog/posts/{slug}`** → Update a Blog 
+* **`DELETE /blog/posts/{slug}/`** → Delete a blog 
+
+## Blog Categories
+* **`GET /blog/categories/`** → List all blog categories
+* **`POST /blof/categories/`** → Create a blog categories
+* **`GET /blog/categories/{id}/`** → Retrieve a blog categories
+* **`PUT /blog/categories/{id}`** → Update a Blog categories by id
+* **`DELETE /blog/categories/{id}/`** → Delete a blog categories
+
+## Blog Comment
+* **`GET /blog/comments/`** → List all blog comments
+* **`POST /blof/comments/`** → Create a blog comments
+* **`GET /blog/comments/{id}/`** → Retrieve a blog comments
+* **`PUT /blog/comments/{id}`** → Update a Blog comments by id
+* **`DELETE /blog/comments/{id}/`** → Delete a blog comments
 
 ## Deployment
 
@@ -360,6 +384,48 @@ python manage.py runserver
   "token_count":44
 }
 ```
+
+### Create a Blog Post
+**POST** `/blog/posts/`
+
+#### Request Body:
+```json
+{
+    "title": "Day of the Jungle",
+    "slug": "day-of-the-jungle",
+    "photo": "https://source.unsplash.com/800x600/?jungle",
+    "description": "Exploring the hidden waterfalls...",
+    "category_ids": [1, 3]
+}
+```
+
+
+- `category_ids`: List of category IDs to tag the post.
+- `slug` can be auto-generated on the backend if needed.
+
+### Create a Blog Category
+**POST** `/blog/categories/`
+
+#### Request Body:
+```json
+{
+    "title": "Productivity",
+    "slug": "productivity",
+    "description": "Posts about productivity tips."
+}
+```
+### Comment on a Post
+**POST** `/blog/comments/`
+
+#### Request Body:
+```json
+{
+    "post": <post_id>,
+    "content": "Great insights on coding in the jungle!"
+}
+```
+
+✅ The user is automatically linked to the comment based on the authenticated user in your system.
 
 ## OTCB (one time chat boT) 🤖
 
