@@ -13,6 +13,15 @@ import SignUp from './Pages/signup/SignUp.tsx';
 import Devpag from './Pages/DeveloperO/Devpag.tsx';
 import NotePage from './Pages/home/NotePage.tsx';
 import Upgrade from './Pages/payment/Upgrade.tsx';
+import Blog from './Pages/Blog/Blog.tsx';
+import BlogPostDetail from './Pages/Blog/BlogPostDetail.tsx';
+import BlogContactus from './Pages/Blog/BlogContactus.tsx';
+import BlogAboutUs from './Pages/Blog/BlogAboutUs.tsx';
+import BlogPost from './Pages/Blog/BlogAdd.tsx';
+import BlogDelete from './Pages/Blog/BlogDelete.tsx';
+import BlogpostEdit from './Pages/Blog/BlogpostEdit.tsx';
+import BlogCategoriesFilter from './Pages/Blog/BlogCategories.tsx';
+import BlogAdminDashboard from './Pages/Blog/BlogPostDashbored.tsx';
 
 
 createRoot(document.getElementById('root')!).render(
@@ -30,6 +39,15 @@ createRoot(document.getElementById('root')!).render(
           <Route path='/feed/:foldername' element={<HomeLayout />} >
             <Route path=":noteId" element={<NotePage />} />
           </Route>
+          <Route path='/blog' element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPostDetail />} />
+          <Route path="/blog/contactus" element={<BlogContactus />} />
+          <Route path="/blog/aboutus" element={<BlogAboutUs />} />
+          <Route path="/blog/newpost" element={<BlogPost />} />
+          <Route path="/blog/dashboard" element={<BlogAdminDashboard />} />
+          <Route path="/blog/category/:slug" element={<BlogCategoriesFilter />} />
+          <Route path="/blog/delete/:slug" element={<BlogDelete />} />
+          <Route path="/blog/edit/:slug" element={<BlogpostEdit />} />
 
           <Route path="/upgrade" element={<Upgrade />} />
           <Route path="/developerOptions" element={<Devpag />} />

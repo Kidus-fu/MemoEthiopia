@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 from .models import BlogPost, Comment,Category
 from django.utils.text import slugify
 
@@ -9,6 +10,7 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ['id', 'user', 'content', 'created_at','is_edited','post']
+
     def get_user(self, obj):
         user_info = obj.user  # userInfo
         user = user_info.user  # Django User
@@ -26,6 +28,10 @@ class CommentSerializer(serializers.ModelSerializer):
 
     
 class BlogPostSerializer(serializers.ModelSerializer):
+    title = serializers.CharField(
+        max_length=255,
+        validators=[UniqueValidator(queryset=BlogPost.objects.all())]
+    )
     comments = CommentSerializer(many=True, read_only=True)  
     categories = serializers.SerializerMethodField()
     category_ids = serializers.ListField(
@@ -75,9 +81,21 @@ class BlogPostSerializer(serializers.ModelSerializer):
             for category in obj.categories.all()
         ]
 
+
+
+
 class CategoriesSerializer(serializers.ModelSerializer):
-    posts = BlogPostSerializer(many=True, read_only=True)
+    title = serializers.CharField(
+        max_length=255,
+        validators=[UniqueValidator(queryset=Category.objects.all())]
+    )
+    slug = serializers.SlugField(max_length=100, read_only=True)
+    posts = serializers.SerializerMethodField()
     
     class Meta:
         model = Category
-        fields = ['id', 'title', 'slug', 'posts']
+        fields = ['id', 'title', 'slug', 'posts','description']
+
+    def get_posts(self, obj):
+        posts_qs = obj.posts.order_by('-created_at')[:3]  # latest 3
+        return BlogPostSerializer(posts_qs, many=True, context=self.context).data

@@ -8,6 +8,8 @@ import theamReducer from "./features/Theam/theam"
 import { loginAPI } from '../services/auth/login';
 import { signupAPI } from '../services/auth/singup';
 import { userProfileAPI } from '../services/userprofile';
+import { blogApi } from '../services/Blog/blogposts';
+
 
 const store = configureStore({
     reducer: {
@@ -20,6 +22,7 @@ const store = configureStore({
         [notesgetAPI.reducerPath]: notesgetAPI.reducer,
         [loginAPI.reducerPath]: loginAPI.reducer,
         [signupAPI.reducerPath]: signupAPI.reducer,
+        [blogApi.reducerPath]: blogApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(
@@ -27,7 +30,8 @@ const store = configureStore({
             signupAPI.middleware,
             notesgetAPI.middleware,
             loginAPI.middleware,
-            userProfileAPI.middleware
+            userProfileAPI.middleware,
+            blogApi.middleware
         ),
 });
 

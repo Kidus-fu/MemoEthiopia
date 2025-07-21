@@ -127,7 +127,9 @@ const LandingNavBar: React.FC = () => {
             )}
           </li>
 
-          <li className="cursor-pointer" title="Newsletter">Newsletter</li>
+            <Link to={"/blog"} target="_blank">
+          <li className="cursor-pointer" title="Blog">Blog</li>
+          </Link>
           <li className="cursor-pointer" title="About Us">Features</li>
           <li className="cursor-pointer" title="About Us">Pricing</li>
 

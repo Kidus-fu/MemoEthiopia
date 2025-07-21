@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../../store/store';
 import NoteList from './NoteList';
-import { Outlet, useMatch, useNavigate, useParams } from 'react-router-dom';
+import { Link, Outlet, useMatch, useNavigate, useParams } from 'react-router-dom';
 import { AlignLeftOutlined, CloseOutlined, ExportOutlined, FileDoneOutlined, FileTextOutlined, FolderAddFilled, FolderFilled, FolderOpenFilled, InboxOutlined, MoreOutlined, ReloadOutlined, RestOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
 import api from '../../api';
 import { Button, ConfigProvider, Drawer, Dropdown, Empty, Skeleton, Spin, theme as antdTheme } from 'antd';
@@ -148,13 +148,13 @@ const HomeLayout: React.FC = () => {
     } else {
       setForlderLoading(true)
       api.get("api-v1/folders/")
-      .then(res => {
-        const data = res.data.results
-        setFolders(data)
-        if (foldername) {
-          const newdata = data.filter((folder: any) => folder.name.toLowerCase().includes(foldername.toLowerCase()))
-          setOpenForder(newdata[0]);
-        }
+        .then(res => {
+          const data = res.data.results
+          setFolders(data)
+          if (foldername) {
+            const newdata = data.filter((folder: any) => folder.name.toLowerCase().includes(foldername.toLowerCase()))
+            setOpenForder(newdata[0]);
+          }
           setForlderLoading(false)
           setLoading(false)
           dispatch(fetchUserData())
@@ -252,7 +252,7 @@ const HomeLayout: React.FC = () => {
 
   const handelnewfolderC = (name: string) => {
     setLocaloading(true)
-    
+
     api.post('api-v1/folders/', { name: name })
       .then(() => {
         folderinputnew.current?.blur();
@@ -416,9 +416,16 @@ const HomeLayout: React.FC = () => {
             onContextMenu={(e) => e.preventDefault()}
           >
             <div className={getClassNames(`flex gap-2 ${theme === "dark" ? "bg-[#1f1f1f]" : "bg-[#ffffff33]"}`)}>
-              <div className=" p-1 cursor-pointer">
-                Blog <ExportOutlined />
-              </div>
+              <Link to={"/blog"}
+                onClick={(e) => {
+                  e.preventDefault(); // Prevent default navigation
+                  window.open("/blog", "_blank", "noopener,noreferrer");
+                }}
+              >
+                <div className=" p-1 cursor-pointer">
+                  Blog <ExportOutlined />
+                </div>
+              </Link>
               <div className=" p-1 cursor-pointer">
                 Shop <ExportOutlined />
               </div>
@@ -572,7 +579,7 @@ const HomeLayout: React.FC = () => {
                         </p>
                       </div>}
                       {
-                        forlderloading  && (
+                        forlderloading && (
                           <ConfigProvider theme={{
                             algorithm: theme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
                             components: {
@@ -581,8 +588,8 @@ const HomeLayout: React.FC = () => {
                               }
                             },
                           }}>
-                          <Skeleton />
-                          <Skeleton />
+                            <Skeleton />
+                            <Skeleton />
                           </ConfigProvider>
                         )
                       }

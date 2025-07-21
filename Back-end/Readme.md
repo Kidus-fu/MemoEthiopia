@@ -181,14 +181,14 @@ python manage.py runserver
 
 ## Blog Categories
 * **`GET /blog/categories/`** → List all blog categories
-* **`POST /blof/categories/`** → Create a blog categories
+* **`POST /blog/categories/`** → Create a blog categories
 * **`GET /blog/categories/{id}/`** → Retrieve a blog categories
 * **`PUT /blog/categories/{id}`** → Update a Blog categories by id
 * **`DELETE /blog/categories/{id}/`** → Delete a blog categories
 
 ## Blog Comment
 * **`GET /blog/comments/`** → List all blog comments
-* **`POST /blof/comments/`** → Create a blog comments
+* **`POST /blog/comments/`** → Create a blog comments
 * **`GET /blog/comments/{id}/`** → Retrieve a blog comments
 * **`PUT /blog/comments/{id}`** → Update a Blog comments by id
 * **`DELETE /blog/comments/{id}/`** → Delete a blog comments
