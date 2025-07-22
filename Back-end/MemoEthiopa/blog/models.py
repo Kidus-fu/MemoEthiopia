@@ -10,15 +10,19 @@ class Category(models.Model):
     created_at = models.DateTimeField(auto_now_add=True,blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        # Check if updating an existing instance
         if self.pk:
-            old = BlogPost.objects.get(pk=self.pk)
-            if old.title != self.title:
+            try:
+                old = BlogPost.objects.get(pk=self.pk)
+                if old.title != self.title:
+                    self.slug = slugify(self.title)
+            except BlogPost.DoesNotExist:
+                # If the object does not exist (creation), still slugify
                 self.slug = slugify(self.title)
         else:
             # On create
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
+
     
     def get_all_posts(self):
         return self.posts.all()
