@@ -26,9 +26,22 @@ export interface BlogPost {
     categories: Category[];
 }
 
-const endpoint = "http://localhost:8000/blog/"
+interface APIRESPONSEBlogPost {
+    count: number;
+    next: string | null;
+    previous: string | null;
+    results: BlogPost[];
+}
+interface APIRESPONSECategory {
+    count: number;
+    next: string | null;
+    previous: string | null;
+    results: Category[];
+}
 
-// const endpoint = "https://memoethiopia.onrender.com/"
+// const endpoint = "http://localhost:8000/blog/"
+
+const endpoint = "https://memoethiopia.onrender.com/"
 
 const baseQuery = fetchBaseQuery({
     baseUrl: endpoint,
@@ -47,11 +60,11 @@ export const blogApi = createApi({
     baseQuery,
     tagTypes: ['BlogPost', 'Category', 'Comment'],
     endpoints: (builder) => ({
-        getBlogPosts: builder.query<BlogPost[], void>({
+        getBlogPosts: builder.query<APIRESPONSEBlogPost, void>({
             query: () => 'posts/',
             providesTags: ['BlogPost'],
         }),
-        getBlogPostbycategory: builder.query<BlogPost[], string>({
+        getBlogPostbycategory: builder.query<APIRESPONSEBlogPost, string>({
             query: (category) => `posts/?category_title=${category}`,
             providesTags: ['BlogPost'],
         }),
@@ -59,7 +72,7 @@ export const blogApi = createApi({
             query: (slug) => `posts/${slug}/`,
             providesTags: (_ , __ , slug) => [{ type: 'BlogPost', slug }],
         }),
-        getCategories: builder.query<Category[], void>({
+        getCategories: builder.query<APIRESPONSECategory, void>({
             query: () => 'categories/',
             providesTags: ['Category'],
         }),

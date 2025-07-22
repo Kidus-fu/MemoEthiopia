@@ -94,7 +94,7 @@ const BlogpostEdit: React.FC = () => {
         );
     }
 
-
+    
     const arraysEqual = (a: number[], b: number[]) => {
         if (a.length !== b.length) return false;
         const sortedA = [...a].sort();
@@ -202,7 +202,7 @@ const BlogpostEdit: React.FC = () => {
                                     placeholder="Select categories"
                                     value={selectedCategories} // This pre-selects them
                                     options={
-                                        (categories?.results ?? data)?.map((category: any) => ({
+                                        categories?.results ?.map((category: any) => ({
                                             label: category.title,
                                             value: category.id,
                                         }))
