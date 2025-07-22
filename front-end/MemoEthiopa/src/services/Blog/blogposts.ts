@@ -41,7 +41,7 @@ interface APIRESPONSECategory {
 
 // const endpoint = "http://localhost:8000/blog/"
 
-const endpoint = "https://memoethiopia.onrender.com/"
+const endpoint = "https://memoethiopia.onrender.com/blog/"
 
 const baseQuery = fetchBaseQuery({
     baseUrl: endpoint,
