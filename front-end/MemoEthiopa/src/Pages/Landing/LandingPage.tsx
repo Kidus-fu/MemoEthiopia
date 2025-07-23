@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { RootState } from '../../store/store';
 import LandingNavBar from '../../components/Landing/LandingNavBer';
-import ThemeSelector from '../../components/TheamSlecter';
 import logo from '../../assets/MemoEthio_logo_4.png';
 import { Badge, Spin } from 'antd';
 import LandingPageCarousel from '../../components/Landing/Carousel';
@@ -59,8 +58,7 @@ const LandingPage: React.FC = () => {
                             <LandingPageCarousel />
                         </div>
                         <div className='fixed right-1 top-20  z-50'>
-                            <Badge.Ribbon text="MVP Vision" >
-                                
+                            <Badge.Ribbon text="MVP Vision" > 
                             </Badge.Ribbon>
                         </div>
                         <div className={getClassNames("")}>                            
@@ -78,9 +76,6 @@ const LandingPage: React.FC = () => {
 
                         <div className="z-">
                             <Footer />
-                        </div>
-                        <div className="bg-transparent fixed bottom-0 left-0 right-0 z-10 flex justify-between items-center p-4">
-                            <ThemeSelector />
                         </div>
                         <Chatbot
                             name="Guest"

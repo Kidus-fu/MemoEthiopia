@@ -110,7 +110,7 @@ const NotePage = () => {
 
   return (
     <div
-      className="fixed md:relative top-0 w-full z-0 h-full m-0 overflow-auto overflow-x-hidden"
+      className="fixed md:relative top-0 w-full z-0 h-full m-0 overflow-auto overflow-x-hidden sm:text-xs"
       style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
     >
       {loading ? (
@@ -142,16 +142,16 @@ const NotePage = () => {
           </ConfigProvider>
           <div className={getClassNames("min-h-screen w-full")}>
             {/* Header */}
-            <div className={getClassNames("sticky top-0 z-40 w-full ")}>
-              <div className="flex justify-between items-center p-2">
+            <div className={getClassNames("sticky top-0 z-40 w-full sm:text-xs")}>
+              <div className="flex justify-between items-center p-2 sm:text-xs">
                 <div
-                  className="text-lg cursor-pointer"
+                  className="sm:text-xs cursor-pointer"
                   title="back"
                   onClick={() => navigate(`/feed/${note?.folder_name}`)}
                 >
                   <ArrowLeftOutlined />
                 </div>
-                <h1 className="text-xl md:text-3xl font-bold text-center truncate max-w-[60%]">
+                <h1 className="text-lg md:text-2xl font-bold text-center truncate max-w-[60%]">
                   {note?.title}
                 </h1>
                 <div>
@@ -205,7 +205,7 @@ const NotePage = () => {
                       placement="bottomLeft"
                     >
                       <div className="rounded-full flex justify-center cursor-pointer">
-                        <EllipsisOutlined className="text-2xl" />
+                        <EllipsisOutlined className="sm:text-xs" />
                       </div>
                     </Dropdown>
                   </ConfigProvider>
@@ -228,7 +228,7 @@ const NotePage = () => {
 
             {/* Folder */}
             <div
-              className={`text-sm m-2 flex flex-wrap gap-4 md:gap-10 p-5 border-b ${theme === "dark" ? "border-gray-800" : "border-gray-300"
+              className={`sm:text-xs m-2 flex flex-wrap gap-4 md:gap-10 p-5 border-b ${theme === "dark" ? "border-gray-800" : "border-gray-300"
                 }`}
             >
               <div className="flex gap-2 items-center">
@@ -238,15 +238,15 @@ const NotePage = () => {
             </div>
 
             {/* Markdown Content */}
-            <div className={getClassNames("text-base w-full whitespace-pre-line break-words caption-top p-4")}>
+            <div className={getClassNames("text-base w-full whitespace-pre-line break-words caption-top p-4 sm:text-xs")}>
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{
-                  h1: (props) => <h1 className="text-3xl font-bold mt-6 mb-3" {...props} />,
-                  h2: (props) => <h2 className="text-2xl font-bold mt-5 mb-2" {...props} />,
-                  h3: (props) => <h3 className="text-xl font-semibold mt-4 mb-2" {...props} />,
+                  h1: (props) => <h1 className="text-2xl font-bold mt-6 mb-3" {...props} />,
+                  h2: (props) => <h2 className="text-xl font-bold mt-5 mb-2" {...props} />,
+                  h3: (props) => <h3 className="text-lg font-semibold mt-4 mb-2" {...props} />,
                   p: (props) => (
-                    <p className="text-base leading-6 my-2 break-words" {...props} />
+                    <p className="text-base leading-6 sm:text-sm my-2 break-words" {...props} />
                   ),
                   hr: (props) => (
                     <hr
@@ -277,7 +277,7 @@ const NotePage = () => {
                   },
                   a: (props) => (
                     <a
-                      className="text-blue-600 underline hover:text-blue-800 break-all"
+                      className="text-blue-600 underline hover:text-blue-800 break-all sm:text-sm"
                       target="_blank"
                       rel="noreferrer"
                       {...props}

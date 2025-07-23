@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Badge, Button, Modal, Popover, Result } from 'antd';
+import { Badge, Button, Modal, Result } from 'antd';
 import { ConfigProvider } from 'antd';
 import { Form, Input, theme as antdTheme } from 'antd';
-import { BugFilled, BugOutlined, FacebookFilled, GoogleCircleFilled, Loading3QuartersOutlined, LockFilled, UserOutlined } from '@ant-design/icons';
+import {  FacebookFilled, GoogleCircleFilled, Loading3QuartersOutlined, LockFilled, UserOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 
 import SinginImg from "./singin.png"
 import { validateUsernameEmail } from './FormValidaters';
 import { SinginType } from '../type';
-import { backToClentMode, changeToDeveloperMode } from '../../store/features/Developer_test';
 import { RootState } from '../../store/store';
 import MemoEthiopaLogo from "../../assets/MemoEthio_logo_4.png"
 import { useSigninForm } from '../../hooks/useSinginForm';
-import ThemeSelector from '../../components/TheamSlecter';
 
 import LoginHelper from './LoginHelper';
 import { Link } from 'react-router-dom';
@@ -25,12 +23,7 @@ const SignIn: React.FC = () => {
     const loggedIn = useSelector((state: RootState) => state.userinfo.loggedIn)
     const dispatch = useDispatch()
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const HandelerDeveloperTest = () => {
-        dispatch(changeToDeveloperMode())
-    }
-    const HandelerClient = () => {
-        dispatch(backToClentMode())
-    }
+
     useEffect(() => {
         document.title = "MemoEthiopa | Sign In";
     }, []);
@@ -50,7 +43,7 @@ const SignIn: React.FC = () => {
                         components: {
                             Input: {
                                 borderRadius: 10,
-                                lineHeight: 2.5,
+                                lineHeight: 2,
                                 activeBorderColor: "",
                                 colorBgBase: "#EAEFE6"
                             },
@@ -79,12 +72,12 @@ const SignIn: React.FC = () => {
                             />
                         ) :
                             (
-                                <div className={getClassNames("w-full max-w-md p-4 sm:px-8")}>
-                                    <h3 className={getClassNames("text-4xl font-semibold text-center ")}>LOGIN</h3>
-                                    <div className={getClassNames("text-center mt-4 mb-2")}>
-                                        <small className={getClassNames("")}>
+                                <div className={getClassNames("w-full max-w-md sm:p-4 sm:px-8")}>
+                                    <h3 className={getClassNames("text-3xl sm:text-2xl font-semibold text-center ")}>LOGIN</h3>
+                                    <div className={getClassNames("text-center mt-2 mb-2")}>
+                                        <small className={getClassNames("sm:text-xs")}>
                                             How do I get started?{" "}
-                                            <span className="text-blue-500 hover:underline cursor-pointer"
+                                            <span className="text-blue-500 hover:underline cursor-pointer text-xs"
                                                 onClick={() => setIsModalOpen(true)}
                                             >
                                                 Learn more
@@ -106,14 +99,14 @@ const SignIn: React.FC = () => {
                                         </Modal>
                                     </div>
                                     <div className="flex justify-center items-center w-full ">
-                                        <div className="w-4/5 max-w-md ">
+                                        <div className="w-4/5 max-w-md sm:text-xs">
                                             <Form
                                                 name="basic"
                                                 labelCol={{ span: 0 }}
                                                 wrapperCol={{ span: 25 }}
                                                 initialValues={{ remember: true }}
                                                 onFinish={SinginonFinish}
-                                                style={{ padding: 8 }}
+                                                style={{ padding: 15 }}
                                                 onFinishFailed={SinginonFinishFailed}
                                                 autoComplete="off"
                                                 className={getClassNames("")}
@@ -123,7 +116,7 @@ const SignIn: React.FC = () => {
                                                     name="usernameoremail"
                                                     rules={[{ required: true, message: 'Please input your username or email!', validator: validateUsernameEmail }]}
                                                 >
-                                                    <Input prefix={<UserOutlined />} placeholder='username/email' />
+                                                    <Input prefix={<UserOutlined />}  placeholder='username/email' />
                                                 </Form.Item>
 
                                                 <Form.Item<SinginType>
@@ -140,7 +133,7 @@ const SignIn: React.FC = () => {
                                                     <button
                                                         type="submit"
                                                         className={getClassNames(
-                                                            "rounded-lg bg-gradient-to-r text-white from-[#6f6dcc] to-[#312EB5]  mt-1 font-bold w-4/5 max-w-sm mx-auto"
+                                                            "rounded-lg bg-gradient-to-r text-white from-[#6f6dcc] to-[#312EB5]  mt-1 font-bold w-4/5 max-w-sm mx-auto text-sm"
                                                         )}
                                                     >
                                                         {SinginisLoading ? <Loading3QuartersOutlined className='animate-spin' /> : ""}   Login Now
@@ -148,18 +141,18 @@ const SignIn: React.FC = () => {
                                                 </div>
                                             </Form>
                                             <div className={getClassNames("flex items-center my-4")}>
-                                                <div className={getClassNames("flex-grow border-t border-gray-300")}></div>
-                                                <span className={getClassNames("mx-4 text-gray-500 font-medium text-sm")}>Login with others</span>
+                                                <div className={getClassNames("flex-grow border-t border-gray-300 text-xs")}></div>
+                                                <span className={getClassNames("mx-4 text-gray-500 font-medium text-xs")}>Login with others</span>
                                                 <div className={getClassNames("flex-grow border-t border-gray-300")}></div>
                                             </div>
-                                            <div className={getClassNames("flex justify-center items-center gap-4 mt-6 flex-wrap")}>
-                                                <div className="flex flex-col items-center">
+                                            <div className={getClassNames("flex justify-center items-center gap-2 mt-6 flex-wrap text-xs")}>
+                                                <div className="flex flex-col items-center text-xs">
                                                     <Badge.Ribbon text="Comming soon" >
                                                         <button
-                                                            className={getClassNames("flex items-center gap-2 px-4 py-2 rounded-md transition-all border border-transparent opacity-50 cursor-not-allowed")}
+                                                            className={getClassNames("flex items-center gap-2 px-4 py-2 rounded-md transition-all border border-transparent opacity-50 cursor-not-allowed text-xs")}
                                                             disabled
                                                         >
-                                                            <span className={getClassNames('text-red-700 text-2xl')}>
+                                                            <span className={getClassNames('text-red-700 text-xl')}>
                                                                 <GoogleCircleFilled />
                                                             </span>
                                                             <span className={getClassNames('text-gray-700')}>Login with Google</span>
@@ -169,10 +162,10 @@ const SignIn: React.FC = () => {
                                                 <Badge.Ribbon text="Comming soon" >
                                                     <div className="flex flex-col items-center">
                                                         <button
-                                                            className={getClassNames("flex items-center gap-2 px-3 py-2 rounded-md transition-all border border-transparent opacity-50 cursor-not-allowed")}
+                                                            className={getClassNames("flex items-center gap-2 px-3 py-2 rounded-md transition-all border border-transparent opacity-50 cursor-not-allowed text-xs")}
                                                             disabled
                                                         >
-                                                            <span className={getClassNames('text-blue-800 text-2xl')}>
+                                                            <span className={getClassNames('text-blue-800 text-xl')}>
                                                                 <FacebookFilled />
                                                             </span>
                                                             <span className={getClassNames('text-gray-700')}>Login with Facebook</span>
@@ -186,9 +179,6 @@ const SignIn: React.FC = () => {
                                                     </Link>
                                                 </p>
                                             </div>
-                                            <div className="fixed bottom-4 left-4">
-                                                <ThemeSelector />
-                                            </div>
                                         </div>
                                     </div>
                                 </div>)}
@@ -196,25 +186,14 @@ const SignIn: React.FC = () => {
                 </div>
             </div >
 
-            <div className={getClassNames("rounded-sm  bg-gradient-to-r hidden lg:block shadow-lg shadow-black from-[#3633C7] to-[#312EB5] w-full")}
+            <div className={getClassNames("rounded-sm  h-screen bg-gradient-to-r hidden lg:block shadow-lg shadow-black from-[#3633C7] to-[#312EB5] w-full")}
                 style={{
                     backgroundImage: `url(${SinginImg})`,
                     backgroundRepeat: 'no-repeat',
-                    backgroundSize: 'contain',
+                    backgroundSize: 'cover',
                 }}
             >
             </div>
-            <Popover title="1 Click to Off, Double Click to On">
-                <button
-                    className={getClassNames("fixed bottom-0  text-xl border p-4 right-0 m-2 rounded-full border-red-800 ")}
-                    onDoubleClick={HandelerDeveloperTest}
-                    onClick={HandelerClient}
-                    onTouchStartCapture={HandelerDeveloperTest}
-                    onTouchEnd={HandelerClient}
-                >
-                    {DeveloperTest ? <BugFilled /> : <BugOutlined />}
-                </button>
-            </Popover>
         </div >
     );
 };

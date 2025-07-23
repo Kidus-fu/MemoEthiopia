@@ -49,30 +49,30 @@ const Error404: React.FC = () => {
                 </Link>
 
                 {/* 404 Image & Text */}
-                <div className="text-center max-w-xl">
+                <div className="text-center max-w-xl sm:text-xs">
                     <img src={img_400} alt="404" className="mx-auto max-w-xs mb-4" onDragStart={e => e.preventDefault()} />
                     <h1 className="text-5xl font-bold mb-2">404</h1>
                     <small className="text-red-600 mb-4">Error</small>
-                    <p className="text-lg text-red-500 mb-6">Oops! The page you're looking for doesn't exist.</p>
-                    <Link to="/" className="text-blue-500 underline text-lg hover:text-blue-300">Back to Home</Link>
+                    <p className="text-sm text-red-500 mb-6">Oops! The page you're looking for doesn't exist.</p>
+                    <Link to="/" className="text-blue-500 underline text-md hover:text-blue-300">Back to Home</Link>
                 </div>
 
                 {/* Suggestion Box */}
-                <div className={getClassNames(`fixed bottom-0 right-0 text-white  md:bottom-6 md:right-4  max-w-md w-full transition-all duration-300 ${suggestionClosed ? 'hidden' : ''}`)}>
+                <div className={getClassNames(`fixed bottom-0 right-0 text-white  md:bottom-2 md:right-2  md:w-2/6  max-w-md w-full transition-all duration-300 ${suggestionClosed ? 'hidden' : ''}`)}>
                     <div className="bg-gray-800 border rounded-none border-gray-700 md:rounded-lg shadow-lg">
                         <div className="flex justify-between items-center px-4 py-3 border-b border-gray-700">
-                            <h2 className="text-lg font-semibold">Suggested Path</h2>
+                            <h2 className="sm:text-sm font-semibold">Suggested Path</h2>
                             <button
                                 onClick={() => setSuggestionClosed(true)}
-                                className="p-1 rounded hover:text-gray-300 hover:bg-gray-700"
+                                className="p-1 sm:text-xs rounded hover:text-gray-300 hover:bg-gray-700"
                             >
                                 <CloseOutlined />
                             </button>
                         </div>
-                        <div className="p-4 space-y-3 max-h-60 overflow-y-auto custom-scroll">
+                        <div className="p-4 space-y-3 max-h-60 overflow-y-auto custom-scroll sm:text-sm">
                             {suggestion ? (
                                 <div>
-                                    <p className="text-sm">
+                                    <p className="sm:text-xs">
                                         Did you mean{' '}
                                         <Link to={suggestion} className="text-sky-400 underline">
                                             {suggestion}
@@ -85,12 +85,12 @@ const Error404: React.FC = () => {
                             )}
                             <div>
                                 <small className="text-gray-400">Other valid paths:</small>
-                                <div className="flex flex-wrap gap-2 mt-2">
+                                <div className="flex flex-wrap gap-2 mt-2 ">
                                     {validRoutes.filter(path => path !== suggestion).map(path => (
                                         <Link
                                             key={path}
                                             to={path}
-                                            className="px-3 py-1 border border-gray-700 rounded-lg text-sm hover:underline"
+                                            className="px-3 py-1 border border-gray-700 rounded-lg sm:text-xs hover:underline"
                                         >
                                             {path}
                                         </Link>
@@ -103,7 +103,7 @@ const Error404: React.FC = () => {
 
                 {/* Reopen Suggestion Button */}
                 {suggestionClosed && (
-                    <div className="fixed bottom-6 right-4 bg-gray-800 border border-gray-700 text-white px-4 py-2 rounded-2xl flex items-center gap-2 cursor-pointer hover:bg-gray-700 transition"
+                    <div className="fixed bottom-6 right-4 bg-gray-800 border border-gray-700 text-white px-3 py-2 sm:text-xs rounded-2xl flex items-center gap-2 cursor-pointer hover:bg-gray-700 transition"
                         onClick={() => setSuggestionClosed(false)}
                     >
                         Show Suggestions <UpOutlined className="text-blue-500" />

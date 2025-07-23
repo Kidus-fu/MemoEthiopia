@@ -65,7 +65,9 @@ const BlogNavber:React.FC = () => {
           {userinfo.loggedIn ? (
             <Avatar
               size={user.profile_picture ? "large" : "small"}
-              src={user.profile_picture ? `http://localhost:8000/${user.profile_picture}` : undefined}
+              style={{height:35}}
+              // src={user.profile_picture ? `http://localhost:8000/${user.profile_picture}` : undefined}
+              src={`https://placehold.co/150/?text=${user?.usermore?.username[0]}`}
               icon={!user.profile_picture && <UserOutlined />}
             />
           ) : (

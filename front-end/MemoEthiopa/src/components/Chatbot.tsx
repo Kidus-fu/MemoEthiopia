@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { InfoCircleOutlined, CheckOutlined, PlayCircleOutlined, StopOutlined, CopyOutlined, LikeOutlined, DislikeOutlined, CloseOutlined, LikeFilled } from "@ant-design/icons";
+import { InfoCircleOutlined, CheckOutlined, PlayCircleOutlined, StopOutlined, CopyOutlined, CloseOutlined } from "@ant-design/icons";
 import { useSelector } from 'react-redux';
 import { RootState } from '../../src/store/store';
 import BotLogo from "../../public/Bot.png"
@@ -34,8 +34,6 @@ const ChatBot: React.FC<ChatBotProps> = ({ name, uuid, plan, bio, location }) =>
   const [chat, setChat] = useState<ChatMessage[]>([
     { type: 'bot', text: 'Ready when you are.', time: '' }
   ]);
-  const [liked, setLiked] = useState(false);
-  const [disliked, setDisliked] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const getClassNames = (base: string) => {
@@ -269,35 +267,32 @@ const ChatBot: React.FC<ChatBotProps> = ({ name, uuid, plan, bio, location }) =>
 
         </Modal>
       </ConfigProvider>
-      <div className={`fixed z-50 bg-black/35  h-full w-full transition-all delay-500 ${chatOpen ? "block" : "hidden"}`} ></div>
+      <div className={`fixed z-50 bg-black/35 sm:text-xs  h-full w-full transition-all delay-500 ${chatOpen ? "block" : "hidden"}`} ></div>
       {chatOpen && (
         <>
 
           {/* Aude r8 v10 rwd 5.2l 540hp */}
-          <div className={getClassNames(`fixed  w-full h-2/3 mb-7 md:right-2.5 z-50 select-none  lg:w-[490px] lg:h-[720px] bottom-0  rounded-xl shadow-lg flex transition-all delay-500 ease flex-col overflow-hidden font-sans `)} ref={mobilechatdivRef}>
+          <div className={getClassNames(`fixed  w-full h-2/3 mb-7 md:right-2.5 z-50 select-none  lg:w-[400px] lg:h-[560px] bottom-0  rounded-xl shadow-lg flex transition-all delay-500 ease flex-col overflow-hidden font-sans `)} ref={mobilechatdivRef}>
             <p className="text-center" id="closeChat">________</p>
             {/* Header */}
-            <div className={`flex items-center justify-between p-4 border-b ${theme === "dark" ? "border-gray-800" : "border-gray-300"}`}>
+            <div className={`flex items-center justify-between p-2 border-b ${theme === "dark" ? "border-gray-800" : "border-gray-300"}`}>
               <div className="flex items-center gap-2">
                 <div className="bg-white p-1 rounded-full">
                   <img
                     src={BotLogo}
                     alt="Bot"
-                    className="w-6 h-6 rounded-full"
+                    className="w-4 h-4 rounded-full"
                   />
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold">OTCB</h2>
-                  <p className="text-green-500 text-xs">● Online</p>
+                  <h2 className="text-sm font-bold">OTCB</h2>
+                  <small className="text-green-500 text-xs">● Online</small>
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                
-
-                <button className=" p-1 rounded-sm transition-all delay-300">
-                  <CloseOutlined className="text-xl cursor-pointer  " onClick={() => {
+                <button className="px-2 rounded-sm transition-all delay-300">
+                  <CloseOutlined className="text-sm cursor-pointer  " onClick={() => {
                     setChatOpen(false);
-
                     setVoiceEnabled(false)
                     stopSpeaking()
                   }} />
@@ -309,8 +304,8 @@ const ChatBot: React.FC<ChatBotProps> = ({ name, uuid, plan, bio, location }) =>
             <div className="flex-1 overflow-y-auto p-4 space-y-3 select-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
               {chat.map((msg, index) => (
                 <>
-                  <div key={index} className={`flex ${msg.type === "user" ? "justify-end" : "justify-start"}`}>
-                    <div className={`max-w-[80%] p-3 select-auto rounded-xl text-sm whitespace-pre-line
+                  <div key={index} className={`flex ${msg.type === "user" ? "justify-end" : "justify-start"} mb-1`}>
+                    <div className={`max-w-[80%] p-3 select-auto rounded-xl text-sm whitespace-pre-line sm:text-xs
         ${msg.type === "user" ? "bg-violet-600 text-white rounded-br-none rounded-tl-2xl rounded-tr-2xl rounded-bl-2xl" : "bg-gray-100 text-black rounded-tl-2xl rounded-br-2xl rounded-tr-2xl rounded-bl-none w-auto"}`}>
                       <motion.div
                         initial={{ opacity: 0, y: 10 }}
@@ -318,56 +313,31 @@ const ChatBot: React.FC<ChatBotProps> = ({ name, uuid, plan, bio, location }) =>
                         transition={{ duration: 0.3 }}
                         key={index}
                       ><div className="select-auto">{msg.type === "user" ? msg.text : msg.text}</div>
-                        <div className="text-[10px] text-right mt-1 flex justify-end items-center gap-1 ">
-                          {msg.type === "user" && <CheckOutlined />}
+                        <div className="text-[10px] text-right mt-1 flex justify-end items-center gap-1 text-xs">
                           {msg.time}
                         </div>
                       </motion.div>
                     </div>
                   </div>
-                  <div className="flex gap-1 justify-end">
+                  <div className="flex gap-1 justify-end sm:text-xs">
                     {copiedIndexuser === index && (
                       <span className="text-xs  text-green-500"><CheckOutlined /> Copied!</span>
                     )}
-                    {msg.type === "user" && <CopyOutlined className="text-lg" onClick={() => handleCopy(msg.text, index, "user")} />}
+                    {msg.type === "user" && <CopyOutlined className="text-xs" onClick={() => handleCopy(msg.text, index, "user")} />}
                   </div>
-                  <div className={`flex gap-1.5 ml-2`}>
+                  <div className={`flex gap-1.5 ml-2 sm:text-xs`}>
                     {msg.type === "bot" && (
                       <>
                         {voiceEnabled ? (
-                          <StopOutlined className="text-lg" onClick={() => stopSpeaking()} />
+                          <StopOutlined className="text-xs" onClick={() => stopSpeaking()} />
                         ) : (
-                          <PlayCircleOutlined className="text-lg" onClick={() => handlespeak(msg.text)} />
+                          <PlayCircleOutlined className="text-xs" onClick={() => handlespeak(msg.text)} />
                         )}
 
                         <CopyOutlined
-                          className="text-lg"
+                          className="text-xs"
                           onClick={() => handleCopy(msg.text, index, "ai")}
                         />
-
-                        {/* Like / Dislike */}
-                        {liked ? (
-                          <LikeFilled className="text-lg text-blue-500" />
-                        ) : (
-                          <>
-                            <LikeOutlined
-                              className="text-lg"
-                              onClick={() => {
-                                setLiked(true);
-                                setDisliked(false);
-                              }}
-                            />
-                            <DislikeOutlined
-                              className={`text-lg ${disliked ? "text-red-500" : ""}`}
-                              onClick={() => {
-                                setDisliked(!disliked);
-                                if (liked) setLiked(false);
-                              }}
-                            />
-                          </>
-                        )}
-
-
                       </>
                     )}
                     {copiedIndexai === index && (
@@ -378,14 +348,14 @@ const ChatBot: React.FC<ChatBotProps> = ({ name, uuid, plan, bio, location }) =>
               ))}
 
               {botTyping && (
-                <div className="flex justify-start">
+                <div className="flex justify-start sm:text-xs">
                   <motion.div
-                    className="bg-gray-200 text-black px-3 py-2 rounded-tl-2xl rounded-br-2xl rounded-tr-2xl rounded-bl-none text-sm"
+                    className="bg-gray-200 text-black px-3 py-2 rounded-tl-2xl rounded-br-2xl rounded-tr-2xl rounded-bl-none text-xs"
                     initial={{ opacity: 0.5 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.5, repeat: Infinity, repeatType: "reverse" }}
                   >
-                    <motion.div className="flex gap-1">
+                    <motion.div className="flex gap-1 sm:text-xs">
                       <motion.div
                         className="w-2 h-2 bg-gray-700 rounded-full"
                         animate={{ y: [0, -4, 0] }}
@@ -411,22 +381,20 @@ const ChatBot: React.FC<ChatBotProps> = ({ name, uuid, plan, bio, location }) =>
 
 
             {/* Quick buttons */}
-            <div className={"flex flex-wrap gap-2 p-3 select-none"}>
+            <div className={"flex flex-wrap gap-2 p-3 sm:text-xs select-none"}>
               <button className={getClassNames(`${theme === "dark" ? "border-gray-800" : "border-gray-300"} border px-3 py-1 rounded-full text-xs`)} onClick={() => setMessage("What is MemoEthiopia?")}>What is MemoEthiopia?</button>
               <button className={getClassNames(`${theme === "dark" ? "border-gray-800" : "border-gray-300"} border px-3 py-1 rounded-full text-xs`)} onClick={() => setMessage("How can i start it?")}>How can i start it?</button>
               <button className={getClassNames(`${theme === "dark" ? "border-gray-800" : "border-gray-300"} border px-3 py-1 rounded-full text-xs`)} onClick={() => setMessage("FAQs")}>FAQs</button>
-
-
             </div>
 
 
             {/* Footer */}
             <div className={`p-3 border-t border ${theme === "dark" ? "border-gray-800" : "border-gray-300"} flex items-center gap-2`}>
-              <InfoCircleOutlined className="text-xl " onClick={() => setIsModalOpen(true)} />
+              <InfoCircleOutlined className="text-sm " onClick={() => setIsModalOpen(true)} />
               <input
                 type="text"
                 placeholder="Type your message here..."
-                className={getClassNames(`flex-1 p-3 text-sm rounded-xl outline-none border ${theme === "dark" ? "border-gray-800" : "border-gray-300"}`)}
+                className={getClassNames(`flex-1 p-2 text-xs rounded-xl outline-none border ${theme === "dark" ? "border-gray-800" : "border-gray-300"}`)}
                 value={message}
                 ref={inputRef}
                 onChange={(e) => setMessage(e.target.value)}
@@ -436,7 +404,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ name, uuid, plan, bio, location }) =>
               />
               <button
                 onClick={handleSend}
-                className="text-white bg-violet-600 px-4 py-3 rounded-full text-sm hover:bg-violet-700"
+                className="text-white bg-violet-600 px-4 py-3 sm:text-xs rounded-full text-sm hover:bg-violet-700"
               >
                 ➤
               </button>
@@ -446,26 +414,26 @@ const ChatBot: React.FC<ChatBotProps> = ({ name, uuid, plan, bio, location }) =>
       )}
       <button
         onClick={() => setChatOpen(true)}
-        className={`fixed bottom-1 right-1 md:hidden border block z-50 ${theme === "drak" ? "bg-violet-300 border-gray-800" : "bg-violet-200 border-gray-300"} m-4 p-5 rounded-full shadow-lg  transition-all ${chatOpen ? 'hidden' : 'block'
+        className={`fixed bottom-1 sm:text-xs right-1 md:hidden border block z-50 ${theme === "drak" ? "bg-violet-300 border-gray-800" : "bg-violet-200 border-gray-300"} m-4 p-5 rounded-full shadow-lg  transition-all ${chatOpen ? 'hidden' : 'block'
           }`}
       >
         <img
           src={BotLogo}
           alt="Bot"
-          className="w-6 h-6 rounded-full"
+          className="w-4 h-4 rounded-full"
         />
       </button>
       {/* Chat Toggle Button */}
-      <div className="fixed z-50 bottom-0 right-2 hidden md:block">
+      <div className="fixed z-50 bottom-0 right-1 hidden md:block">
         <button
           onClick={() => setChatOpen(true)}
-          className={`bg-violet-200 m-4 p-5 rounded-full shadow-lg  transition-all ${chatOpen ? 'hidden' : 'block'
+          className={`bg-violet-200 m-3 p-4 rounded-full shadow-lg  transition-all ${chatOpen ? 'hidden' : 'block'
             }`}
         >
           <img
             src={BotLogo}
             alt="Bot"
-            className="w-6 h-6 rounded-full"
+            className="w-4 h-4 rounded-full"
           />
         </button>
 

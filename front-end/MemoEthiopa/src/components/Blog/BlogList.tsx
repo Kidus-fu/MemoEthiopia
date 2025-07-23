@@ -73,7 +73,8 @@ const BlogList: React.FC = () => {
 
                                             <img
                                                 onDragStart={(e) => e.preventDefault()}
-                                                src={post.photo}
+                                                // src={post.photo}
+                                                src={`https://placehold.co/600x400?text=${post?.title}`}
                                                 alt={post.title}
                                                 className="w-full h-64 object-cover" />
 

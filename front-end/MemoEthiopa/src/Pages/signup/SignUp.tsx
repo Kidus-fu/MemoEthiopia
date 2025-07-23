@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
-import { Badge, Button, ConfigProvider, Form, Input, Popover, Result, theme as antdTheme } from "antd";
+import { Badge, Button, ConfigProvider, Form, Input, Result, theme as antdTheme } from "antd";
 import { Link } from "react-router-dom";
-import { BugFilled, BugOutlined, CaretLeftOutlined, CaretRightOutlined, FacebookFilled, GoogleCircleFilled } from "@ant-design/icons";
-import { backToClentMode, changeToDeveloperMode } from "../../store/features/Developer_test";
+import { CaretLeftOutlined, CaretRightOutlined, FacebookFilled, GoogleCircleFilled } from "@ant-design/icons";
 import MemoEthiopaLogo from "../../assets/MemoEthio_logo_4.png"
 import SignUpImg from "./singin.png"
 import SignUpImg2 from "./MemoEthiop_singin.png"
 import { logout } from "../../store/features/users/Userinfo";
-import ThemeSelector from "../../components/TheamSlecter";
 import { SignupType } from "../type";
 import { useSignupForm } from "../../hooks/useSingupForm";
 
@@ -27,12 +25,6 @@ const SignUp: React.FC = () => {
             setSelecteImg(SignUpImg)
         }
     }
-    const HandelerDeveloperTest = () => {
-        dispatch(changeToDeveloperMode())
-    }
-    const HandelerClient = () => {
-        dispatch(backToClentMode())
-    }
     useEffect(() => {
         document.title = "MemoEthiopa | Sign Up";
     }, []);
@@ -45,9 +37,11 @@ const SignUp: React.FC = () => {
     };
 
     return (
-        <div className={getClassNames("min-h-screen sm:w-full  flex justify-center")}>
+        <div className={getClassNames("min-h-screen sm:w-full  flex justify-center sm:text-sm")}>
             <div className={getClassNames("rounded-md shadow-md w-full")}>
+                <Link to={"/"} >
                 <img src={MemoEthiopaLogo} alt="" className={getClassNames("w-18 h-18 m-2 fixed")} />
+                </Link> 
                 <div className="min-h-screen w-full flex justify-center items-center  py-8 sm:px-0">
                     <ConfigProvider theme={{
                         algorithm: theme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
@@ -93,27 +87,27 @@ const SignUp: React.FC = () => {
                                             </span>
                                         </small>
                                     </div>
-                                    <div className={getClassNames("flex justify-center items-center gap-4 mt-6 mb-4 flex-wrap")}>
-                                        <div className="flex flex-col items-center">
+                                    <div className={getClassNames("flex justify-center items-center gap-4 mt-6 mb-4 flex-wrap sm:text-xs")}>
+                                        <div className="flex flex-col items-center ">
                                             <Badge.Ribbon text="Comming soon" >
                                                 <button
-                                                    className={getClassNames("flex items-center gap-2 px-4 py-2 rounded-md transition-all border border-transparent opacity-50 cursor-not-allowed")}
+                                                    className={getClassNames("flex items-center gap-2 px-4 py-2 rounded-md transition-all border border-transparent opacity-50 cursor-not-allowed sm:text-xs")}
                                                     disabled
                                                 >
-                                                    <span className={getClassNames('text-red-700 text-2xl')}>
+                                                    <span className={getClassNames('text-red-700 text-xl')}>
                                                         <GoogleCircleFilled />
                                                     </span>
-                                                    <span className={getClassNames('text-gray-700')}>Login with Google</span>
+                                                    <span className={getClassNames('text-gray-700 sm:text-xs')}>Login with Google</span>
                                                 </button>
                                             </Badge.Ribbon>
                                         </div>
                                         <Badge.Ribbon text="Comming soon" >
-                                            <div className="flex flex-col items-center">
+                                            <div className="flex flex-col items-center sm:text-xs">
                                                 <button
                                                     className={getClassNames("flex items-center gap-2 px-3 py-2 rounded-md transition-all border border-transparent opacity-50 cursor-not-allowed")}
                                                     disabled
                                                 >
-                                                    <span className={getClassNames('text-blue-800 text-2xl')}>
+                                                    <span className={getClassNames('text-blue-800 text-xl')}>
                                                         <FacebookFilled />
                                                     </span>
                                                     <span className={getClassNames('text-gray-700')}>Login with Facebook</span>
@@ -122,12 +116,12 @@ const SignUp: React.FC = () => {
                                         </Badge.Ribbon>
 
                                     </div>
-                                    <div className={getClassNames("flex items-center my-4")}>
+                                    <div className={getClassNames("flex items-center my-4 sm:text-xs")}>
                                         <div className={getClassNames("flex-grow border-t border-gray-300")}></div>
-                                        <span className={getClassNames("mx-4 text-gray-500 font-medium text-sm")}>or contine with email</span>
+                                        <span className={getClassNames("mx-4 text-gray-500 font-medium text-xs")}>or contine with email</span>
                                         <div className={getClassNames("flex-grow border-t border-gray-300")}></div>
                                     </div>
-                                    <div className="flex justify-center items-center w-full ">
+                                    <div className="flex justify-center items-center w-full p-3">
                                         <Form
                                             name="signup"
                                             layout="vertical"
@@ -178,16 +172,13 @@ const SignUp: React.FC = () => {
                                                 </Button>
                                             </Form.Item>
 
-                                            <p className="text-gray-400 text-center">
+                                            <p className="text-gray-400 text-center sm:text-xs">
                                                 Already have an account?{' '}
                                                 <Link to="/signin" className="text-blue-500 hover:underline">
                                                     Sign in
                                                 </Link>
                                             </p>
                                         </Form>
-                                    </div>
-                                    <div className="fixed bottom-4 left-4">
-                                        <ThemeSelector />
                                     </div>
                                 </div>)}
                     </ConfigProvider>
@@ -204,18 +195,6 @@ const SignUp: React.FC = () => {
                     <button onClick={HandelBgChange}><CaretRightOutlined /></button>
                 </div>
             </div>
-
-            <Popover title="1 Click to Off, Double Click to On">
-                <button
-                    className={getClassNames("fixed bottom-0  text-xl border p-4 right-0 m-2 rounded-full border-red-800 ")}
-                    onDoubleClick={HandelerDeveloperTest}
-                    onClick={HandelerClient}
-                    onTouchStartCapture={HandelerDeveloperTest}
-                    onTouchEnd={HandelerClient}
-                >
-                    {DeveloperTest ? <BugFilled /> : <BugOutlined />}
-                </button>
-            </Popover>
         </div >
     );
 };

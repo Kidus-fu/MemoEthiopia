@@ -71,7 +71,7 @@ const LandingNavBar: React.FC = () => {
 
   return (
     <>
-    <div className={getClasses(`fixed z-40 bg-black/35 backdrop-blur-xs h-full w-full transition-all delay-500 ${openMobileMenu ? "block" : "hidden"}`)}></div>
+    <div className={getClasses(`fixed z-40 sm:text-xs bg-black/35 backdrop-blur-xs h-full w-full transition-all delay-500 ${openMobileMenu ? "block" : "hidden"}`)}></div>
     <nav className={getClasses(`sticky p-0 z-50 top-0 ${theme === "drak" ? "bg-black/25":"bg-black/5"}  backdrop-blur-2xl h-14`)}>
       <div className={getClasses("flex  justify-between bg-transparent items-center h-full px-6")}>
         {/* Logo */}
@@ -87,7 +87,7 @@ const LandingNavBar: React.FC = () => {
         </Link>
 
         {/* Desktop Menu */}
-        <ul className={getClasses("hidden bg-transparent lg:flex gap-3 items-center select-none ")}>
+        <ul className={getClasses("hidden bg-transparent lg:flex gap-3 items-center select-none sm:text-xs")}>
           <li
             className="relative group"
             onMouseEnter={() => setMenuOpen(1)}
@@ -154,8 +154,8 @@ const LandingNavBar: React.FC = () => {
 
         {/* Action Buttons */}
         <div className="hidden lg:flex gap-4 items-center">
-          <Link to="/signin" title="" className="px-4 py-2 border border-gray-700 rounded hover:scale-105 transition-transform">Sign In</Link>
-          <Link to="/signup" className="px-4 py-2 bg-blue-900  text-white rounded hover:scale-105 transition-transform">Get Free Account</Link>
+          <Link to="/singin" title="" className="px-4 py-2 border sm:text-sm border-gray-700 rounded hover:scale-105 transition-transform">Sign In</Link>
+          <Link to="/singup" className="px-4 py-2 bg-blue-900 sm:text-sm  text-white rounded hover:scale-105 transition-transform">Get Free Account</Link>
         </div>
 
         {/* Mobile Toggle */}

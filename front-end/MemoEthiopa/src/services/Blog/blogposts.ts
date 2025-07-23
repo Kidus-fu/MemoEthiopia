@@ -39,9 +39,9 @@ interface APIRESPONSECategory {
     results: Category[];
 }
 
-// const endpoint = "http://localhost:8000/blog/"
+const endpoint = "http://localhost:8000/blog/"
 
-const endpoint = "https://memoethiopia.onrender.com/blog/"
+// const endpoint = "https://memoethiopia.onrender.com/blog/"
 
 const baseQuery = fetchBaseQuery({
     baseUrl: endpoint,
@@ -65,7 +65,7 @@ export const blogApi = createApi({
             providesTags: ['BlogPost'],
         }),
         getBlogPostbycategory: builder.query<APIRESPONSEBlogPost, string>({
-            query: (category) => `posts/?category_title=${category}`,
+            query: (category) => `posts/?categories__title=${category}`,
             providesTags: ['BlogPost'],
         }),
         getBlogPost: builder.query<BlogPost, string>({

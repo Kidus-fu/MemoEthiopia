@@ -5,8 +5,8 @@ import { loginType } from '../types';
 export const loginAPI = createApi({
     reducerPath: "loginAPI",
     baseQuery: fetchBaseQuery({
-        baseUrl: "https://memoethiopia.onrender.com/api-v1/",
-        //  baseUrl: "http://localhost:8000/api-v1/",
+        // baseUrl: "https://memoethiopia.onrender.com/api-v1/",
+         baseUrl: "http://localhost:8000/api-v1/",
     }),
     endpoints: (builder) => ({
         postlogin: builder.mutation({

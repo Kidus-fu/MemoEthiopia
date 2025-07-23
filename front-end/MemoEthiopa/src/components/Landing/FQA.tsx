@@ -50,8 +50,8 @@ const FAQ: React.FC = () => {
         <section className={getClassNames("relative z-0 mt-1 ")}>
             
             <div className={getClassNames("px-6 py-10 md:py-20 md:px-10 max-w-7xl mx-auto")}>
-                <h2 className={getClassNames("text-3xl font-bold text-center mb-8 ")}>Frequently Asked Questions</h2>
-                <div className="space-y-4">
+                <h2 className={getClassNames("text-2xl font-bold text-center mb-8 ")}>Frequently Asked Questions</h2>
+                <div className="space-y-4 sm:text-sm">
                     {faqs.map((faq, index) => (
                         <div key={index} className={getClassNames(`border-b ${theme === 'dark' ? "border-gray-800" : "border-gray-300"}  rounded-lg`)}>
                             <button

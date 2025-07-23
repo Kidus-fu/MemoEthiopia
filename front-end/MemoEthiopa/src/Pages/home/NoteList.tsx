@@ -25,7 +25,7 @@ const NoteList: React.FC<FoldernotesState> = ({ foldernotes }) => {
   const getClassNames = (base: string) => {
     const border = DeveloperTest ? "border border-red-700" : "";
     const themeStyle =
-      theme === "dark" ? " bg-[#1f1f1f] text-white" : "bg-[#ECEEF0] text-black";
+      theme === "dark" ? "text-white" : "text-black";
     return `${base} ${border} ${themeStyle}`;
   };
   
@@ -120,12 +120,12 @@ const NoteList: React.FC<FoldernotesState> = ({ foldernotes }) => {
     <>
       {foldernotes ? (
         <div
-          className={getClassNames(`h-screen w-auto`)}
+          className={getClassNames(`  w-auto sm:text-sm`)}
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {localoading && <Spin fullscreen={true} tip='just a sec.' />}
           <section className={getClassNames("w-full overflow-y-auto py-8")}>
-            <h2 className={getClassNames("text-xl font-semibold mb-4 mx-5")}>
+            <h2 className={getClassNames("sm:text-md font-semibold mb-4 mx-5")}>
               {foldernotes.name || "All Notes"}
             </h2>
 
@@ -142,7 +142,7 @@ const NoteList: React.FC<FoldernotesState> = ({ foldernotes }) => {
                 ))
               ) : notes.length === 0 ? (
                 <li className={getClassNames(`p-6 rounded cursor-pointer`)}>
-                  <div className="flex gap-2.5 mt-2 text-xs text-gray-400">
+                  <div className="flex gap-2.5 mt-2 sm:text-xs text-gray-400">
                     <div className="flex-1">
                       <p className="truncate w-60">not found</p>
                     </div>
@@ -217,7 +217,7 @@ const NoteList: React.FC<FoldernotesState> = ({ foldernotes }) => {
                         <li
                           key={note.uuid}
                           className={getClassNames(
-                            `p-6 rounded cursor-pointer  ${selectNote === note.uuid
+                            `p-6 rounded cursor-pointer sm:text-xs  ${selectNote === note.uuid
                               ? theme === "dark"
                                 ? "bg-[#3D3939]"
                                 : "bg-[#fdf8f8]"
@@ -233,15 +233,15 @@ const NoteList: React.FC<FoldernotesState> = ({ foldernotes }) => {
                           }}
                           title={`${note.title} ${note.is_pinned ? '~ Pinned' : ''}`}
                         >
-                          <p className="font-medium  text-lg flex items-center gap-2">
+                          <p className="font-medium  sm:text-xs flex items-center gap-2">
                             {note.is_pinned && (
                               <span className="text-sm opacity-55"><PushpinFilled /></span>
                             )}
                             {note.title}
                           </p>
-                          <div className="flex gap-2.5 mt-2 text-xs text-gray-400">
+                          <div className="flex gap-2.5 mt-2 sm:text-xs text-gray-400">
                             <div className="flex-1">
-                              <p className="truncate w-60">{note.content}</p>
+                              <p className="truncate w-60 sm:text-xs">{note.content}</p>
                             </div>
                           </div>
                         </li>
@@ -255,20 +255,21 @@ const NoteList: React.FC<FoldernotesState> = ({ foldernotes }) => {
         </div >
       ) : (
         <div
-          className={getClassNames("w-full md:w-96 h-screen overflow-auto")}
+          className={getClassNames("w-full sm:w-80 h-screen overflow-auto")}
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           <section className={getClassNames("overflow-y-auto ")}>
             <div
               className={getClassNames(
-                "h-full mt-20 flex items-center justify-center"
+                "h-full mt-20 sm:text-sm flex items-center justify-center"
               )}
             >
               <Result
                 icon={<FolderOpenFilled />}
+                className=""
                 title="Select a Folder to view"
                 extra={
-                  <p>
+                  <p className=" text-sm">
                     Choose a Folder from the list on the left to view its
                     contents, or create a new Folder to add to your collection.
                   </p>

@@ -23,7 +23,7 @@ interface NotificationListProps {
 
 const NotificationList: React.FC<NotificationListProps> = ({ notifications, theme }) => {
   return (
-    <div className={`w-[440px]  h-[500px] rounded-2xl p-2 ${theme === "dark" ? "bg-[#242927]" : "bg-white"
+    <div className={`w-[340px]  h-[340px] sm:text-xs rounded-2xl p-2 ${theme === "dark" ? "bg-[#242927]" : "bg-white"
       }`}>
       {
         notifications.length ?
@@ -55,7 +55,7 @@ const NotificationList: React.FC<NotificationListProps> = ({ notifications, them
                         <div
                           className="flex items-center justify-between w-full">
                           <span
-                            className={`text-sm truncate ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
+                            className={`sm:text-xs truncate ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
                             {item.user_name.username}: {item.message}
                           </span>
                           <ConfigProvider theme={{
@@ -82,7 +82,7 @@ const NotificationList: React.FC<NotificationListProps> = ({ notifications, them
                               ]
                             }} trigger={["click"]} placement="bottomLeft"
                               overlayStyle={{ width: 220, height: 220, borderRadius: 20 }}>
-                              <span className="text-lg text-gray-400 me-2"><MoreOutlined /></span>
+                              <span className="sm:text-xs text-gray-400 me-2"><MoreOutlined /></span>
                             </Dropdown>
                           </ConfigProvider>
                         </div>
@@ -94,8 +94,8 @@ const NotificationList: React.FC<NotificationListProps> = ({ notifications, them
               )}
             />) :
           (
-            <div className={`flex justify-center items-center mt-40`}>
-              <Empty description={"Empty Notification"}  className="text-white"/>
+            <div className={`flex justify-center items-center mt-20 sm:text-xs`}>
+              <Empty description={"Empty Notification"}  />
             </div>
           )
       }

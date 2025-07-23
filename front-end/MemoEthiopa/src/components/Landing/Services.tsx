@@ -18,21 +18,21 @@ const Services: React.FC = () => {
             <div className={getClassNames("")}>
                 <section
                     id="features"
-                    className={getClassNames("relative block px-6 py-10 md:py-20 md:px-10 ")}
+                    className={getClassNames("relative block  px-6 py-10 md:py-20 md:px-10 ")}
                 >
                     <div className={getClassNames("relative mx-auto max-w-5xl text-center")}>
                         <span className={getClassNames("my-3 flex items-center justify-center font-medium uppercase tracking-wider")}>
                             Discover Memo Ethiopia
                         </span>
-                        <h2 className={getClassNames("block w-full bg-gradient-to-b font-bold  text-3xl sm:text-4xl")}>
+                        <h2 className={getClassNames("block w-full bg-gradient-to-b font-bold  text-sm sm:text-2xl")}>
                             Smart. Simple. Ethiopian.
                         </h2>
-                        <p className={getClassNames("mx-auto my-4 w-full max-w-xl bg-transparent text-center font-medium leading-relaxed tracking-wid")}>
+                        <p className={getClassNames("mx-auto my-4 sm:text-sm w-full max-w-xl bg-transparent text-center font-medium leading-relaxed tracking-wid")}>
                             Memo Ethiopia helps you capture thoughts, organize ideas, and access your notes anytime powered by AI and built for productivity.
                         </p>
                     </div>
 
-                    <div className={getClassNames("relative mx-auto max-w-7xl z-10  bg-transparent grid grid-cols-1 gap-10 pt-14 sm:grid-cols-2 lg:grid-cols-3")}>
+                    <div className={getClassNames("relative mx-auto max-w-7xl z-10 sm:text-sm bg-transparent grid grid-cols-1 gap-10 pt-14 sm:grid-cols-2 lg:grid-cols-3")}>
                         {/* Feature Card 1 */}
                         <div className={getClassNames(`rounded-md ${theme === 'dark' ? 'border-gray-700 shadow-[rgb(30,27,51)]' : ' border-gray-300'} shadow-2xl p-8 text-center border hover:scale-110 transition-transform duration-300 `)} >
                             <div

@@ -21,10 +21,10 @@ const ContactUs: React.FC = () => {
                             Contact
                         </p>
                         <h2
-                            className={getClassNames("font-heading mb-4 font-bold tracking-tight  text-3xl sm:text-5xl")}>
+                            className={getClassNames("font-heading mb-4 font-bold tracking-tight  text-3xl sm:text-3xl")}>
                             Get in Touch
                         </h2>
-                        <p className={getClassNames("mx-auto mt-4 max-w-3xl text-xl ")}>In hac habitasse platea
+                        <p className={getClassNames("mx-auto mt-4 max-w-3xl text-sm ")}>In hac habitasse platea
                             dictumst
                         </p>
                     </div>
@@ -32,7 +32,7 @@ const ContactUs: React.FC = () => {
                 <div className={getClassNames("flex items-stretch justify-center")}>
                     <div className={getClassNames("grid md:grid-cols-2")}>
                         <div className={getClassNames("h-full pr-6")}>
-                            <p className={getClassNames("mt-3 mb-12 text-lg ")}>
+                            <p className={getClassNames("mt-3 mb-12 text-md ")}>
                                 Class aptent taciti sociosqu ad
                                 litora torquent per conubia nostra, per inceptos himenaeos. Duis nec ipsum orci. Ut scelerisque
                                 sagittis ante, ac tincidunt sem venenatis ut.
@@ -49,15 +49,15 @@ const ContactUs: React.FC = () => {
                                             <path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z"></path>
                                         </svg>
                                     </div>
-                                    <div className={getClassNames("ml-4 mb-4")}>
-                                        <h3 className={getClassNames("mb-2 text-lg font-medium leading-6")}>Address</h3>
+                                    <div className={getClassNames("ml-4 mb-4 sm:text-sm")}>
+                                        <h3 className={getClassNames("mb-2 text-md font-medium leading-6")}>Address</h3>
                                         <p>Addis Ababa, Ethiopia</p>
                                         <p>123 Example Street</p>
                                     </div>
                                 </li>
 
                                 {/* Contact */}
-                                <li className={getClassNames("flex")}>
+                                <li className={getClassNames("flex sm:text-sm")}>
                                     <div className={getClassNames("flex h-10 w-10 items-center justify-center rounded bg-blue-900")}>
                                         {/* Phone Icon */}
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -69,14 +69,14 @@ const ContactUs: React.FC = () => {
                                         </svg>
                                     </div>
                                     <div className={getClassNames("ml-4 mb-4")}>
-                                        <h3 className={getClassNames("mb-2 text-lg font-medium leading-6")}>Contact</h3>
+                                        <h3 className={getClassNames("mb-2 text-md font-medium leading-6")}>Contact</h3>
                                         <p>Phone: +251 900 000 000</p>
                                         <p>Email: example@gmail.com</p>
                                     </div>
                                 </li>
 
                                 {/* Working Hours */}
-                                <li className={getClassNames("flex")}>
+                                <li className={getClassNames("flex sm:text-sm")}>
                                     <div className={getClassNames("flex h-10 w-10 items-center justify-center rounded bg-blue-900")}>
                                         {/* Clock Icon */}
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -87,7 +87,7 @@ const ContactUs: React.FC = () => {
                                         </svg>
                                     </div>
                                     <div className={getClassNames("ml-4 mb-4")}>
-                                        <h3 className={getClassNames("mb-2 text-lg font-medium leading-6")}>Working Hours</h3>
+                                        <h3 className={getClassNames("mb-2 text-md font-medium leading-6")}>Working Hours</h3>
                                         <p>Monday - Friday: 8:00 AM - 5:00 PM</p>
                                         <p>Saturday: 8:00 AM - 12:00 PM</p>
                                     </div>
@@ -96,7 +96,7 @@ const ContactUs: React.FC = () => {
 
                         </div>
                         <div className={getClassNames("card h-fit max-w-6xl p-5 md:p-12")} id="form">
-                            <h2 className={getClassNames("mb-4 text-2xl font-bold")}>Ready to Get Started?</h2>
+                            <h2 className={getClassNames("mb-4 text-xl font-bold")}>Ready to Get Started?</h2>
                             <div className={getClassNames("mb-6")}>
                                 <div className={getClassNames("mx-0 mb-1 sm:mb-4")}>
                                     <div className={getClassNames("mx-0 mb-1 sm:mb-4")}>

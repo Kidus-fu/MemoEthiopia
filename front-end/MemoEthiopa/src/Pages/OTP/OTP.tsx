@@ -1,18 +1,15 @@
 import React, { useState } from "react";
-import {  useSelector, useDispatch } from "react-redux";
+import {  useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import {
     Button,
     ConfigProvider,
     Input,
-    Popover,
     Spin,
     Tooltip,
     theme as antdTheme,
 } from "antd";
-import { ArrowRightOutlined, BugFilled, BugOutlined } from "@ant-design/icons";
-import { backToClentMode, changeToDeveloperMode } from "../../store/features/Developer_test";
-import ThemeSelector from "../../components/TheamSlecter";
+import { ArrowRightOutlined } from "@ant-design/icons";
 import { Link, useLocation } from "react-router-dom";
 import type { GetProps } from 'antd';
 import MemoEthiopLogo from "../../assets/MemoEthio_logo_4.png";
@@ -23,7 +20,6 @@ type OTPProps = GetProps<typeof Input.OTP>;
 const OTP: React.FC = () => {
     const theme = useSelector((state: RootState) => state.theam.theme);
     const DeveloperTest = useSelector((state: RootState) => state.developertest.border_test);
-    const dispatch = useDispatch();
     const location = useLocation();
     const email = location.state?.email || "your email";
     const [loading, setLoading] = useState(false);
@@ -56,7 +52,7 @@ const OTP: React.FC = () => {
     return (
         <>
             <div className={getClassNames("min-h-screen w-full flex justify-center items-center py-8 sm:px-0")}>
-                <div className={getClassNames("p-10 shadow-2xl rounded-2xl max-w-md w-full")}>
+                <div className={getClassNames("p-10 shadow-2xl sm:text-xs rounded-2xl max-w-md w-full")}>
                     <ConfigProvider
                         theme={{
                             algorithm: theme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
@@ -71,16 +67,16 @@ const OTP: React.FC = () => {
                         }}
                     >
                         <Spin fullscreen spinning={loading} />
-                        <div className="flex justify-end mb-4">
+                        <div className="flex justify-end mb-4 ">
                             <Link to={'/'}>
-                                <Button type="text">Skip <ArrowRightOutlined /></Button>
+                                <Button type="text" size="small">Skip <ArrowRightOutlined /></Button>
                             </Link>
                         </div>
 
                         <div className={getClassNames("text-center mb-6")}>
                             <img src={MemoEthiopLogo} alt="MemoEthioLogo" className="h-32 mx-auto" draggable={false} />
-                            <h2 className="font-bold text-3xl mt-4">Verify OTP</h2>
-                            <p className="mt-2">Enter the 6-digit code sent to <span className="text-sky-600 underline">{email}</span></p>
+                            <h2 className="font-bold text-2xl mt-4">Verify OTP</h2>
+                            <p className="mt-2 text-xs">Enter the 6-digit code sent to <span className="text-sky-600 underline">{email}</span></p>
                         </div>
 
                         <div className="flex flex-col items-center gap-6">
@@ -98,7 +94,7 @@ const OTP: React.FC = () => {
                             />
 
                             <Button
-                                size="large"
+                                size="middle"
                                 type="primary"
                                 block
                                 className="w-1/2 mt-4"
@@ -109,7 +105,7 @@ const OTP: React.FC = () => {
                             </Button>
                         </div>
 
-                        <div className="text-center mt-8">
+                        <div className="text-center mt-8 ">
                             <p>Didn't receive the code?
                                 <Tooltip title="Sometimes the email server might throw an error. If you don’t receive the OTP, just press the 'Skip' button at the top.">
                                     <span className="text-sky-600 px-2 cursor-pointer">Learn more</span>
@@ -118,19 +114,6 @@ const OTP: React.FC = () => {
                         </div>
                     </ConfigProvider>
                 </div>
-            </div>
-
-            <Popover title="1 Click to Off, Double Click to On">
-                <button
-                    onDoubleClick={() => dispatch(changeToDeveloperMode())}
-                    onClick={() => dispatch(backToClentMode())}
-                >
-                    {DeveloperTest ? <BugFilled /> : <BugOutlined />}
-                </button>
-            </Popover>
-
-            <div className="fixed bottom-4 left-4">
-                <ThemeSelector />
             </div>
         </>
     );

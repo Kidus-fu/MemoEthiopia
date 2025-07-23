@@ -28,7 +28,7 @@ const HomeLayout: React.FC = () => {
   const showMessage = useMessage()
   const DeveloperTest = useSelector((state: RootState) => state.developertest.border_test);
   const [loading, setLoading] = useState(true)
-  const [forlderloading, setForlderLoading] = useState(true)
+  const [forlderloading, setForlderLoading] = useState(false)
   const [localoading, setLocaloading] = useState(false)
   const [openForder, setOpenForder]: any = useState(undefined);
   const [folders, setFolders] = useState<FolderState[]>([])
@@ -141,8 +141,6 @@ const HomeLayout: React.FC = () => {
   };
   useEffect(() => {
     setForlderLoading(true);
-    console.log(folders.length);
-    console.log(forlderloading);
     if (!loggedIn) {
       window.location.href = "/"
     } else {
@@ -395,34 +393,33 @@ const HomeLayout: React.FC = () => {
             <img
               src={logo}
               alt="Loading..."
-              className="h-72 w-72 animate-scaleUp"
+              className="sm:h-60 sm:w-60 animate-scaleUp"
             />
             <Spin
-              size="large"
+              size="default"
               style={{
                 fontSize: '36px',
                 color: theme === 'dark' ? '#ffffffcc' : '#000000cc',
               }}
             />
-            <p className="text-sm text-gray-500 animate-pulse">
+            <p className="sm:text-xs text-gray-500 animate-pulse">
               Loading, please wait...
             </p>
           </div>
-          <small className={getClassNames("fixed bottom-0")}>@2025 provide Memo Ethiopia</small>
         </div>
       ) : (
         <>
-          <div className={`sticky  hidden  px-5 justify-between md:flex top-0 z-50 ${theme === "dark" ? "bg-[#1f1f1f]" : "bg-[#ffffff33]"} w-full`}
+          <div className={`sticky hidden px-5 sm:text-xs justify-between md:flex top-0 z-50 ${theme === "dark" ? "bg-[#1f1f1f]" : "bg-[#ffffff33]"} w-full`}
             onContextMenu={(e) => e.preventDefault()}
           >
-            <div className={getClassNames(`flex gap-2 ${theme === "dark" ? "bg-[#1f1f1f]" : "bg-[#ffffff33]"}`)}>
+            <div className={getClassNames(`sm:flex gap-2 sm:text-xs ${theme === "dark" ? "bg-[#1f1f1f]" : "bg-[#ffffff33]"}`)}>
               <Link to={"/blog"}
                 onClick={(e) => {
                   e.preventDefault(); // Prevent default navigation
                   window.open("/blog", "_blank", "noopener,noreferrer");
                 }}
               >
-                <div className=" p-1 cursor-pointer">
+                <div className=" p-1 cursor-pointer sm:text-xs">
                   Blog <ExportOutlined />
                 </div>
               </Link>
@@ -437,10 +434,10 @@ const HomeLayout: React.FC = () => {
                       placement="bottomRight"
                       dropdownRender={() => <NotificationList notifications={notifications} theme={theme} />}>
                       <div className="relative inline-block" onClick={handelNotificationopen}>
-                        <button className={"text-md cursor-pointer border border-transparent"} title='notfication' >
+                        <button className={" cursor-pointer border border-transparent"} title='notfication' >
                           Notification
                         </button>
-                        <span className="absolute -top-1 -right-2 bg-red-600 text-white text-xs px-1.5 py-0.5 rounded-full" title={notificationCount}>
+                        <span className="absolute -top-1 -right-2 sm:text-xs bg-red-600 text-white text-xs px-1.5 py-0.5 rounded-full" title={notificationCount}>
                           {notificationCount}
                         </span>
                       </div>
@@ -452,16 +449,16 @@ const HomeLayout: React.FC = () => {
                       trigger={["click"]}
                       placement="bottomRight"
                       dropdownRender={() => <NotificationList notifications={notifications} theme={theme} />}>
-                      <button className='text-md cursor-pointer border border-transparent' title='notfication'>Notification</button>
+                      <button className=' cursor-pointer border border-transparent' title='notfication'>Notification</button>
                     </Dropdown>
                   </>
                 )}
               </div>
-              <div className=" p-1 cursor-pointer opacity-50 text-blue-400" title="GashaAI">
+              <div className=" p-1 cursor-pointer opacity-50 sm:text-xs text-blue-400" title="GashaAI">
                 GashaAI
                 {/* <ThemeSelector /> */}
               </div>
-              <div className=" p-1 opacity-35 cursor-pointer" title='Chat'>
+              <div className=" p-1 opacity-35 sm:text-xs cursor-pointer" title='Chat'>
                 Chat
               </div>
               <div className=" p-1 cursor-pointer" title='Reload' onClick={() => {
@@ -482,15 +479,16 @@ const HomeLayout: React.FC = () => {
 
                 <Dropdown menu={{ items: useritems }} trigger={["click"]} placement="bottomLeft"
                   overlayStyle={{ width: 220, height: 220, borderRadius: 20 }}>
-                  <div className={getClassNames("h-8 w-8 mt-2 rounded-full cursor-pointer  overflow-hidden flex items-center justify-center")}>
+                  <div className={getClassNames("h-6 w-6 mt-1 bg-transparent rounded-full cursor-pointer  overflow-hidden flex items-center justify-center")}>
                     {user?.profile_picture ? (
                       <img
-                        src={`https://memoethiopia.onrender.com${user.profile_picture}`}
+                        // src={`https://memoethiopia.onrender.com${user.profile_picture}`}
+                        src={`https://placehold.co/150/?text=${user?.usermore?.username[0]}`}
                         alt="User Avatar"
                         className="h-full w-full object-cover"
                       />
                     ) : (
-                      <UserOutlined className={" text-2xl "} />
+                    <UserOutlined className={" text-lg "} />
                     )}
                   </div>
                 </Dropdown>
@@ -498,12 +496,12 @@ const HomeLayout: React.FC = () => {
             </div>
           </div>
 
-          <div className={getClassNames("md:flex  h-screen  w-full overflow-y-auto")}
+          <div className={getClassNames("sm:flex h-screen w-full overflow-y-auto")}
             onContextMenu={(e) => e.preventDefault()}
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {localoading && <Spin fullscreen={true} tip='just a sec.' />}
             {/* Sidebar */}
-            <aside className={getClassNames(` ${mobileSidebar ? 'fixed z-50 ease-in' : 'hidden'}   py-4 px-4 mb-3 h-screen lg:flex  flex-col overflow-y-auto `)} style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+            <aside className={getClassNames(` ${mobileSidebar ? 'fixed z-50 ease-in' : 'hidden'}   py-2 px-4 mb-3 h-screen lg:flex  flex-col overflow-y-auto `)} style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
               <div className={getClassNames(`${mobileSidebar ? 'flex justify-end items-end  right-5  top-2' : 'hidden'}`)}>
                 <button className={getClassNames("text-xl")} onClick={() => setMobileSidebar(false)}><CloseOutlined /></button>
               </div>
@@ -516,12 +514,12 @@ const HomeLayout: React.FC = () => {
                   setNewFoldersNameC("")
                 }}>
                 <div className="flex  justify-between">
-                  <h1 className="text-md font-bold mb-4">MemoEthiopia</h1>
+                  <h1 className="text-xs font-bold mb-4">MemoEthiopia</h1>
                   <SearchOutlined />
                 </div>
 
                 {/* <AddNoteForm onClose={() => setIsModalOpen(false)} folders={folders} theme={theme} open={isModalOpen} user={user} onSumbit={handelnewNote} /> */}
-                <button className={getClassNames(`px-4 py-2.5 cursor-pointer w-full rounded mt-2 mb-4 text-center ${theme === "dark" ? "bg-[#3D3939]" : "bg-[#ffff]"} `)}
+                <button className={getClassNames(`px-2 py-2 cursor-pointer w-full rounded mt-2 mb-4 text-center ${theme === "dark" ? "bg-[#3D3939]" : "bg-[#ffff]"} `)}
                 // onClick={() => setIsModalOpen(true)}
                 >+ New Note</button>
               </div>
@@ -534,25 +532,27 @@ const HomeLayout: React.FC = () => {
                   setNewfoldercreate(false)
                   setNewFoldersNameC("")
                 }}>
-                  <h2 className={getClassNames("text-sm font-semibold text-gray-400")}>Recents</h2>
-                  <button className={getClassNames("text-left px-2 py-1 rounded my-1")}><FileTextOutlined /> Reflection on the Month of June</button>
-                  <button className={getClassNames("text-left px-2 py-1 rounded my-1")}><FileTextOutlined /> Reflection on the Month of June</button>
+                  <h2 className={getClassNames("sm:text-xs font-semibold text-gray-400")}>Recents</h2>
+                  <button className={getClassNames("text-left sm:text-xs rounded my-1")}><FileTextOutlined /> Reflection on the Month of June</button>
+                  <button className={getClassNames("text-left sm:text-xs rounded my-1")}><FileTextOutlined /> Reflection on the Month of June</button>
                 </div>
-                <div className="flex justify-between text-gray-400 ">
-                  <h2 className="mt-4 text-sm font-semibold text-gray-400">Folders</h2>
+                <div className="flex justify-between text-gray-400 " >
+                  <h2 className="mt-4 sm:text-xs font-semibold text-gray-400">Folders</h2>
                   <FolderAddFilled className='mt-4 cursor-pointer' onClick={() => {
-                    setNewfoldercreate(true)
-                    setNewFoldersNameC("")
+                    if (!loading) {
+                      setNewfoldercreate(true)
+                      setNewFoldersNameC("")
+                    }
                   }} />
                 </div>
-                <div className="space-y-1 text-sm overflow-y-auto mb-3 h-2/5" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                <div className="space-y-1 text-xs overflow-y-auto mb-3 h-2/3" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                   {loading ? (
                     Array.from({ length: 4 }).map((_, idx) => (
-                      <Skeleton.Input key={idx} className={getClassNames(`cursor-pointer w-full border border-transparent m-1 ${theme === "dark" ? "bg-transparent " : ""}  text-md rounded   scale-100`)} />
+                      <Skeleton.Input key={idx} className={getClassNames(`cursor-pointer w-full border border-transparent m-1 ${theme === "dark" ? "bg-transparent " : ""}   rounded   scale-100`)} />
                     ))
                   ) : (
                     <>
-                      {newfoldercreate && <div className={getClassNames(`flex justify-between cursor-pointer border border-transparent  text-md rounded px-4 py-3 `)} >
+                      {newfoldercreate && <div className={getClassNames(`flex justify-between cursor-pointer border border-transparent   rounded px-2 py-2 `)} >
                         <p>
                           <FolderFilled className='pr-2' />
                           <input
@@ -571,10 +571,10 @@ const HomeLayout: React.FC = () => {
                                 setNewfoldercreate(false)
                               }
                             }}
-                            className={getClassNames(`outline-none w-3/4 p-1 transition-all delay-150 ease-in ${theme == "dark" ? "bg-black/30" : "bg-white"} focus:ring-0 border  ${folderNameError ? "border-red-700" : "border-transparent"}`)} />
+                            className={getClassNames(`outline-none w-3/4 p-1 sm:text-xs transition-all delay-150 ease-in ${theme == "dark" ? "bg-black/30" : "bg-white"} focus:ring-0 border  ${folderNameError ? "border-red-700" : "border-transparent"}`)} />
                           <br />
                           {
-                            folderNameError && <small className={`text-center ms-5 transition-all delay-300 ease-in ${theme === 'dark' ? "text-red-500" : "text-red-800"} `}>Folder name already taken.</small>
+                            folderNameError && <small className={`text-center sm:text-xs ms-5 transition-all delay-300 ease-in ${theme === 'dark' ? "text-red-500" : "text-red-800"} `}>Folder name already taken.</small>
                           }
                         </p>
                       </div>}
@@ -588,8 +588,8 @@ const HomeLayout: React.FC = () => {
                               }
                             },
                           }}>
-                            <Skeleton />
-                            <Skeleton />
+                            <Skeleton active />
+                            <Skeleton active />
                           </ConfigProvider>
                         )
                       }
@@ -605,7 +605,7 @@ const HomeLayout: React.FC = () => {
                           }}>
 
                             <Dropdown menu={Folderitems ? { items: Folderitems, onClick: Folderitems ? (e) => handelFolderitem(e, folder.id, folder.name) : undefined } : undefined} placement="bottom" trigger={["contextMenu"]} >
-                              <div className={getClassNames(`flex justify-between cursor-pointer border border-transparent  text-md rounded px-4 py-3  ${openForder === folder
+                              <div className={getClassNames(`flex justify-between cursor-pointer border border-transparent   rounded px-3 py-2  ${openForder === folder
                                 ? `${theme === "dark" ? "bg-gray-800 border-gray-800" : "bg-[#edf0f5] "} scale-105`
                                 : ""
                                 }`)}>
@@ -642,7 +642,7 @@ const HomeLayout: React.FC = () => {
                                         setRenameid(0)
                                       }
                                     }}
-                                    className={getClassNames("bg-transparent")}
+                                    className={getClassNames("bg-transparent sm:text-xs")}
                                     onTouchStart={() => {
                                       handleOpenforder(folder.name)
                                       setTimeout(() => {
@@ -677,157 +677,159 @@ const HomeLayout: React.FC = () => {
                     </>
                   )}
                 </div>
-                <div className="flex justify-between text-gray-400 m-3 cursor-pointer"
-                  onClick={() => {
-                    if (renamid !== 0) {
-                      setRenameid(0)
-                    }
-                  }}>
-                  <h2 className={getClassNames("mt-4 text-sm font-semibold  text-gray-400")}>More</h2>
-                </div>
-                <div className={getClassNames("space-y-1 text-md overflow-hidden mb-3 p-4 ")}
-                  onClick={() => {
-                    setNewfoldercreate(false)
-                    setNewFoldersNameC("")
-                    if (renamid !== 0) {
-                      setRenameid(0)
-                    }
-                  }}>
-                  <div className="text-md mb-2 cursor-pointer flex gap-1.5">
-                    <InboxOutlined /> Archived
+                <div className={getClassNames("sticky bottom-3 left-0 right-0 p-2 ")}>
+                  <div className="flex justify-between text-gray-400  cursor-pointer"
+                    onClick={() => {
+                      if (renamid !== 0) {
+                        setRenameid(0)
+                      }
+                    }}>
+                    <h2 className={getClassNames("mt-2 sm:text-xs font-semibold  text-gray-400")}>More</h2>
                   </div>
-                  <ConfigProvider
-                    theme={{
-                      algorithm: theme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
-                      token: {
-                        colorPrimary: '#f8f9fa',
-                        fontSize: 12,
-                      },
-                    }}
-                  >
-                    <Drawer
-                      title="Trased notes"
-                      placement="left"
-                      width={420}
-                      onClose={() => setTrashopen(false)}
-                      open={Trashopen}
-                      closable={true}
-                      bodyStyle={{ padding: "1rem", overflowY: "auto" }}
+                  <div className={getClassNames("space-y-1 text-xs overflow-hidden mb-3 p-2 ")}
+                    onClick={() => {
+                      setNewfoldercreate(false)
+                      setNewFoldersNameC("")
+                      if (renamid !== 0) {
+                        setRenameid(0)
+                      }
+                    }}>
+                    <div className=" mb-2 cursor-pointer flex gap-1.5">
+                      <InboxOutlined /> Archived
+                    </div>
+                    <ConfigProvider
+                      theme={{
+                        algorithm: theme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
+                        token: {
+                          colorPrimary: '#f8f9fa',
+                          fontSize: 12,
+                        },
+                      }}
                     >
-                      <div className={`flex justify-end items-end text-sm my-1  `}>
-                        <Button type='text' className={`${TrashedLoad || trashedNotes.length === 0 ? "cursor-not-allowed opacity-30" : " opacity-100"}`}
-                          onClick={() => handelTrashRestor()}>
-                          <FileDoneOutlined /> Restor all item</Button>
-                        <Button danger={true} type='text' className={` ${TrashedLoad || trashedNotes.length === 0 ? "cursor-not-allowed opacity-30" : "cursor-pointer opacity-100"}`}
-                          onClick={() => handelTrashClear()}
-                        ><RestOutlined /> Clear All</Button>
-                      </div>
-                      {
-                        TrashedLoad ?
-                          // <Skeleton.Node  />
-                          <ul className="space-y-2 px-1">
-                            {Array.from({ length: 5 }).map((_, idx) => (
-                              <li
-                                key={idx}
-                                className={` ${theme === "dark" ? "bg-[#2e2c2c]" : "bg-[#f3f1f1]"} p-4 rounded-lg animate-pulse  flex flex-col gap-2`}
-                              >
-                                <div className={`h-4 w-2/3 rounded-md`} />
-                                <div className={`h-4 w-2/3 rounded-md`} />
-                                <div className={`h-4 w-2/3 rounded-md`} />
-                              </li>
-                            ))}
-                          </ul>
-                          :
-                          trashedNotes.length ?
-                            (
-                              <ul className="space-y-3 px-1 w-auto">
-                                {trashedNotes.map((note: any, idx: number) => (
-                                  <Dropdown
-                                    menu={{
-                                      items: [
-                                        {
-                                          key: '1',
-                                          className: "p-2 ",
-                                          label: "Restor",
-                                          onClick: () => {
-                                            handelNoteTrashOut(note, idx)
-                                          },
-                                          icon: <ReloadOutlined />,
-                                        },
-                                        {
-                                          key: '2',
-                                          className: "p-2 ",
-                                          label: "Delete",
-                                          danger: true,
-                                          onClick: () => {
-                                            handelNoteTrashDel(note, idx)
-                                          },
-                                          icon: <RestOutlined />,
-                                        },
-                                      ],
-                                    }}
-                                    overlayStyle={{ width: 150, height: 260 }}
-                                    trigger={["contextMenu"]}
-                                    placement="bottomLeft"
-                                  >
-                                    <li
-                                      key={note.uuid}
-                                      className={getClassNames(
-                                        `p-6 rounded cursor-pointer  ${theme === "dark" ? "bg-[#1d1c1c]" : "bg-[#fdf8f8]"}`)}>
-                                      <p className="font-medium  text-lg flex items-center gap-2">
-                                        {note.title}
-                                      </p>
-                                      <div className="flex gap-2.5 mt-2 text-xs text-gray-400">
-                                        <div className="flex-1">
-                                          <p className="truncate w-60">{note.content}</p>
-                                        </div>
-                                        <Dropdown
-                                          menu={{
-                                            items: [
-                                              {
-                                                key: '1',
-                                                className: "p-2 ",
-                                                label: "Restor",
-                                                onClick: () => {
-                                                  handelNoteTrashOut(note, idx)
-                                                },
-                                                icon: <ReloadOutlined />,
-                                              },
-                                              {
-                                                key: '2',
-                                                className: "p-2 ",
-                                                label: "Delete",
-                                                danger: true,
-                                                onClick: () => {
-                                                  handelNoteTrashDel(note, idx)
-                                                },
-                                                icon: <RestOutlined />,
-                                              },
-                                            ],
-                                          }}
-                                          overlayStyle={{ width: 150, height: 260 }}
-                                          trigger={["click"]}
-                                          placement="bottomLeft"
-                                        >
-                                          <MoreOutlined className='text-lg' />
-                                        </Dropdown>
-                                      </div>
-                                    </li>
-                                  </Dropdown>
-                                ))}
-                              </ul>
-                            )
+                      <Drawer
+                        title="Trased notes"
+                        placement="left"
+                        width={420}
+                        onClose={() => setTrashopen(false)}
+                        open={Trashopen}
+                        closable={true}
+                        bodyStyle={{ padding: "1rem", overflowY: "auto" }}
+                      >
+                        <div className={`flex justify-end items-end text-xs my-1  `}>
+                          <Button type='text' className={`${TrashedLoad || trashedNotes.length === 0 ? "cursor-not-allowed opacity-30" : " opacity-100"}`}
+                            onClick={() => handelTrashRestor()}>
+                            <FileDoneOutlined /> Restor all item</Button>
+                          <Button danger={true} type='text' className={` ${TrashedLoad || trashedNotes.length === 0 ? "cursor-not-allowed opacity-30" : "cursor-pointer opacity-100"}`}
+                            onClick={() => handelTrashClear()}
+                          ><RestOutlined /> Clear All</Button>
+                        </div>
+                        {
+                          TrashedLoad ?
+                            // <Skeleton.Node  />
+                            <ul className="space-y-2 px-1">
+                              {Array.from({ length: 5 }).map((_, idx) => (
+                                <li
+                                  key={idx}
+                                  className={` ${theme === "dark" ? "bg-[#2e2c2c]" : "bg-[#f3f1f1]"} p-4 rounded-lg animate-pulse  flex flex-col gap-2`}
+                                >
+                                  <div className={`h-4 w-2/3 rounded-md`} />
+                                  <div className={`h-4 w-2/3 rounded-md`} />
+                                  <div className={`h-4 w-2/3 rounded-md`} />
+                                </li>
+                              ))}
+                            </ul>
                             :
-                            (
-                              <Empty description={"empty trash"} />
-                            )}
+                            trashedNotes.length ?
+                              (
+                                <ul className="space-y-3 px-1 w-auto">
+                                  {trashedNotes.map((note: any, idx: number) => (
+                                    <Dropdown
+                                      menu={{
+                                        items: [
+                                          {
+                                            key: '1',
+                                            className: "p-2 ",
+                                            label: "Restor",
+                                            onClick: () => {
+                                              handelNoteTrashOut(note, idx)
+                                            },
+                                            icon: <ReloadOutlined />,
+                                          },
+                                          {
+                                            key: '2',
+                                            className: "p-2 ",
+                                            label: "Delete",
+                                            danger: true,
+                                            onClick: () => {
+                                              handelNoteTrashDel(note, idx)
+                                            },
+                                            icon: <RestOutlined />,
+                                          },
+                                        ],
+                                      }}
+                                      overlayStyle={{ width: 150, height: 260 }}
+                                      trigger={["contextMenu"]}
+                                      placement="bottomLeft"
+                                    >
+                                      <li
+                                        key={note.uuid}
+                                        className={getClassNames(
+                                          `p-6 rounded cursor-pointer  ${theme === "dark" ? "bg-[#1d1c1c]" : "bg-[#fdf8f8]"}`)}>
+                                        <p className="font-medium  text-lg flex items-center gap-2">
+                                          {note.title}
+                                        </p>
+                                        <div className="flex gap-2.5 mt-2 text-xs text-gray-400">
+                                          <div className="flex-1">
+                                            <p className="truncate w-60">{note.content}</p>
+                                          </div>
+                                          <Dropdown
+                                            menu={{
+                                              items: [
+                                                {
+                                                  key: '1',
+                                                  className: "p-2 ",
+                                                  label: "Restor",
+                                                  onClick: () => {
+                                                    handelNoteTrashOut(note, idx)
+                                                  },
+                                                  icon: <ReloadOutlined />,
+                                                },
+                                                {
+                                                  key: '2',
+                                                  className: "p-2 ",
+                                                  label: "Delete",
+                                                  danger: true,
+                                                  onClick: () => {
+                                                    handelNoteTrashDel(note, idx)
+                                                  },
+                                                  icon: <RestOutlined />,
+                                                },
+                                              ],
+                                            }}
+                                            overlayStyle={{ width: 150, height: 260 }}
+                                            trigger={["click"]}
+                                            placement="bottomLeft"
+                                          >
+                                            <MoreOutlined className='text-lg' />
+                                          </Dropdown>
+                                        </div>
+                                      </li>
+                                    </Dropdown>
+                                  ))}
+                                </ul>
+                              )
+                              :
+                              (
+                                <Empty description={"empty trash"} />
+                              )}
 
-                    </Drawer>
-                  </ConfigProvider>
-                  <div className="text-md mb-2 cursor-pointer"
-                    onClick={() => handelTrashopen()}
-                  >
-                    <RestOutlined /> Tarsh
+                      </Drawer>
+                    </ConfigProvider>
+                    <div className=" mb-2 cursor-pointer"
+                      onClick={() => handelTrashopen()}
+                    >
+                      <RestOutlined /> Tarsh
+                    </div>
                   </div>
                 </div>
               </div>
@@ -837,7 +839,7 @@ const HomeLayout: React.FC = () => {
               onClick={() => setMobileSidebar(true)}>
               <AlignLeftOutlined className="" />
             </div>
-            <div className="z-50">
+            <div className={`z-50 ${theme === "dark" ? "bg-[#1f1f1f]" : "bg-[#ECEEF0]"} `}>
               <NoteList foldernotes={openForder} />
             </div>
             <div className={getClassNames(`${inOutlet ? "" : `${theme === "dark" ? "bg-[#242424]" : "bg-[#ffffff33]"}`}   top-0 left-0 z-0 right-0 bottom-0 overflow-y-auto lg:static lg:h-auto lg:flex w-full h-auto`)}>

@@ -120,7 +120,7 @@ const BlogPostDetail: React.FC = () => {
                     <div className="lg:col-span-3">
                         <h1 className="text-2xl font-bold m-2">{data?.title}</h1>
                         <div className="text-sm text-gray-500 mb-4">Admin | Category |  {dayjs(data?.created_at).fromNow()}</div>
-                        <img src={data?.photo} alt={data?.title} onDragStart={(e) => e.preventDefault()} className="rounded mb-6 w-full md:w-11/12 h-72 md:h-96" />
+                        <img src={`https://placehold.co/1200x600?text=${data?.title}`} alt={data?.title} onDragStart={(e) => e.preventDefault()} className="rounded mb-6 w-full md:w-11/12 h-72 md:h-96" />
                         {/* <div className=" bg-gray-200 rounded mb-6"></div> */}
 
                         <Paragraph
@@ -223,12 +223,13 @@ const BlogPostDetail: React.FC = () => {
                             renderItem={(item) => (
                                 <li className="border-b border-gray-200 p-4 flex items-start space-x-3">
                                     <img
-                                        src={item?.user?.profile_picture ? `http://localhost:8000/${item.user.profile_picture}` : "https://via.placeholder.com/150"}
+                                        // src={item?.user?.profile_picture ? `http://localhost:8000/${item.user.profile_picture}` : "https://via.placeholder.com/150"}
+                                        src={`https://placehold.co/150/?text=${item.user.username[0]}`} 
                                         className="w-10 h-10 rounded-full object-cover"
                                     />
                                     <div>
-                                        {/* <p className="font-semibold text-sm">{item.author}</p> */}
-                                        {/* <p className="text-gray-700 text-sm mt-1">{item.content}</p> */}
+                                        <p className="font-semibold text-sm">{item.user.username}</p>
+                                        <p className="text-gray-700 text-sm mt-1">{item.content}</p>
                                     </div>
                                 </li>
                             )}
