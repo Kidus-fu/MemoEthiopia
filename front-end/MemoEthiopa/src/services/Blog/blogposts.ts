@@ -65,7 +65,7 @@ export const blogApi = createApi({
             providesTags: ['BlogPost'],
         }),
         getBlogPostbycategory: builder.query<APIRESPONSEBlogPost, string>({
-            query: (category) => `posts/?categories__title=${category}`,
+            query: (category) => `posts/?category_title=${category}`,
             providesTags: ['BlogPost'],
         }),
         getBlogPost: builder.query<BlogPost, string>({

@@ -45,7 +45,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/blog/aboutus" element={<BlogAboutUs />} />
           <Route path="/blog/newpost" element={<BlogPost />} />
           <Route path="/blog/dashboard" element={<BlogAdminDashboard />} />
-          <Route path="/blog/category/:slug" element={<BlogCategoriesFilter />} />
+          <Route path="/blog/category/:title" element={<BlogCategoriesFilter />} />
           <Route path="/blog/delete/:slug" element={<BlogDelete />} />
           <Route path="/blog/edit/:slug" element={<BlogpostEdit />} />
 

@@ -50,7 +50,7 @@ const BlogSearch: React.FC<BlogSearchProps> = ({ SearchPromt }) => {
         
             {loading ?
                 (<BlogSearchLoading />) : (
-                    <div className="max-w-7xl mx-auto px-4 py-1 overflow-hidden mt-5"
+                    <div className="max-w-7xl mx-auto sm:px-4 sm:text-sm py-1 overflow-hidden mt-5"
                         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
                         {posts.length === 0 && (
                             <div className="flex justify-center items-center w-full">
@@ -65,7 +65,8 @@ const BlogSearch: React.FC<BlogSearchProps> = ({ SearchPromt }) => {
                                     className="bg-white shadow-md rounded-lg overflow-hidden flex flex-col">
                                     <img
                                         onDragStart={(e) => e.preventDefault()}
-                                        src={post.photo}
+                                        // src={post.photo}
+                                        src={`https://placehold.co/600x400?text=${post?.title}`}
                                         alt={post.title}
                                         className="w-full h-64 object-cover" />
 

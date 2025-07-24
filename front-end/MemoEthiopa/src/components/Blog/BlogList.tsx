@@ -42,7 +42,7 @@ const BlogList: React.FC = () => {
 
     return (
         <>
-            <div className="max-w-7xl mx-auto px-4 py-8 overflow-hidden mt-15"
+            <div className="max-w-7xl mx-auto sm:px-4 sm:text-sm sm:py-4 overflow-hidden mt-15"
                 style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
                 {search ?
                     <>
@@ -60,24 +60,22 @@ const BlogList: React.FC = () => {
                                     <h3 className="text-2xl  font-bold ms-4 text-gray-800 mb-4  pb-2">
                                         {category.title}
                                     </h3>
-                                    <Link to={`/blog/category/${category.slug}`}>
+                                    <Link to={`/blog/category/${category.title}`}>
                                         <h2 className='text-sm text-[#18A0FB] me-14 cursor-pointer'>more <ArrowRightOutlined /></h2>
                                     </Link>
                                 </div>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 px-6 lg:grid-cols-3 mt-6 gap-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 px-6 lg:grid-cols-3 mt-1 gap-6">
                                     {category.posts.map((post: any) => (
                                         <div
                                             key={post.id}
                                             className="bg-white shadow-md rounded-lg overflow-hidden flex flex-col">
-
                                             <img
                                                 onDragStart={(e) => e.preventDefault()}
                                                 // src={post.photo}
                                                 src={`https://placehold.co/600x400?text=${post?.title}`}
                                                 alt={post.title}
                                                 className="w-full h-64 object-cover" />
-
                                             <div className="p-4 flex flex-col flex-1">
                                                 <div className="flex justify-between p-1">
                                                     <div className="">

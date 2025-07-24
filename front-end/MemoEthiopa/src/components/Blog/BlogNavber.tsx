@@ -29,7 +29,7 @@ const BlogNavber:React.FC = () => {
       {user.is_superuser ? (
         <>
           <Link to="/blog/dashboard" className="text-purple-600 hover:text-purple-800">Dashboard</Link>
-        <Link to="/blog/categories" className="text-purple-600 hover:text-purple-800">New Category</Link>
+        {/* <Link to="/blog/categories" className="text-purple-600 hover:text-purple-800">New Category</Link> */}
           <Link to="/blog/newpost" className="text-purple-600 hover:text-purple-800">New Blog</Link>
         </>
       ) : (

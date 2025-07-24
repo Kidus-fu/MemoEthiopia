@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import {  Link, useNavigate, useParams } from 'react-router-dom';
 import { Breadcrumb, Button,  Result, Skeleton } from 'antd';
 import BlogNavber from '../../components/Blog/BlogNavber';
 import BlogFooter from '../../components/Blog/BlogFooter';
@@ -12,8 +12,8 @@ dayjs.extend(relativeTime);
 
 
 const BlogCategoriesFilter: React.FC = () => {
-    const { slug } = useParams<{ slug: string }>();
-    const { data: categoriesData, isLoading, error } = useGetBlogPostbycategoryQuery(slug!);
+    const { title } = useParams<{ title: string }>();
+    const { data: categoriesData, isLoading, error } = useGetBlogPostbycategoryQuery(title!);
     const navigate = useNavigate();
     const ref = useRef<HTMLDivElement>(null);
     useEffect(() => {
@@ -58,7 +58,7 @@ const BlogCategoriesFilter: React.FC = () => {
     return (
         <>
             <BlogNavber />
-            <div className="max-w-7xl mx-auto px-4 py-8 overflow-hidden pt-20"
+            <div className="max-w-7xl mx-auto px-4 py-8  overflow-hidden pt-20"
                 style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
                 ref={ref}
             >
@@ -68,7 +68,7 @@ const BlogCategoriesFilter: React.FC = () => {
                             {/* Category Title */}
                             <Breadcrumb className="mb-8 ">
                                 <Breadcrumb.Item><Link to={'/blog'}>Home</Link></Breadcrumb.Item>
-                                <Breadcrumb.Item className="bg-gray-200 p-0.5 cursor-pointer">{slug}</Breadcrumb.Item>
+                                <Breadcrumb.Item className="bg-gray-200 p-0.5 cursor-pointer">{title}</Breadcrumb.Item>
                             </Breadcrumb>
                         </div>
                     </div>
@@ -80,7 +80,8 @@ const BlogCategoriesFilter: React.FC = () => {
                                 className="bg-white shadow-md rounded-lg overflow-hidden flex flex-col">
                                 <img
                                     onDragStart={(e) => e.preventDefault()}
-                                    src={post.photo}
+                                    // src={post.photo}
+                                    src={`https://placehold.co/600x400?text=${post?.title}`}
                                     alt={post.title}
                                     className="w-full h-64 object-cover" />
 
@@ -94,9 +95,6 @@ const BlogCategoriesFilter: React.FC = () => {
                                                 <small className='text-sm text-[#6DE4EA]'>Admin</small>
                                                 <small className='text-sm opacity-50'>{dayjs(post.created_at).fromNow()}</small>
                                             </div>
-                                        </div>
-                                        <div className="text-[#18A0FB] flex flex-wrap gap-2">
-                                            {slug}
                                         </div>
 
                                     </div>
@@ -114,10 +112,10 @@ const BlogCategoriesFilter: React.FC = () => {
                         
                     </div>
                     <div className="flex justify-center items-center">
-                            <Button type="text"  className="mt-4" >
+                            <Button type="text"  className="mt-4" disabled={categoriesData?.previous === null ? true:false} >
                                  Previous 
                             </Button>
-                            <Button type="text"  className="mt-4">
+                            <Button type="text"  className="mt-4" disabled={categoriesData?.next === null ? true:false} >
                                 Next 
                             </Button>
 

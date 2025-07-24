@@ -172,7 +172,13 @@ const BlogPostDetail: React.FC = () => {
                                 <Link to={`/blog/${item.slug}`} onClick={() => ref.current?.scrollIntoView({ behavior: "smooth" })}>
                                     <div key={item} className="bg-white shadow rounded overflow-hidden">
                                         {/* <div className="w-full h-40 bg-gray-200"></div> */}
-                                        <img src={item?.photo} alt={data?.title} onDragStart={(e) => e.preventDefault()} className="rounded mb-6 w-full h-full md:h-40" />
+                                        <img
+                                            src={`https://placehold.co/300x180?text=${encodeURIComponent(item?.title || 'MemoEthiopia')}`}
+                                            alt={item?.title || 'MemoEthiopia Note'}
+                                            onDragStart={(e) => e.preventDefault()}
+                                            className="rounded-sm mb-4 w-full h-auto max-h-48 object-cover"
+                                        />
+
                                         <div className="p-4">
                                             <h3 className="font-semibold text-gray-800">{item.title}</h3>
                                         </div>
@@ -224,7 +230,7 @@ const BlogPostDetail: React.FC = () => {
                                 <li className="border-b border-gray-200 p-4 flex items-start space-x-3">
                                     <img
                                         // src={item?.user?.profile_picture ? `http://localhost:8000/${item.user.profile_picture}` : "https://via.placeholder.com/150"}
-                                        src={`https://placehold.co/150/?text=${item.user.username[0]}`} 
+                                        src={`https://placehold.co/150/?text=${item.user.username[0]}`}
                                         className="w-10 h-10 rounded-full object-cover"
                                     />
                                     <div>
@@ -241,7 +247,9 @@ const BlogPostDetail: React.FC = () => {
                             <h3 className="font-semibold mb-2">Categories</h3>
                             <ul className="text-blue-600 space-y-1 text-sm">
                                 {data?.categories.map((category: any) => (
-                                    <li key={category.id}>{category.title}</li>
+                                    <Link to={`/blog/category/${category?.title}/`} >
+                                        <li key={category.id}>{category.title}</li>
+                                    </Link>
                                 ))}
                             </ul>
                         </div>
