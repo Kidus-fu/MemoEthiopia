@@ -1,6 +1,16 @@
 from langchain.agents import Tool
 from .toolsfunc import *
 
+
+create_note_tool = Tool(
+    name="CreateNoteWithAI",
+    func=CreateNoteWithAI,
+    description=(
+        "Creates a new Markdown-formatted note for the user based on their prompt "
+        "and saves it automatically into MemoEthiopia."
+    )
+)
+
 userinfo = Tool(
     name="GetUserInfo",
     func=GetUserInfo,

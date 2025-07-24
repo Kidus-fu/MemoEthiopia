@@ -164,6 +164,9 @@ python manage.py runserver
 * **`PUT /memoai/chat-session/{uuid}/`** → Update a chat-session
 * **`DELETE /memoai/chat-session/{uuid}/`** → Delete a chat-session
 
+# AI Agent Note Crate 
+* **`POST /memoai/noteagent/`** → Create a AI Note
+
 ## AI Agent Chat message 
 * **`GET /api-v1/chat-message/`** → List all chat-message
 * **`POST /api-v1/chat-message/`** → Create a chat-message
@@ -373,6 +376,19 @@ python manage.py runserver
 }
 
 ```
+
+## AI Agent Note Crate 
+``` json
+{
+    "user_prompt": "I went a note about ethiopia addis ababa hotal",
+    "metadata": {
+        "user_id": "1",
+        "folder_id":"4"
+    }
+}
+
+```
+
 
 ## AI Agent Chat message:
 ``` json

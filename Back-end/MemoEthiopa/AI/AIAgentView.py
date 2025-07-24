@@ -2,6 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .AIAgent import agent_executor
+from .tools import create_note_tool
+from rest_framework.permissions import IsAuthenticated
 # Import your initialized agent
 
 
@@ -24,29 +26,69 @@ from .AIAgent import agent_executor
 # }
 
 
+class CreateNoteAgentView(APIView):
+    permission_classes  = [IsAuthenticated]
+    def post(self, request):
+        user_prompt = request.data.get("user_prompt")
+        metadata = request.data.get("metadata", {})
+
+        if not user_prompt:
+            return Response({"error": "user_prompt is required."}, status=status.HTTP_400_BAD_REQUEST)
+        user_id = metadata.get("user_id")
+        folder_id = metadata.get("folder_id")
+
+        if not user_id:
+            return Response({"error": "user_id in metadata is required."}, status=status.HTTP_400_BAD_REQUEST)
+        input_data = {
+            "user_id": user_id,
+            "user_prompt": user_prompt,
+            "folder_id":folder_id
+        }
+
+        try:
+            markdown_note = create_note_tool.func(input_data)
+
+            return Response({"created_note_md": markdown_note}, status=status.HTTP_201_CREATED)
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 class LangChainAgentView(APIView):
     def post(self, request):
         user_prompt = request.data.get("user_prompt", "")
-        clear_prompt = ""
-        metadata = request.data.get("metadata",{})
-        if not metadata:    
-            return Response({"error":"Meta Data requerment to send"}, status=status.HTTP_400_BAD_REQUEST)
+        metadata = request.data.get("metadata", {})
+
+        # Validation
+        if not metadata:
+            return Response({"error": "metadata is required."}, status=status.HTTP_400_BAD_REQUEST)
         if not user_prompt:
-            return Response({"error": "Missing 'input' in request data."}, status=status.HTTP_400_BAD_REQUEST)
-        
-        name = metadata.get("name","Guset")
-        user_uuid = metadata.get("user_uuid","")
-        location = metadata.get("location","")
-        tools = metadata.get("tools","")
-        choose_note = metadata.get("choose_note",{})
-        chat_session = metadata.get("chat-session",{})
-        if choose_note:
-            note_uuid = choose_note.get("note_uuid","no uuid")
+            return Response({"error": "user_prompt is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Extract metadata safely
+        name = metadata.get("name", "Guest")
+        user_uuid = metadata.get("user_uuid", "")
+        location = metadata.get("location", "")
+        tools = metadata.get("tools", "")
+        choose_note = metadata.get("choose_note", {})
+        chat_session = metadata.get("chat_session", {})  # fix key naming
+
         if not chat_session:
-            return Response({"error": "Missing 'input' in request data."}, status=status.HTTP_400_BAD_REQUEST)
-        chat_session_uuid = chat_session.get("uuid","no uuid pass")
-            # more staf here 
-        clear_prompt = f"You are a AI Assemant in MemoEthiopia answer user quertion simple way  user prompt is {user_prompt} uuid is {user_uuid}"        
+            return Response({"error": "chat_session is required in metadata."}, status=status.HTTP_400_BAD_REQUEST)
+
+        note_uuid = choose_note.get("note_uuid", "no uuid") if choose_note else None
+        chat_session_uuid = chat_session.get("uuid", "no uuid passed")
+
+        # Build clear prompt
+        clear_prompt = (
+            f"You are an AI Assistant in MemoEthiopia. Answer the user's question simply.\n"
+            f"User Prompt: {user_prompt}\n"
+            f"User UUID: {user_uuid}\n"
+            f"Note UUID: {note_uuid}\n"
+            f"Location: {location}\n"
+            f"Tools: {tools}\n"
+            f"Chat Session UUID: {chat_session_uuid}"
+        )
 
         try:
             result = agent_executor.invoke({"input": clear_prompt})

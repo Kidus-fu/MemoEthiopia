@@ -11,6 +11,8 @@ from notes.models import *
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
+from langchain_groq import ChatGroq
+import re
 
 load_dotenv()
 
@@ -19,6 +21,102 @@ endpoint = "http://localhost:8000/api-v1/"
 aiendpoint = "http://localhost:8000/memoai/"
 # production 
 # endpoint = "https://memoethiopia.onrender.com/api-v1/"
+
+llm = ChatGroq(
+    groq_api_key=os.getenv("GROQ_API_KEY"),
+    model_name="llama3-8b-8192",
+    streaming=True
+)
+
+
+def clean_markdown(text: str) -> str:
+    """
+    Removes Markdown formatting symbols like #, ##, *, **, **** from text.
+    Useful for extracting clean titles or plain summaries.
+    """
+    # Remove headers like #, ##, ### at the start of lines
+    text = re.sub(r'^#{1,6}\s*', '', text, flags=re.MULTILINE)
+
+    # Remove bold (**text**)
+    text = re.sub(r'\*\*(.*?)\*\*', r'\1', text)
+
+    # Remove italic (*text*)
+    text = re.sub(r'\*(.*?)\*', r'\1', text)
+
+    # Remove any remaining stray *
+    text = text.replace('*', '')
+
+    # Remove any remaining stray #
+    text = text.replace('#', '')
+
+    # Remove any leading/trailing whitespace
+    return text.strip()
+
+def CreateNoteWithAI(input_data: dict) -> str:
+    """
+    Expects:
+        {
+            "user_id": "<id>",
+            "user_prompt": "<prompt describing the note>",
+            "folder_id":'<folder_id>'
+        }
+    Returns:
+        Markdown string of the created note.
+    """
+    userModel = User
+
+    user_id = input_data.get("user_id")
+    user_prompt = input_data.get("user_prompt")
+    folder_id = input_data.get("folder_id")
+
+
+    if not user_id or not user_prompt:
+        return "Missing user_id or user_prompt."
+
+    try:
+        user = userModel.objects.get(id=user_id)
+    except userModel.DoesNotExist:
+        return "User not found."
+    
+    folder = None
+    if folder_id:
+        try:
+            folder = Folder.objects.get(id=folder_id, user=user)
+        except Folder.DoesNotExist:
+            return {"error": "Folder not found or does not belong to user."}
+
+    # Construct system prompt
+    prompt = (
+        f"You are an AI assistant for MemoEthiopia.\n"
+        f"Create a detailed, well-structured note for the user based on this prompt:\n\n"
+        f"'{user_prompt}'\n\n"
+        f"Format the note in Markdown with clear headings, bullet points, and code blocks if needed. "
+        f"Ensure it is clear and helps the user understand the topic easily."
+    )
+
+    response = llm.invoke(prompt)
+    markdown_note = response.content
+    
+    # Use first line as title if possible
+    first_line = markdown_note.strip().splitlines()[0].replace("#", "").strip()
+    title = first_line if first_line else f"Note: {user_prompt[:50]}"
+    title = clean_markdown(title)
+
+    note = Note.objects.create(
+        user=user,
+        title=title,
+        content=markdown_note,
+        folder=folder
+    )
+    note.save()
+
+
+    return {
+        "note_uuid": str(note.uuid),
+        "note_title": note.title,
+        "note_content_md": markdown_note,
+        "folder": folder.name if folder else None
+    }
 
 
 
