@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 import { ConfigProvider, Dropdown, Modal, Spin, theme as antdTheme } from "antd";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { ArrowLeftOutlined, CloseOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, FolderFilled, InboxOutlined, InfoCircleOutlined, ScheduleOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, CloseOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined,  FolderOutlined, InboxOutlined, InfoCircleOutlined, ScheduleOutlined, ShareAltOutlined } from "@ant-design/icons";
 import { useMessage } from "../../components/useMessage";
 import NoteDetail from "./NoteDetail";
 
@@ -142,7 +142,7 @@ const NotePage = () => {
           </ConfigProvider>
           <div className={getClassNames("min-h-screen w-full")}>
             {/* Header */}
-            <div className={getClassNames("sticky top-0 z-40 w-full sm:text-xs")}>
+            <div className={getClassNames("sticky top-0 z-40 w-full sm:text-xs ")}>
               <div className="flex justify-between items-center p-2 sm:text-xs">
                 <div
                   className="sm:text-xs cursor-pointer"
@@ -158,7 +158,10 @@ const NotePage = () => {
                   <ConfigProvider
                     theme={{
                       algorithm: theme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
-                      components: { Dropdown: { paddingBlock: 10 } },
+                      components: { Dropdown: { 
+                        paddingBlock: 10,
+                        fontSize: 10 
+                      } },
                     }}
                   >
                     <Dropdown
@@ -176,6 +179,12 @@ const NotePage = () => {
                             label: "Detiles",
                             icon: <InfoCircleOutlined />,
                             onClick: () => setNotedetail(true)
+                          },
+                          {
+                            key: '7',
+                            className: "p-2 opacity-50",
+                            label: "Share",
+                            icon: <ShareAltOutlined />,
                           },
                           {
                             key: '4',
@@ -228,11 +237,11 @@ const NotePage = () => {
 
             {/* Folder */}
             <div
-              className={`sm:text-xs m-2 flex flex-wrap gap-4 md:gap-10 p-5 border-b ${theme === "dark" ? "border-gray-800" : "border-gray-300"
+              className={`sm:text-xs text-md m-2 flex flex-wrap gap-4 md:gap-10 p-5 border-b ${theme === "dark" ? "border-gray-800" : "border-gray-300"
                 }`}
             >
               <div className="flex gap-2 items-center">
-                <FolderFilled /> <p>Folder</p>
+                <FolderOutlined /> <p>Folder</p>
               </div>
               <p className="underline">{note?.folder_name}</p>
             </div>

@@ -29,29 +29,6 @@ llm = ChatGroq(
 )
 
 
-def clean_markdown(text: str) -> str:
-    """
-    Removes Markdown formatting symbols like #, ##, *, **, **** from text.
-    Useful for extracting clean titles or plain summaries.
-    """
-    # Remove headers like #, ##, ### at the start of lines
-    text = re.sub(r'^#{1,6}\s*', '', text, flags=re.MULTILINE)
-
-    # Remove bold (**text**)
-    text = re.sub(r'\*\*(.*?)\*\*', r'\1', text)
-
-    # Remove italic (*text*)
-    text = re.sub(r'\*(.*?)\*', r'\1', text)
-
-    # Remove any remaining stray *
-    text = text.replace('*', '')
-
-    # Remove any remaining stray #
-    text = text.replace('#', '')
-
-    # Remove any leading/trailing whitespace
-    return text.strip()
-
 def CreateNoteWithAI(input_data: dict) -> str:
     """
     Expects:
@@ -64,10 +41,10 @@ def CreateNoteWithAI(input_data: dict) -> str:
         Markdown string of the created note.
     """
     userModel = User
-
     user_id = input_data.get("user_id")
     user_prompt = input_data.get("user_prompt")
     folder_id = input_data.get("folder_id")
+    title = input_data.get("title")
 
 
     if not user_id or not user_prompt:
@@ -87,20 +64,19 @@ def CreateNoteWithAI(input_data: dict) -> str:
 
     # Construct system prompt
     prompt = (
-        f"You are an AI assistant for MemoEthiopia.\n"
-        f"Create a detailed, well-structured note for the user based on this prompt:\n\n"
-        f"'{user_prompt}'\n\n"
-        f"Format the note in Markdown with clear headings, bullet points, and code blocks if needed. "
-        f"Ensure it is clear and helps the user understand the topic easily."
-    )
+            "You are an AI assistant for MemoEthiopia.\n"
+            "Create a detailed, well-structured note for the user based on the following prompt:\n\n"
+            f"{user_prompt}\n\n"
+            "Format the note in Markdown with clear headings, bullet points, and code blocks if needed.\n"
+            "Ensure the note is clear and helps the user understand the topic easily.\n"
+            "**Do not include a title or top-level heading in the note. Start directly with the content.**"
+        )
+
 
     response = llm.invoke(prompt)
     markdown_note = response.content
-    
-    # Use first line as title if possible
-    first_line = markdown_note.strip().splitlines()[0].replace("#", "").strip()
-    title = first_line if first_line else f"Note: {user_prompt[:50]}"
-    title = clean_markdown(title)
+   
+    title = title
 
     note = Note.objects.create(
         user=user,

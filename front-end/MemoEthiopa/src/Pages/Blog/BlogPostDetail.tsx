@@ -13,6 +13,7 @@ import { AppDispatch, RootState } from "../../store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserData } from "../../store/features/users/User";
 import { Typography } from 'antd';
+
 const { Paragraph } = Typography;
 
 
@@ -46,7 +47,6 @@ const BlogPostDetail: React.FC = () => {
         })
             .then((res) => {
                 setComentload(false)
-                console.log("Comment posted successfully:", res.data);
                 // Optionally, you can update the state to reflect the new comment
                 const newComment = {
                     id: res.data.id,

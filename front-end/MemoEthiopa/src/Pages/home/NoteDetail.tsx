@@ -2,7 +2,7 @@ import React from 'react';
 import dayjs from 'dayjs';
 import { RootState } from '../../store/store';
 import { useSelector } from 'react-redux';
-import { FolderFilled, HomeFilled, IdcardFilled, InfoCircleFilled,  ScheduleFilled, UserOutlined } from '@ant-design/icons';
+import { FolderOpenFilled, HomeOutlined, IdcardOutlined,   InfoCircleOutlined, ScheduleOutlined, UserOutlined } from '@ant-design/icons';
 
 interface UserInfo {
     bio: string;
@@ -53,25 +53,23 @@ const NoteDetail: React.FC<NoteDetailProps> = ({ note }) => {
         return `${base} ${border} ${themeStyle}`;
     };
     return (
-        <div className={getClassNames("max-w-2xl  mx-auto p-4 space-y-4")}>
-            <h1 className={getClassNames("text-3xl font-bold text-center")}>{note.title}</h1>
+        <div className={getClassNames("max-w-2xl  mx-auto p-4 space-y-4 sm:text-xs")}>
+            <h1 className={getClassNames("text-xl font-bold text-center")}>{note.title}</h1>
 
-            <div className={getClassNames("flex flex-wrap justify-center gap-4 text-sm")}>
-                <span><FolderFilled className='me-2'/>Folder: {note.folder_name}</span>
-                <span><ScheduleFilled className='me-1' /> Created: {dayjs(note.created_at).format('DD MMM YYYY')}</span>
-                <span><IdcardFilled className='me-1' /> ID: {note.id}</span>
+            <div className={getClassNames("flex flex-wrap justify-center gap-4 ")}>
+                <span><FolderOpenFilled className='me-2'/>Folder: {note.folder_name}</span>
+                <span><ScheduleOutlined className='me-1' /> Created: {dayjs(note.created_at).format('DD MMM YYYY')}</span>
+                <span><IdcardOutlined className='me-1' /> ID: {note.id}</span>
             </div>
 
-            <div className={getClassNames("border-t pt-4 space-y-2 text-sm")}>
+            <div className={getClassNames("border-t pt-4 space-y-2 ")}>
                 <p><UserOutlined className='me-2'/> Author: {note.user_info.username} ({note.user_info.email})</p>
-                <p><HomeFilled /> Location: {note.user_info.location}</p>
-                <p><ScheduleFilled /> DOB: {dayjs(note.user_info.date_of_birth).format('DD MMM YYYY')}</p>
-                <p><InfoCircleFilled /> Bio: {note.user_info.bio}</p>
+                <p><HomeOutlined /> Location: {note.user_info.location}</p>
+                <p><ScheduleOutlined /> DOB: {dayjs(note.user_info.date_of_birth).format('DD MMM YYYY')}</p>
+                <p><InfoCircleOutlined /> Bio: {note.user_info.bio}</p>
             </div>
 
-            <a href={note.absolute_url} target="_blank" rel="noopener noreferrer" className={getClassNames("text-blue-600 underline block text-center")}>
-                View on MemoEthiopia
-            </a>
+            
         </div>
     );
 };

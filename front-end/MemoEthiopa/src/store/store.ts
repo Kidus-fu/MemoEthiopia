@@ -9,6 +9,7 @@ import { loginAPI } from '../services/auth/login';
 import { signupAPI } from '../services/auth/singup';
 import { userProfileAPI } from '../services/userprofile';
 import { blogApi } from '../services/Blog/blogposts';
+import { createNoteApi } from '../services/Notes/createNoteApi';
 
 
 const store = configureStore({
@@ -23,6 +24,7 @@ const store = configureStore({
         [loginAPI.reducerPath]: loginAPI.reducer,
         [signupAPI.reducerPath]: signupAPI.reducer,
         [blogApi.reducerPath]: blogApi.reducer,
+        [createNoteApi.reducerPath]: createNoteApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(
@@ -31,7 +33,8 @@ const store = configureStore({
             notesgetAPI.middleware,
             loginAPI.middleware,
             userProfileAPI.middleware,
-            blogApi.middleware
+            blogApi.middleware,
+            createNoteApi.middleware
         ),
 });
 

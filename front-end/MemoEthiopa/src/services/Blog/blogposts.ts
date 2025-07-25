@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { ACCESS_TOKEN } from '../../config';
 
 
 
@@ -46,7 +47,7 @@ const endpoint = "https://memoethiopia.onrender.com/blog/"
 const baseQuery = fetchBaseQuery({
     baseUrl: endpoint,
     prepareHeaders: (headers) => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem(ACCESS_TOKEN);
         if (token) {
             headers.set('Authorization', `Token ${token}`); 
         }

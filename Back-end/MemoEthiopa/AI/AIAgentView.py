@@ -36,13 +36,19 @@ class CreateNoteAgentView(APIView):
             return Response({"error": "user_prompt is required."}, status=status.HTTP_400_BAD_REQUEST)
         user_id = metadata.get("user_id")
         folder_id = metadata.get("folder_id")
+        title = metadata.get("title")
 
         if not user_id:
             return Response({"error": "user_id in metadata is required."}, status=status.HTTP_400_BAD_REQUEST)
+        if not folder_id:
+            return Response({"error": "folder_id in metadata is required."}, status=status.HTTP_400_BAD_REQUEST)
+        if not title:
+            return Response({"error": "title in metadata is required."}, status=status.HTTP_400_BAD_REQUEST)
         input_data = {
             "user_id": user_id,
             "user_prompt": user_prompt,
-            "folder_id":folder_id
+            "folder_id":folder_id,
+            "title":title
         }
 
         try:

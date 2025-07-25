@@ -3,15 +3,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../../store/store';
 import NoteList from './NoteList';
 import { Link, Outlet, useMatch, useNavigate, useParams } from 'react-router-dom';
-import { AlignLeftOutlined, CloseOutlined, ExportOutlined, FileDoneOutlined, FileTextOutlined, FolderAddFilled, FolderFilled, FolderOpenFilled, InboxOutlined, MoreOutlined, ReloadOutlined, RestOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
+import {  CloseOutlined, ExportOutlined, FileDoneOutlined, FileTextOutlined, FolderAddFilled, FolderFilled, FolderOpenFilled, InboxOutlined, MenuOutlined, MoreOutlined, ReloadOutlined, RestOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
 import api from '../../api';
 import { Button, ConfigProvider, Drawer, Dropdown, Empty, Skeleton, Spin, theme as antdTheme } from 'antd';
 import logo from '../../assets/MemoEthio_logo_4.png';
 import { Folderitems, useUserMenuItems } from "./MenuPropsC"
 import { fetchUserData } from '../../store/features/users/User';
-// import AddNoteForm from './NewNoteForm';
 import NotificationList from './NotificationList';
 import { useMessage } from '../../components/useMessage';
+import AddNoteForm from './NewNoteForm';
+import { useCreateAiNoteMutation } from '../../services/Notes/createNoteApi';
 
 interface FolderState {
   created_at: string;
@@ -51,7 +52,8 @@ const HomeLayout: React.FC = () => {
   const [mobileSidebar, setMobileSidebar] = useState(false)
   const { foldername } = useParams()
   const useritems = useUserMenuItems();
-  // const [isModalOpen, setIsModalOpen] = useState(false);
+  const [createAiNote, { isLoading }] = useCreateAiNoteMutation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenforder = (name: string) => {
     if (folders) {
@@ -65,7 +67,7 @@ const HomeLayout: React.FC = () => {
   };
 
   useEffect(() => {
-    document.title = `Memo Ethiopia | my Notes`;
+    document.title = `Memo Ethiopia | My Notes`;
 
     let startX = 0;
     let isEdgeSwipe = false;
@@ -106,34 +108,28 @@ const HomeLayout: React.FC = () => {
 
     setInOutlet(match ? true : false)
   }, [match])
-  // const handelnewNote = (values: any) => {
-  //   setLocaloading(true)
-  //   let uuid: string | undefined;
-  //   api.post('api-v1/notes/', values)
-  //     .then(res => {
-  //       uuid = res.data.uuid
-  //     })
-  //     .finally(() => {
-  //       api.get("api-v1/folders/")
-  //         .then(res => {
-  //           if (res.status === 200) {
-  //             const data = res.data.results
-  //             setFolders(data)
-  //             const foldernow = data.find((folderq: any) => folderq.id === values?.folder);
-  //             navigate(`/feed/${foldernow.name}/${uuid}`)
-  //             setOpenForder(foldernow)
-  //             setLocaloading(false)
 
-  //           } else {
-  //             console.error("get error to fauch a notes")
-  //           }
-  //         })
-  //     })
-  //     .catch((err: any) => {
-  //       console.error(err);
-  //       setLocaloading(false)
-  //     })
-  // }
+  const handleNoteSubmit = async (values: any) => {
+    navigate('/feed/')
+    try {
+      const payload = {
+        user_prompt: values.prompt,
+        metadata: {
+          user_id: user.user,
+          folder_id: values.folder,
+          title: values.title,
+        },
+      };
+      const response = await createAiNote(payload).unwrap();
+      const resdata = response.created_note_md
+      navigate(`/feed/${resdata.folder}/${resdata.note_uuid}/`)
+
+      showMessage('success', 'AI Note created successfully!');
+    } catch (error) {
+      console.error(error);
+      showMessage('error', 'Failed to create AI Note.');
+    }
+  };
   const getClassNames = (base: string) => {
     const border = DeveloperTest ? 'border border-red-700' : '';
     const themeStyle = theme === 'dark' ? ' bg-[#1C1C1C] text-white' : 'bg-[#F3F6FB] text-gray-600';
@@ -409,6 +405,7 @@ const HomeLayout: React.FC = () => {
         </div>
       ) : (
         <>
+          <Spin fullscreen tip={<p className='animate-pulse'>AI Ganerate</p>} spinning={isLoading} />
           <div className={`sticky hidden px-5 sm:text-xs justify-between md:flex top-0 z-50 ${theme === "dark" ? "bg-[#1f1f1f]" : "bg-[#ffffff33]"} w-full`}
             onContextMenu={(e) => e.preventDefault()}
           >
@@ -473,6 +470,7 @@ const HomeLayout: React.FC = () => {
                 components: {
                   Dropdown: {
                     paddingBlock: 10,
+                    fontSize: 11
                   }
                 },
               }}>
@@ -488,7 +486,7 @@ const HomeLayout: React.FC = () => {
                         className="h-full w-full object-cover"
                       />
                     ) : (
-                    <UserOutlined className={" text-lg "} />
+                      <UserOutlined className={" text-lg "} />
                     )}
                   </div>
                 </Dropdown>
@@ -518,9 +516,9 @@ const HomeLayout: React.FC = () => {
                   <SearchOutlined />
                 </div>
 
-                {/* <AddNoteForm onClose={() => setIsModalOpen(false)} folders={folders} theme={theme} open={isModalOpen} user={user} onSumbit={handelnewNote} /> */}
+                <AddNoteForm onClose={() => setIsModalOpen(false)} folders={folders} theme={theme} open={isModalOpen} user={user} onSubmit={handleNoteSubmit} loading={isLoading} />
                 <button className={getClassNames(`px-2 py-2 cursor-pointer w-full rounded mt-2 mb-4 text-center ${theme === "dark" ? "bg-[#3D3939]" : "bg-[#ffff]"} `)}
-                // onClick={() => setIsModalOpen(true)}
+                  onClick={() => setIsModalOpen(true)}
                 >+ New Note</button>
               </div>
               <div className={getClassNames("flex-1 overflow-y-auto space-y-2 mb-3 overflow-x-auto w-auto ")}
@@ -545,14 +543,14 @@ const HomeLayout: React.FC = () => {
                     }
                   }} />
                 </div>
-                <div className="space-y-1 text-xs overflow-y-auto mb-3 h-2/3" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                <div className={`space-y-1 sm:text-xs overflow-y-auto mb-3 h-2/3 `} style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                   {loading ? (
                     Array.from({ length: 4 }).map((_, idx) => (
                       <Skeleton.Input key={idx} className={getClassNames(`cursor-pointer w-full border border-transparent m-1 ${theme === "dark" ? "bg-transparent " : ""}   rounded   scale-100`)} />
                     ))
                   ) : (
                     <>
-                      {newfoldercreate && <div className={getClassNames(`flex justify-between cursor-pointer border border-transparent   rounded px-2 py-2 `)} >
+                      {newfoldercreate && <div className={getClassNames(`flex justify-between cursor-pointer border border-transparent px-2 py-2 `)} >
                         <p>
                           <FolderFilled className='pr-2' />
                           <input
@@ -578,102 +576,123 @@ const HomeLayout: React.FC = () => {
                           }
                         </p>
                       </div>}
-                      {
-                        forlderloading && (
-                          <ConfigProvider theme={{
-                            algorithm: theme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
-                            components: {
-                              Dropdown: {
-                                paddingBlock: 10,
+                      <ConfigProvider
+                        theme={{
+                          algorithm: theme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
+                          components: {
+                            Dropdown: {
+                              paddingBlock: 10,
+                              fontSize: 10
+                            }
+                          },
+                        }}
+                      >
+                        {forlderloading ? (
+                          <div className="space-y-4 p-4">
+                            {[...Array(4)].map((_, idx) => (
+                              <Skeleton
+                                key={idx}
+                                active
+                                title={false}
+                                className="rounded-lg"
+                              />
+                            ))}
+                          </div>
+                        ) : (
+                          folders.map((folder) => (
+                            <Dropdown
+                              key={folder.id}
+                              menu={
+                                Folderitems
+                                  ? {
+                                    items: Folderitems,
+                                    onClick: (e) => handelFolderitem(e, folder.id, folder.name)
+                                  }
+                                  : undefined
                               }
-                            },
-                          }}>
-                            <Skeleton active />
-                            <Skeleton active />
-                          </ConfigProvider>
-                        )
-                      }
-                      {folders.map((folder) => (
-                        <>
-                          <ConfigProvider theme={{
-                            algorithm: theme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
-                            components: {
-                              Dropdown: {
-                                paddingBlock: 10,
-                              }
-                            },
-                          }}>
-
-                            <Dropdown menu={Folderitems ? { items: Folderitems, onClick: Folderitems ? (e) => handelFolderitem(e, folder.id, folder.name) : undefined } : undefined} placement="bottom" trigger={["contextMenu"]} >
-                              <div className={getClassNames(`flex justify-between cursor-pointer border border-transparent   rounded px-3 py-2  ${openForder === folder
-                                ? `${theme === "dark" ? "bg-gray-800 border-gray-800" : "bg-[#edf0f5] "} scale-105`
-                                : ""
-                                }`)}>
-
-                                {renamid == folder.id ? (
-                                  <p key={folder.id}>
-                                    <FolderFilled className='pr-2' />
+                              placement="bottom"
+                              trigger={["contextMenu"]}
+                            >
+                              <div
+                                className={getClassNames(
+                                  `flex justify-between items-center cursor-pointer border border-transparent rounded px-3 py-2 transition-all duration-200 ${openForder === folder ? `${theme === "dark" ? "bg-gray-800 border-gray-800" : "bg-[#edf0f5] "} scale-105`
+                                    : ""}
+                                `)}
+                              >
+                                {renamid === folder.id ? (
+                                  <div className="flex items-center gap-2 w-full">
+                                    <FolderFilled className="pr-1" />
                                     <input
                                       value={newFoldersName}
-                                      onChange={(e) => {
-                                        setNewFoldersName(e.target.value)
-                                      }}
+                                      onChange={(e) => setNewFoldersName(e.target.value)}
                                       ref={folderinput}
-                                      className={getClassNames(`outline-none p-1 w-3/4 ${theme == "dark" ? "bg-black/30" : "bg-white"} focus:ring-0 focus:border-none`)}
+                                      className={getClassNames(
+                                        `outline-none p-1 w-full ${theme == "dark" ? "bg-black/30 text-white" : "bg-white"}`
+                                      )}
                                       onKeyDown={(e) => {
                                         if (e.key === 'Enter') {
-                                          handelCloseInput(folder.id)
-                                        }
-                                        if (e.key === 'Escape') {
-                                          setRenameid(0)
+                                          handelCloseInput(folder.id);
+                                        } else if (e.key === 'Escape') {
+                                          setRenameid(0);
                                         }
                                       }}
                                     />
-                                  </p>
+                                  </div>
                                 ) : (
                                   <p
-                                    key={folder.id}
+                                    className="flex items-center gap-2 w-full"
                                     onClick={() => {
-                                      setMobileSidebar(false)
-                                      setNewfoldercreate(false)
-                                      setNewFoldersNameC("")
-                                      handleOpenforder(folder.name)
+                                      setMobileSidebar(false);
+                                      setNewfoldercreate(false);
+                                      setNewFoldersNameC("");
+                                      handleOpenforder(folder.name);
                                       if (renamid !== 0) {
-                                        setRenameid(0)
+                                        setRenameid(0);
                                       }
                                     }}
-                                    className={getClassNames("bg-transparent sm:text-xs")}
                                     onTouchStart={() => {
-                                      handleOpenforder(folder.name)
+                                      handleOpenforder(folder.name);
                                       setTimeout(() => {
-                                        setMobileSidebar(false)
+                                        setMobileSidebar(false);
                                       }, 3000);
-                                      setNewfoldercreate(false)
-                                      setNewFoldersNameC("")
+                                      setNewfoldercreate(false);
+                                      setNewFoldersNameC("");
                                     }}
                                   >
-                                    {openForder === folder ?
-                                      <FolderOpenFilled className='pr-2' />
-                                      :
-                                      <FolderFilled className='pr-2' />}
+                                    {openForder === folder ? <FolderOpenFilled /> : <FolderFilled />}
                                     {folder.name}
                                   </p>
                                 )}
 
-                                <Dropdown menu={Folderitems ? { items: Folderitems, onClick: Folderitems ? (e) => handelFolderitem(e, folder.id, folder.name) : undefined } : undefined} placement="bottomRight" trigger={["click"]}>
-                                  <MoreOutlined className={getClassNames('cursor-pointer bg-transparent')} onClick={() => {
-                                    if (renamid !== 0) {
-                                      setRenameid(0)
-                                      setNewfoldercreate(false)
-                                      setNewFoldersNameC("")
-                                    }
-                                  }} />
+                                <Dropdown
+                                  menu={
+                                    Folderitems
+                                      ? {
+                                        items: Folderitems,
+                                        onClick: (e) => handelFolderitem(e, folder.id, folder.name)
+                                      }
+                                      : undefined
+                                  }
+                                  placement="bottomRight"
+                                  trigger={["click"]}
+                                >
+                                  <MoreOutlined
+                                    className="cursor-pointer"
+                                    onClick={() => {
+                                      if (renamid !== 0) {
+                                        setRenameid(0);
+                                        setNewfoldercreate(false);
+                                        setNewFoldersNameC("");
+                                      }
+                                    }}
+                                  />
                                 </Dropdown>
                               </div>
                             </Dropdown>
-                          </ConfigProvider>
-                        </>
-                      ))}
+                          ))
+                        )}
+                      </ConfigProvider>
+
                     </>
                   )}
                 </div>
@@ -741,7 +760,7 @@ const HomeLayout: React.FC = () => {
                             :
                             trashedNotes.length ?
                               (
-                                <ul className="space-y-3 px-1 w-auto">
+                                <ul className="space-y-3 px-1 w-auto ">
                                   {trashedNotes.map((note: any, idx: number) => (
                                     <Dropdown
                                       menu={{
@@ -775,7 +794,7 @@ const HomeLayout: React.FC = () => {
                                         key={note.uuid}
                                         className={getClassNames(
                                           `p-6 rounded cursor-pointer  ${theme === "dark" ? "bg-[#1d1c1c]" : "bg-[#fdf8f8]"}`)}>
-                                        <p className="font-medium  text-lg flex items-center gap-2">
+                                        <p className="font-medium  sm:text-sm flex items-center gap-2">
                                           {note.title}
                                         </p>
                                         <div className="flex gap-2.5 mt-2 text-xs text-gray-400">
@@ -835,11 +854,44 @@ const HomeLayout: React.FC = () => {
               </div>
             </aside >
 
-            <div className={`block md:hidden ${!mobileSidebar ? 'fixed text-2xl p-0 z-0 top-0.5 left-1.5' : 'hidden'}`}
-              onClick={() => setMobileSidebar(true)}>
-              <AlignLeftOutlined className="" />
+            <div
+              className={getClassNames(`fixed md:hidden w-full  transition-transform duration-200  ${mobileSidebar ? 'hidden' : 'block'}`)}
+              
+            >
+              <div className="flex justify-between gap-2 p-2">
+                <MenuOutlined className="text-xl " onClick={() => setMobileSidebar(true)}/>
+                <div className="flex gap-2">
+              <ConfigProvider theme={{
+                algorithm: theme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
+                components: {
+                  Dropdown: {
+                    paddingBlock: 10,
+                    fontSize: 11
+                  }
+                },
+              }}>
+
+                <Dropdown menu={{ items: useritems }} trigger={["click"]} placement="bottomLeft"
+                  overlayStyle={{ width: 220, height: 220, borderRadius: 20 }}>
+                  <div className={getClassNames("h-6 w-6 mt-1 bg-transparent rounded-full cursor-pointer  overflow-hidden flex items-center justify-center")}>
+                    {user?.profile_picture ? (
+                      <img
+                        // src={`https://memoethiopia.onrender.com${user.profile_picture}`}
+                        src={`https://placehold.co/150/?text=${user?.usermore?.username[0]}`}
+                        alt="User Avatar"
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <UserOutlined className={" text-lg "} />
+                    )}
+                  </div>
+                </Dropdown>
+              </ConfigProvider>
             </div>
-            <div className={`z-50 ${theme === "dark" ? "bg-[#1f1f1f]" : "bg-[#ECEEF0]"} `}>
+              </div>
+            </div>
+
+            <div className={`pt-3 ${theme === "dark" ? "bg-[#1f1f1f]" : "bg-[#ECEEF0]"} sm:h-auto h-screen`}>
               <NoteList foldernotes={openForder} />
             </div>
             <div className={getClassNames(`${inOutlet ? "" : `${theme === "dark" ? "bg-[#242424]" : "bg-[#ffffff33]"}`}   top-0 left-0 z-0 right-0 bottom-0 overflow-y-auto lg:static lg:h-auto lg:flex w-full h-auto`)}>

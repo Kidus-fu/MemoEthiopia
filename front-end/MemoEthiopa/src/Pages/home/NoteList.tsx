@@ -118,12 +118,12 @@ const NoteList: React.FC<FoldernotesState> = ({ foldernotes }) => {
   }
   return (
     <>
+        {localoading && <Spin fullscreen={true} tip='just a sec.' />}
       {foldernotes ? (
         <div
           className={getClassNames(`  w-auto sm:text-sm`)}
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          {localoading && <Spin fullscreen={true} tip='just a sec.' />}
           <section className={getClassNames("w-full overflow-y-auto py-8")}>
             <h2 className={getClassNames("sm:text-md font-semibold mb-4 mx-5")}>
               {foldernotes.name || "All Notes"}
@@ -159,7 +159,10 @@ const NoteList: React.FC<FoldernotesState> = ({ foldernotes }) => {
                             ? antdTheme.darkAlgorithm
                             : antdTheme.defaultAlgorithm,
                         components: {
-                          Dropdown: { paddingBlock: 10 },
+                          Dropdown: { 
+                            paddingBlock: 10,
+                            fontSize: 11,
+                          },
                         },
                         token: {
                           colorBgMask: "rgb(1, 1, 1,0.7)"

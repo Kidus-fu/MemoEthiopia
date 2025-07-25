@@ -7,9 +7,7 @@ import { Link } from 'react-router-dom';
 const Upgrade: React.FC = () => {
     const theme = useSelector((state: RootState) => state.theam.theme);
     const user = useSelector((state: RootState) => state.user);
-    const DeveloperTest = useSelector((state: RootState) => state.developertest.border_test);
-    console.log(user);
-    
+    const DeveloperTest = useSelector((state: RootState) => state.developertest.border_test);    
     const getClassNames = (base: string) => {
         const border = DeveloperTest ? 'border border-red-700' : '';
         const themeStyle = theme === 'dark'
