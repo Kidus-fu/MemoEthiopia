@@ -22,6 +22,8 @@ import BlogDelete from './Pages/Blog/BlogDelete.tsx';
 import BlogpostEdit from './Pages/Blog/BlogpostEdit.tsx';
 import BlogCategoriesFilter from './Pages/Blog/BlogCategories.tsx';
 import BlogAdminDashboard from './Pages/Blog/BlogPostDashbored.tsx';
+import Setting from './Pages/home/Setting.tsx';
+import SettingPort from './Pages/home/SettingPort.tsx';
 
 
 createRoot(document.getElementById('root')!).render(
@@ -36,6 +38,9 @@ createRoot(document.getElementById('root')!).render(
           <Route path='/otp_verification' element={<OTP />} />
           <Route path='*' element={<Error404 />} />
           <Route path='/feed' element={<HomeLayout />} />
+          <Route path='/setting' element={<Setting />} >
+            <Route path=":settingport" element={<SettingPort />} />
+          </Route>
           <Route path='/feed/:foldername' element={<HomeLayout />} >
             <Route path=":noteId" element={<NotePage />} />
           </Route>

@@ -22,6 +22,9 @@ const BlogCategoriesFilter: React.FC = () => {
     const handleReload = () => {
         navigate(0);
     };
+    useEffect(() => {
+            document.title = title as string;
+        },[title])
 
     if (isLoading) {
         return (

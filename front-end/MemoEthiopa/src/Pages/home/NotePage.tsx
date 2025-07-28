@@ -62,6 +62,9 @@ const NotePage = () => {
       .then((resp: any) => setNote(resp.data))
       .finally(() => setLoading(false));
   }, [noteId]);
+  useEffect(() => {
+      document.title = note?.title ? note?.title : "My Note"
+  },[note])
 
   const getClassNames = (base: string) => {
     const border = DeveloperTest ? "border border-red-700" : "";

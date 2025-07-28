@@ -2,9 +2,9 @@ import { message } from "antd"
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "./config"
 import axios from "axios"
 // in Test case
-// const endpoint = "http://localhost:8000/"
+const endpoint = "http://localhost:8000/"
 
-const endpoint = "https://memoethiopia.onrender.com/"
+// const endpoint = "https://memoethiopia.onrender.com/"
 const api = axios.create({
     baseURL: endpoint,
 })

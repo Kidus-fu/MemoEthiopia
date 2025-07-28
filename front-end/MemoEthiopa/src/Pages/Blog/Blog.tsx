@@ -10,7 +10,7 @@ const Blog: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>()
 
     useEffect(() => {
-        document.title = "Memo Ethiopia | Blog"
+        document.title = "Blog"
         dispatch(fetchUserData())
         user
     }, [])

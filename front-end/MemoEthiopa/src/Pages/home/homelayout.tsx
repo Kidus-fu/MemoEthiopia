@@ -2,17 +2,17 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../../store/store';
 import NoteList from './NoteList';
-import { Link, Outlet, useMatch, useNavigate, useParams } from 'react-router-dom';
-import {  CloseOutlined, ExportOutlined, FileDoneOutlined, FileTextOutlined, FolderAddFilled, FolderFilled, FolderOpenFilled, InboxOutlined, MenuOutlined, MoreOutlined, ReloadOutlined, RestOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
+import { Outlet, useMatch, useNavigate, useParams } from 'react-router-dom';
+import { CloseOutlined, FileDoneOutlined, FileTextOutlined, FolderAddFilled, FolderFilled, FolderOpenFilled, InboxOutlined, MenuOutlined, MoreOutlined, ReloadOutlined, RestOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
 import api from '../../api';
 import { Button, ConfigProvider, Drawer, Dropdown, Empty, Skeleton, Spin, theme as antdTheme } from 'antd';
 import logo from '../../assets/MemoEthio_logo_4.png';
 import { Folderitems, useUserMenuItems } from "./MenuPropsC"
 import { fetchUserData } from '../../store/features/users/User';
-import NotificationList from './NotificationList';
 import { useMessage } from '../../components/useMessage';
 import AddNoteForm from './NewNoteForm';
 import { useCreateAiNoteMutation } from '../../services/Notes/createNoteApi';
+import MinNavbar from '../../components/home/minNavber';
 
 interface FolderState {
   created_at: string;
@@ -43,8 +43,6 @@ const HomeLayout: React.FC = () => {
   const [newfoldercreate, setNewfoldercreate] = useState(false)
   const folderinput = useRef<HTMLInputElement>(null)
   const folderinputnew = useRef<HTMLInputElement>(null)
-  const [notificationCount, setnotificationCount]: any = useState()
-  const [notifications, setNotifications]: any = useState()
   const [folderNameError, setFolderNameError] = useState(false)
   const [Trashopen, setTrashopen] = useState(false)
   const [TrashedLoad, setTrashedLoad] = useState(false)
@@ -56,18 +54,16 @@ const HomeLayout: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenforder = (name: string) => {
-    if (folders) {
-      folders.map((folder) => {
-        if (folder.name === name) {
-          setOpenForder(folder);
-          navigate(`/feed/${folder.name}`)
-        }
-      })
+    const targetFolder: any = folders.find((folder) => folder.name === name);
+    if (targetFolder) {
+      setOpenForder(targetFolder); // update state
+      navigate(`/feed/${targetFolder.name}`); // use directly
     }
   };
 
+
   useEffect(() => {
-    document.title = `Memo Ethiopia | My Notes`;
+    document.title = `My Notes`;
 
     let startX = 0;
     let isEdgeSwipe = false;
@@ -105,7 +101,6 @@ const HomeLayout: React.FC = () => {
     };
   }, []);
   useEffect(() => {
-
     setInOutlet(match ? true : false)
   }, [match])
 
@@ -221,6 +216,9 @@ const HomeLayout: React.FC = () => {
       setNewFoldersName(name)
       return null
     }
+    if (e.key == "3") {
+     setIsModalOpen(true)
+    }
     // Deleting key 4
     if (e.key == '4') {
       handelFolderDelete(id)
@@ -272,29 +270,13 @@ const HomeLayout: React.FC = () => {
         setLocaloading(false)
       })
   }
-  useEffect(() => {
-    api.get('api-v1/notification/')
-      .then(res => {
-        const data = res.data.results
-        setNotifications(data);
-        setnotificationCount(data.length)
-      })
-  }, [])
+
   useEffect(() => {
     folderinputnew.current?.focus();
     folderinputnew.current?.select();
   }, [newfoldercreate]);
 
-  const handelNotificationopen = () => {
-    setnotificationCount(0)
-    notifications.map((notifi: any) => {
-      api.patch(`api-v1/notification/${notifi.id}/`,
-        {
-          message: notifi.message,
-          is_read: true
-        })
-    })
-  }
+
   const handelTrashopen = () => {
     setTrashedLoad(true)
     api.get('api-v1/notes/outtrash/')
@@ -349,6 +331,7 @@ const HomeLayout: React.FC = () => {
         }
       })
   }
+
   const handelTrashRestor = () => {
     setTrashedNotes([]);
     api.post('api-v1/notes/outtrash/?restore_all=true')
@@ -379,7 +362,6 @@ const HomeLayout: React.FC = () => {
           showMessage("error", 'Something went wrong try again')
         }
       })
-
   }
   return (
     <>
@@ -406,93 +388,7 @@ const HomeLayout: React.FC = () => {
       ) : (
         <>
           <Spin fullscreen tip={<p className='animate-pulse'>AI Ganerate</p>} spinning={isLoading} />
-          <div className={`sticky hidden px-5 sm:text-xs justify-between md:flex top-0 z-50 ${theme === "dark" ? "bg-[#1f1f1f]" : "bg-[#ffffff33]"} w-full`}
-            onContextMenu={(e) => e.preventDefault()}
-          >
-            <div className={getClassNames(`sm:flex gap-2 sm:text-xs ${theme === "dark" ? "bg-[#1f1f1f]" : "bg-[#ffffff33]"}`)}>
-              <Link to={"/blog"}
-                onClick={(e) => {
-                  e.preventDefault(); // Prevent default navigation
-                  window.open("/blog", "_blank", "noopener,noreferrer");
-                }}
-              >
-                <div className=" p-1 cursor-pointer sm:text-xs">
-                  Blog <ExportOutlined />
-                </div>
-              </Link>
-              <div className=" p-1 cursor-pointer">
-                Shop <ExportOutlined />
-              </div>
-              <div className="p-1 cursor-pointer">
-                {notificationCount ? (
-                  <>
-                    <Dropdown
-                      trigger={["click"]}
-                      placement="bottomRight"
-                      dropdownRender={() => <NotificationList notifications={notifications} theme={theme} />}>
-                      <div className="relative inline-block" onClick={handelNotificationopen}>
-                        <button className={" cursor-pointer border border-transparent"} title='notfication' >
-                          Notification
-                        </button>
-                        <span className="absolute -top-1 -right-2 sm:text-xs bg-red-600 text-white text-xs px-1.5 py-0.5 rounded-full" title={notificationCount}>
-                          {notificationCount}
-                        </span>
-                      </div>
-                    </Dropdown>
-                  </>
-                ) : (
-                  <>
-                    <Dropdown
-                      trigger={["click"]}
-                      placement="bottomRight"
-                      dropdownRender={() => <NotificationList notifications={notifications} theme={theme} />}>
-                      <button className=' cursor-pointer border border-transparent' title='notfication'>Notification</button>
-                    </Dropdown>
-                  </>
-                )}
-              </div>
-              <div className=" p-1 cursor-pointer opacity-50 sm:text-xs text-blue-400" title="GashaAI">
-                GashaAI
-                {/* <ThemeSelector /> */}
-              </div>
-              <div className=" p-1 opacity-35 sm:text-xs cursor-pointer" title='Chat'>
-                Chat
-              </div>
-              <div className=" p-1 cursor-pointer" title='Reload' onClick={() => {
-                window.location.reload()
-              }}>
-                <ReloadOutlined />
-              </div>
-            </div>
-            <div className="flex gap-2">
-              <ConfigProvider theme={{
-                algorithm: theme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
-                components: {
-                  Dropdown: {
-                    paddingBlock: 10,
-                    fontSize: 11
-                  }
-                },
-              }}>
-
-                <Dropdown menu={{ items: useritems }} trigger={["click"]} placement="bottomLeft"
-                  overlayStyle={{ width: 220, height: 220, borderRadius: 20 }}>
-                  <div className={getClassNames("h-6 w-6 mt-1 bg-transparent rounded-full cursor-pointer  overflow-hidden flex items-center justify-center")}>
-                    {user?.profile_picture ? (
-                      <img
-                        // src={`https://memoethiopia.onrender.com${user.profile_picture}`}
-                        src={`https://placehold.co/150/?text=${user?.usermore?.username[0]}`}
-                        alt="User Avatar"
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <UserOutlined className={" text-lg "} />
-                    )}
-                  </div>
-                </Dropdown>
-              </ConfigProvider>
-            </div>
-          </div>
+          <MinNavbar />
 
           <div className={getClassNames("sm:flex h-screen w-full overflow-y-auto")}
             onContextMenu={(e) => e.preventDefault()}
@@ -516,7 +412,7 @@ const HomeLayout: React.FC = () => {
                   <SearchOutlined />
                 </div>
 
-                <AddNoteForm onClose={() => setIsModalOpen(false)} folders={folders} theme={theme} open={isModalOpen} user={user} onSubmit={handleNoteSubmit} loading={isLoading} />
+                <AddNoteForm onClose={() => setIsModalOpen(false)} folders={folders} theme={theme} open={isModalOpen} user={user} onSubmit={handleNoteSubmit} loading={isLoading}  />
                 <button className={getClassNames(`px-2 py-2 cursor-pointer w-full rounded mt-2 mb-4 text-center ${theme === "dark" ? "bg-[#3D3939]" : "bg-[#ffff]"} `)}
                   onClick={() => setIsModalOpen(true)}
                 >+ New Note</button>
@@ -856,38 +752,37 @@ const HomeLayout: React.FC = () => {
 
             <div
               className={getClassNames(`fixed md:hidden w-full  transition-transform duration-200  ${mobileSidebar ? 'hidden' : 'block'}`)}
-              
             >
               <div className="flex justify-between gap-2 p-2">
-                <MenuOutlined className="text-xl " onClick={() => setMobileSidebar(true)}/>
+                <MenuOutlined className="text-xl " onClick={() => setMobileSidebar(true)} />
                 <div className="flex gap-2">
-              <ConfigProvider theme={{
-                algorithm: theme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
-                components: {
-                  Dropdown: {
-                    paddingBlock: 10,
-                    fontSize: 11
-                  }
-                },
-              }}>
+                  <ConfigProvider theme={{
+                    algorithm: theme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
+                    components: {
+                      Dropdown: {
+                        paddingBlock: 10,
+                        fontSize: 11
+                      }
+                    },
+                  }}>
 
-                <Dropdown menu={{ items: useritems }} trigger={["click"]} placement="bottomLeft"
-                  overlayStyle={{ width: 220, height: 220, borderRadius: 20 }}>
-                  <div className={getClassNames("h-6 w-6 mt-1 bg-transparent rounded-full cursor-pointer  overflow-hidden flex items-center justify-center")}>
-                    {user?.profile_picture ? (
-                      <img
-                        // src={`https://memoethiopia.onrender.com${user.profile_picture}`}
-                        src={`https://placehold.co/150/?text=${user?.usermore?.username[0]}`}
-                        alt="User Avatar"
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <UserOutlined className={" text-lg "} />
-                    )}
-                  </div>
-                </Dropdown>
-              </ConfigProvider>
-            </div>
+                    <Dropdown menu={{ items: useritems }} trigger={["click"]} placement="bottomLeft"
+                      overlayStyle={{ width: 220, height: 220, borderRadius: 20 }}>
+                      <div className={getClassNames("h-6 w-6 mt-1 bg-transparent rounded-full cursor-pointer  overflow-hidden flex items-center justify-center")}>
+                        {user?.profile_picture ? (
+                          <img
+                            // src={`https://memoethiopia.onrender.com${user.profile_picture}`}
+                            src={`https://placehold.co/150/?text=${user?.usermore?.username[0]}`}
+                            alt="User Avatar"
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          <UserOutlined className={" text-lg "} />
+                        )}
+                      </div>
+                    </Dropdown>
+                  </ConfigProvider>
+                </div>
               </div>
             </div>
 

@@ -71,7 +71,6 @@ const AddNoteForm: React.FC<AddNoteFormProps> = ({ open, onClose, folders, theme
                         mask: { backdropFilter: "blur(3px)" }
                     }}
                 >
-                    
                     <div className="text-center p-4 space-y-4">
                         <p className="text-base font-medium">Are you sure you want to close without saving?</p>
                         <div className="flex gap-2 justify-center">
@@ -125,7 +124,7 @@ const AddNoteForm: React.FC<AddNoteFormProps> = ({ open, onClose, folders, theme
                             label="Select Folder"
                             rules={[{ required: true, message: 'Please select a folder.' }]}
                         >
-                            <Select placeholder="Select a folder for this note">
+                            <Select placeholder="Select a folder for this note" value={"The"}>
                                 {folders.map(folder => (
                                     <Select.Option key={folder.id} value={folder.id}>
                                         {folder.name}

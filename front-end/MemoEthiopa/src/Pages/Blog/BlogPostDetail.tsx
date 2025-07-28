@@ -79,6 +79,9 @@ const BlogPostDetail: React.FC = () => {
                 })
         }
     }, [data])
+    useEffect(() => {
+        document.title = data?.title ? data?.title : "Blog"
+    },[data])
 
     if (isLoading) {
         return (
@@ -102,7 +105,7 @@ const BlogPostDetail: React.FC = () => {
             </div>
         </>
     );
-
+    
     return (
         <>
             <div className="">

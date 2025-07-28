@@ -45,7 +45,7 @@ export const useUserMenuItems = (): MenuProps['items'] => {
       console.error("Failed to copy:", err);
     }
   };
-
+  
   return [
     {
       key: '1',
@@ -114,16 +114,19 @@ export const useUserMenuItems = (): MenuProps['items'] => {
           key: '3-1',
           className: `p-2`,
           label: "Profile",
+          onClick: () => navigate('/setting/account')
         },
         {
           key: '3-2',
           className: `p-2`,
           label: "Settings",
+          onClick : () => navigate('/setting')
         },
         {
           key: '3-3',
           className: `p-2`,
           label: "Keyboard Shortcut",
+          onClick : () => navigate('/setting')
         },
         {
           key: '3-4',

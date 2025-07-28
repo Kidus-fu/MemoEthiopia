@@ -89,10 +89,10 @@ export const useSignupForm = () => {
             const resfresh_token = singinResponse.data.refresh
             localStorage.setItem(ACCESS_TOKEN, access_token)
             localStorage.setItem(REFRESH_TOKEN, resfresh_token)
+            
             window.location.href = "/otp_verification"
             }
 
-           
             return true
 
         } catch {

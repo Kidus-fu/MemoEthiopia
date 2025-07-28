@@ -1,9 +1,9 @@
 import { useSelector } from "react-redux";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { RootState } from "../../store/store";
 import React, { useEffect, useState } from "react";
 import { ConfigProvider, Dropdown, Result, Spin, theme as antdTheme } from "antd";
-import { DeleteOutlined, EditOutlined, EyeFilled, FolderOpenFilled, InboxOutlined, PushpinFilled } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, EyeFilled, FolderOpenFilled, InboxOutlined, MoreOutlined, PushpinFilled } from "@ant-design/icons";
 import api from "../../api";
 import { useMessage } from "../../components/useMessage";
 
@@ -20,7 +20,7 @@ const NoteList: React.FC<FoldernotesState> = ({ foldernotes }) => {
   const DeveloperTest = useSelector((state: RootState) => state.developertest.border_test);
   const [localoading, setLocaloading] = useState(false)
   const showMessage = useMessage()
-  
+
 
   const getClassNames = (base: string) => {
     const border = DeveloperTest ? "border border-red-700" : "";
@@ -28,7 +28,7 @@ const NoteList: React.FC<FoldernotesState> = ({ foldernotes }) => {
       theme === "dark" ? "text-white" : "text-black";
     return `${base} ${border} ${themeStyle}`;
   };
-  
+
 
   useEffect(() => {
     if (foldernotes) {
@@ -118,7 +118,7 @@ const NoteList: React.FC<FoldernotesState> = ({ foldernotes }) => {
   }
   return (
     <>
-        {localoading && <Spin fullscreen={true} tip='just a sec.' />}
+      {localoading && <Spin fullscreen={true} tip='just a sec.' />}
       {foldernotes ? (
         <div
           className={getClassNames(`  w-auto sm:text-sm`)}
@@ -159,7 +159,7 @@ const NoteList: React.FC<FoldernotesState> = ({ foldernotes }) => {
                             ? antdTheme.darkAlgorithm
                             : antdTheme.defaultAlgorithm,
                         components: {
-                          Dropdown: { 
+                          Dropdown: {
                             paddingBlock: 10,
                             fontSize: 11,
                           },
@@ -236,12 +236,71 @@ const NoteList: React.FC<FoldernotesState> = ({ foldernotes }) => {
                           }}
                           title={`${note.title} ${note.is_pinned ? '~ Pinned' : ''}`}
                         >
-                          <p className="font-medium  sm:text-xs flex items-center gap-2">
-                            {note.is_pinned && (
-                              <span className="text-sm opacity-55"><PushpinFilled /></span>
-                            )}
-                            {note.title}
-                          </p>
+                          <div className="flex justify-between">
+                            <div className="">
+                              <p className="font-medium  sm:text-xs flex items-center gap-2">
+                                {note.is_pinned && (
+                                  <span className="text-sm opacity-55"><PushpinFilled /></span>
+                                )}
+                                {note.title}
+                              </p>
+                            </div>
+                            <Dropdown
+                              menu={{
+                                items: [
+                                  {
+                                    key: '1',
+                                    className: "p-2 opacity-35",
+                                    label: "Edit",
+                                    icon: <EditOutlined />,
+                                  },
+                                  {
+                                    key: '2',
+                                    className: "p-2 ",
+                                    label: "Open",
+                                    icon: <EyeFilled />,
+                                    onClick: () => {
+                                      setSelect(note.uuid);
+                                      navigate(`/feed/${foldernotes.name}/${note.uuid}`);
+                                    }
+                                  },
+
+                                  {
+                                    key: '4',
+                                    className: `p-2`,
+                                    label: `${note.is_archived ? 'unArchived' : 'Archived'}`,
+                                    icon: note.is_archived ? <InboxOutlined className="opacity-20" /> : <InboxOutlined />,
+                                    onClick: () => handelArchived(note.uuid, note.is_archived, note.content, note.title)
+                                  },
+                                  {
+                                    key: '5',
+                                    type: 'divider'
+                                  },
+                                  {
+                                    key: '6',
+                                    label: 'Add to Trash',
+                                    icon: <DeleteOutlined />,
+                                    danger: true,
+                                    onClick: () => {
+                                      handelTrash(note.uuid, note.content, note.title)
+                                      navigate(`/feed/`);
+                                    }
+                                  }
+                                ],
+                              }}
+                              overlayStyle={{ width: 180, height: 250 }}
+                              trigger={["click"]}
+                              placement="bottomLeft"
+                            >
+                              <div className="block sm:hidden"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                }}
+                              >
+                                <MoreOutlined />
+                              </div>
+                            </Dropdown>
+                          </div>
                           <div className="flex gap-2.5 mt-2 sm:text-xs text-gray-400">
                             <div className="flex-1">
                               <p className="truncate w-60 sm:text-xs">{note.content}</p>

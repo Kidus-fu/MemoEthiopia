@@ -154,8 +154,8 @@ const LandingNavBar: React.FC = () => {
 
         {/* Action Buttons */}
         <div className="hidden lg:flex gap-4 items-center">
-          <Link to="/singin" title="" className="px-4 py-2 border sm:text-sm border-gray-700 rounded hover:scale-105 transition-transform">Sign In</Link>
-          <Link to="/singup" className="px-4 py-2 bg-blue-900 sm:text-sm  text-white rounded hover:scale-105 transition-transform">Get Free Account</Link>
+          <Link to="/signin" title="" className="px-4 py-2 border sm:text-sm border-gray-700 rounded hover:scale-105 transition-transform">Sign In</Link>
+          <Link to="/signup" className="px-4 py-2 bg-blue-900 sm:text-sm  text-white rounded hover:scale-105 transition-transform">Get Free Account</Link>
         </div>
 
         {/* Mobile Toggle */}
@@ -223,10 +223,10 @@ const LandingNavBar: React.FC = () => {
           {/* Footer menu items here */}
           <div className="fixed bottom-0 w-2/3">
             <div className="m-2 p-2">
-              <Link to="/singup" className="px-4 py-2 bg-blue-900  text-white rounded hover:scale-105 transition-transform">Get Free Account</Link>
+              <Link to="/signup" className="px-4 py-2 bg-blue-900  text-white rounded hover:scale-105 transition-transform">Get Free Account</Link>
             </div>
             <div className="m-2 p-2 w-2/3">
-              <Link to="/singin" className="px-4 py-2 border border-gray-700 rounded hover:scale-105 transition-transform">Sign In</Link>
+              <Link to="/signin" className="px-4 py-2 border border-gray-700 rounded hover:scale-105 transition-transform">Sign In</Link>
             </div>
           </div>
         </div>

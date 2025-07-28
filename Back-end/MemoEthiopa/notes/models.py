@@ -17,6 +17,7 @@ class userInfo(models.Model):
     gender = models.CharField(max_length=10, choices=[('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')], blank=True, null=True)
     social_links = models.JSONField(blank=True, null=True)
     preferred_language = models.CharField(max_length=50, blank=True, null=True)
+    
     class Meta:
         verbose_name = "User Information"
         verbose_name_plural = "User Information"
@@ -102,15 +103,44 @@ class SharedNote(models.Model):
         return f"{self.note.title} shared with {self.shared_with.username}"
 
 class Notification(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="notifications")  # The user receiving the notification
-    message = models.TextField()  # The notification content/message
-    is_read = models.BooleanField(default=False)  # If the notification has been read or not
-    created_at = models.DateTimeField(auto_now_add=True)  # When the notification was created
-    updated_at = models.DateTimeField(auto_now=True)  # When the notification was last updated
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="notifications")  
+    message = models.TextField()  
+    is_read = models.BooleanField(default=False)  
+    created_at = models.DateTimeField(auto_now_add=True)  
+    updated_at = models.DateTimeField(auto_now=True)  
 
     def __str__(self):
-        return f"Notification for {self.user.username} - {self.message[:30]}..."  # Display first 30 characters of the message
+        return f"Notification for {self.user.username} - {self.message[:30]}..."  
 
     class Meta:
-        ordering = ["-created_at"]  # Show newest notifications first
+        ordering = ["-created_at"]  
 
+class Setting(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="setting")  
+    language = models.CharField(
+        max_length=10,
+        choices=[('en', 'English'), ('am', 'Amharic')],
+        default='en'
+    )
+    notifications_enabled = models.BooleanField(default=True)
+    email_updates = models.BooleanField(default=False)
+    default_view = models.CharField(
+        max_length=20,
+        choices=[('list', 'List'), ('grid', 'Grid')],
+        default='list'
+    )
+
+    font_size = models.CharField(
+        max_length=10,
+        choices=[('small', 'Small'), ('medium', 'Medium'), ('large', 'Large')],
+        default='medium'
+    )
+    timezone = models.CharField(max_length=100, default='Africa/Addis_Ababa')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s settings"
+
+
+    

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Note,userInfo ,Category,SharedNote,Folder,Notification,Favorite,TrashNote
+from .models import Note,userInfo ,Category,SharedNote,Folder,Notification,Favorite,TrashNote,Setting
 
 admin.site.register(Note)
 admin.site.register(userInfo)
@@ -10,3 +10,4 @@ admin.site.register(Folder)
 admin.site.register(Notification)
 admin.site.register(Favorite)
 admin.site.register(TrashNote)
+admin.site.register(Setting)
