@@ -5,6 +5,7 @@ import { usePostsignupMutation } from "../services/auth/singup"
 import { SignupType } from "../Pages/type"
 import { usePostloginMutation } from "../services/auth/login"
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../config"
+import api from "../api"
 
 export const useSignupForm = () => {
     const [postsignup, { isLoading }] = usePostsignupMutation()
@@ -89,9 +90,14 @@ export const useSignupForm = () => {
             const resfresh_token = singinResponse.data.refresh
             localStorage.setItem(ACCESS_TOKEN, access_token)
             localStorage.setItem(REFRESH_TOKEN, resfresh_token)
-            
-            window.location.href = "/otp_verification"
+            api.post('api-v1/users/', {
+                "plan":"Free",
+                "is_verified": false,
+            })
+            .then(res => console.log(res))
+            window.location.href = "/setting/account"
             }
+
 
             return true
 

@@ -5,8 +5,8 @@ import { signupType } from '../types';
 export const signupAPI = createApi({
     reducerPath: "signupAPI",
     baseQuery: fetchBaseQuery({
-        baseUrl: "https://memoethiopia.onrender.com/api-v1/",
-        // baseUrl: "http://localhost:8000/api-v1/",
+        // baseUrl: "https://memoethiopia.onrender.com/api-v1/",
+        baseUrl: "http://localhost:8000/api-v1/",
     }),
     tagTypes: [""], 
     endpoints: (builder) => ({

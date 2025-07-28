@@ -254,7 +254,7 @@ class userinfoView(
         return self.retrieve(request, *args, **kwargs)
     def post(self, request, *args, **kwargs):
         print(request.data)
-        # request.data['user'] = request.user.id 
+        request.data['user'] = request.user.id 
         return super().create(request, *args, **kwargs)
     def put(self, request, *args, **kwargs):
         request.data['user'] = request.user.id 
