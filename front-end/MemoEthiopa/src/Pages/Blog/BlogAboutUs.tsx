@@ -1,7 +1,12 @@
+import { useEffect } from "react";
 import BlogFooter from "../../components/Blog/BlogFooter";
 import BlogNavber from "../../components/Blog/BlogNavber";
 
 const BlogAboutUs = () => {
+
+    useEffect(() => {
+        document.title = "Memo Ethiopia Blog | About uaa"
+    },[])
     return (
         <>
             <BlogNavber />

@@ -85,10 +85,13 @@ const LandingNavBar: React.FC = () => {
 
           {/* Desktop Menu */}
           <ul className={getClasses("hidden bg-transparent lg:flex gap-3 items-center select-none sm:text-xs")}>
+            <Link to={"/"} target="_blank">
+              <li className="cursor-pointer" title="Home">Home</li>
+            </Link>
             <Link to={"/blog"} target="_blank">
               <li className="cursor-pointer" title="Blog">Blog</li>
             </Link>
-            <li className="cursor-pointer" title="About Us"><Link to={"/pricing"} > Pricing</Link></li>
+            <li className="cursor-pointer" title="Prucing"><Link to={"/pricing"} > Pricing</Link></li>
 
             <li className="relative group cursor-pointer">
               <Link to={"/developerOptions"} ><span title="Developer Options">Developer Options</span></Link>
@@ -99,7 +102,7 @@ const LandingNavBar: React.FC = () => {
               <li className="cursor-pointer" title="About Us">About</li>
             </Link>
             <Link to={"/contectus"} >
-              <li className="cursor-pointer" title="About Us">Contect</li>
+              <li className="cursor-pointer" title="Contect Us">Contect</li>
             </Link>
           </ul>
 
@@ -136,8 +139,9 @@ const LandingNavBar: React.FC = () => {
             <div className="p-4 space-y-1">
 
               <ul className={getClasses("items-center select-none space-y-3.5")}>
+                <li className="cursor-pointer" title="Home"><Link to={"/"} target="_blank" >Home</Link></li>
                 <li className="cursor-pointer" title="Newsletter"><Link to={"/blog"} target="_blank" >Blog</Link></li>
-                <li className="cursor-pointer" title="About Us"><Link to={"/pricing"} >Pricing</Link></li>
+                <li className="cursor-pointer" title="Pricing"><Link to={"/pricing"} >Pricing</Link></li>
                 <li className="relative group cursor-pointer">
                   <span title="Developer Options"><Link to={"/developerOptions"} > Developer Options</Link></span>
                 </li>

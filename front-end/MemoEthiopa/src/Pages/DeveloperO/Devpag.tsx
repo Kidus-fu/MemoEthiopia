@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import Heros1 from '../../components/DevpafeCom/Heros-1';
@@ -19,7 +19,9 @@ const Devpag: React.FC = () => {
                 : 'bg-[#F3F6FB] text-black';
         return `${base} ${border} ${themeStyle}`;
     };
-
+    useEffect(() => {
+        document.title = "Memo Ethiopia | Developemt Port"
+    })
     return (
         <div className={getClassNames('relative z-0 ')}>
             <LandingNavBar />

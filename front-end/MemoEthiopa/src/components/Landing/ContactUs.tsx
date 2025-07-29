@@ -1,15 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store'
+import { useMessage } from '../useMessage';
 const ContactUs: React.FC = () => {
     const theme = useSelector((state: RootState) => state.theam.theme);
     const DeveloperTest = useSelector((state: RootState) => state.developertest.border_test);
+    const showmessage = useMessage()
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        message: '',
+    });
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        const { name, email, message } = formData;
+
+        if (name && email && message) {
+            showmessage("success","Thanks for contacting us!")
+            setFormData({ name: '', email: '', message: '' });
+        }
+    };
 
     const getClassNames = (base: string) => {
         const border = DeveloperTest ? 'border border-red-700' : '';
-        const themeStyle = theme === 'dark'
-            ? 'bg-[#1C1C1C] text-white '
-            : 'bg-[#F3F6FB] text-black ';
+        const themeStyle =
+            theme === 'dark'
+                ? 'bg-[#1C1C1C] text-white'
+                : 'bg-[#F3F6FB] text-black';
         return `${base} ${border} ${themeStyle}`;
     };
     return (
@@ -95,7 +118,7 @@ const ContactUs: React.FC = () => {
                             </ul>
 
                         </div>
-                        <div className={getClassNames("card h-fit max-w-6xl p-5 md:p-12")} id="form">
+                        {/* <div className={getClassNames("card h-fit max-w-6xl p-5 md:p-12")} id="form">
                             <h2 className={getClassNames("mb-4 text-xl font-bold")}>Ready to Get Started?</h2>
                             <div className={getClassNames("mb-6")}>
                                 <div className={getClassNames("mx-0 mb-1 sm:mb-4")}>
@@ -113,7 +136,56 @@ const ContactUs: React.FC = () => {
                             <div className={getClassNames("text-center ")}>
                                 <button className={getClassNames("w-full bg-blue-800 text-white px-6 py-3 font-xl rounded-md sm:mb-0")}>Send Message</button>
                             </div>
-                        </div>
+                        </div> */}
+                        <section className={getClassNames(`relative mt-1`)} id="contact">
+                            <div className={getClassNames("mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20")}>
+                                {/* Static address/contact info (keep same) */}
+                                <div className={getClassNames("card h-fit max-w-6xl p-5 md:p-12")} id="form">
+                                    <h2 className={getClassNames("mb-4 text-xl font-bold")}>Ready to Get Started?</h2>
+                                    <form onSubmit={handleSubmit}>
+                                        <div className={getClassNames("mb-6")}>
+                                            <div className={getClassNames("mx-0 mb-1 sm:mb-4")}>
+                                                <input
+                                                    type="text"
+                                                    name="name"
+                                                    placeholder="Your name"
+                                                    value={formData.name}
+                                                    onChange={handleChange}
+                                                    className={getClassNames(`mb-2 w-full rounded-md border ${theme === 'dark' ? "border-gray-800" : "border-gray-300"}  py-2 pl-2 pr-4 shadow-md sm:mb-0 focus:outline-none`)}
+                                                />
+                                            </div>
+                                            <div className={getClassNames("mx-0 mb-1 sm:mb-4")}>
+                                                <input
+                                                    type="email"
+                                                    name="email"
+                                                    placeholder="Your email address"
+                                                    value={formData.email}
+                                                    onChange={handleChange}
+                                                    className={getClassNames(`mb-2 w-full rounded-md border ${theme === 'dark' ? "border-gray-800" : "border-gray-300"}  py-2 pl-2 pr-4 shadow-md sm:mb-0 focus:outline-none`)}
+                                                />
+                                            </div>
+                                            <textarea
+                                                name="message"
+                                                rows={5}
+                                                placeholder="Write your message..."
+                                                value={formData.message}
+                                                onChange={handleChange}
+                                                className={getClassNames(`mb-2 w-full focus:outline-none rounded-md border ${theme === 'dark' ? "border-gray-800 placeholder:text-gray-400" : "border-gray-300"}  py-2 pl-2 pr-4 shadow-md sm:mb-0`)}
+                                            ></textarea>
+                                        </div>
+
+                                        <div className={getClassNames("text-center")}>
+                                            <button
+                                                type="submit"
+                                                className={getClassNames("w-full bg-blue-800 text-white px-6 py-3 font-xl rounded-md sm:mb-0")}
+                                            >
+                                                Send Message
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </section>
                     </div>
                 </div>
             </div>

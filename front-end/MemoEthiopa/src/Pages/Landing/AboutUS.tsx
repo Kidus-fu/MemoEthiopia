@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import Footer from "../../components/Landing/Footer";
 import LandingNavBar from "../../components/Landing/LandingNavBer";
+import { useEffect } from "react";
 
 
 
@@ -15,6 +16,9 @@ const AboutUs = () => {
             : 'bg-[#F3F6FB] text-black ';
         return `${base} ${border} ${themeStyle}`;
     };
+    useEffect(() => {
+        document.title = "Memo Ethiopia | About us"
+    },[])
     return (
         <>
             <div className={getClassNames("")}>

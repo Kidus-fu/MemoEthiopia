@@ -3,6 +3,7 @@ import { RootState } from "../../store/store";
 import Footer from "../../components/Landing/Footer";
 import LandingNavBar from "../../components/Landing/LandingNavBer";
 import Pricing from "../../components/Landing/Pricing";
+import { useEffect } from "react";
 
 const PricingPage = () => {
     const theme = useSelector((state: RootState) => state.theam.theme);
@@ -14,6 +15,10 @@ const PricingPage = () => {
             : 'bg-[#F3F6FB] text-black ';
         return `${base} ${border} ${themeStyle}`;
     };
+
+    useEffect(() => {
+        document.title = "Memo Ethiopia | Pricing"
+    })
     return (
         <>
             <div className={getClassNames("")}>
