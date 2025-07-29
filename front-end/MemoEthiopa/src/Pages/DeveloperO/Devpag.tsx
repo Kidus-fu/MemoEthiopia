@@ -21,7 +21,7 @@ const Devpag: React.FC = () => {
     };
 
     return (
-        <div className={getClassNames('relative z-0 mt-1')}>
+        <div className={getClassNames('relative z-0 ')}>
             <LandingNavBar />
            <Heros1 />
            <Heros2 />

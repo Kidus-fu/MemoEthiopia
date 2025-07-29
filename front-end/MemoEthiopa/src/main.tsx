@@ -24,6 +24,9 @@ import BlogCategoriesFilter from './Pages/Blog/BlogCategories.tsx';
 import BlogAdminDashboard from './Pages/Blog/BlogPostDashbored.tsx';
 import Setting from './Pages/home/Setting.tsx';
 import SettingPort from './Pages/home/SettingPort.tsx';
+import AboutUs from './Pages/Landing/AboutUS.tsx';
+import PricingPage from './Pages/Landing/Pricing.tsx';
+import ContectUS from './Pages/Landing/ContectUS.tsx';
 
 
 createRoot(document.getElementById('root')!).render(
@@ -34,6 +37,9 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/" element={<App />} />
           {/* <Route index element={<FirstContent />} /> */}
           <Route path='/signin' element={<SignIn />} />
+          <Route path='/aboutUs' element={<AboutUs />} />
+          <Route path='/pricing' element={<PricingPage />} />
+          <Route path='/contectus' element={<ContectUS />} />
           <Route path='/signup' element={<SignUp />} />
           <Route path='/otp_verification' element={<OTP />} />
           <Route path='*' element={<Error404 />} />

@@ -74,7 +74,7 @@ const LandingPage: React.FC = () => {
                             <ContactUs />
                         </div>
 
-                        <div className="z-">
+                        <div className="">
                             <Footer />
                         </div>
                         <Chatbot

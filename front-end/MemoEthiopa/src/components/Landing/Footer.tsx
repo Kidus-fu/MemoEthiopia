@@ -2,6 +2,7 @@ import React from "react";
 import { GithubFilled, GlobalOutlined, LinkedinFilled } from "@ant-design/icons";
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store'
+import { Link } from "react-router-dom";
 
 const Footer: React.FC = () => {
     const theme = useSelector((state: RootState) => state.theam.theme);
@@ -30,11 +31,11 @@ const Footer: React.FC = () => {
                 <div>
                     <h3 className={getClassNames("text-lg font-semibold  mb-3")}>Quick Links</h3>
                     <ul className={getClassNames("space-y-2 text-sm ")}>
-                        <li><a href="#" className={getClassNames("")}>Home</a></li>
-                        <li><a href="#" className={getClassNames("")}>Features</a></li>
-                        <li><a href="#" className={getClassNames("")}>Pricing</a></li>
-                        <li><a href="#" className={getClassNames("")}>Login</a></li>
-                        <li><a href="#" className={getClassNames("")}>Get Started</a></li>
+                        <li><Link to={"/"} className={getClassNames("")}>Home</Link></li> 
+                        <li><Link to={"/aboutus"} className={getClassNames("")}> About </Link></li>
+                        <li><Link to={"/pricing"} className={getClassNames("")}> Pricing </Link></li>
+                        <li><Link to={"/signin"} className={getClassNames("")}>Login</Link></li>
+                        <li><Link to={"/signup"} className={getClassNames("")}>Get Started</Link></li>
                     </ul>
                 </div>
 
@@ -42,13 +43,13 @@ const Footer: React.FC = () => {
                 <div>
                     <h3 className={getClassNames("text-lg font-semibold  mb-3")}>Connect</h3>
                     <div className={getClassNames("flex space-x-4 mt-2")}>
-                        <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-red-400">
+                        <a href="https://github.com/Kidus-fu/MemoEthiopia" target="_blank" rel="noopener noreferrer" className="text-red-400">
                             <GithubFilled />
                         </a>
-                        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-blue-800">
+                        <a href="https://www.linkedin.com/in/kidus-surafel/" target="_blank" rel="noopener noreferrer" className="text-blue-800">
                             <LinkedinFilled />
                         </a>
-                        <a href="#" className="text-blue-500">
+                        <a href="https://www.memoethiopia.pro.et/" className="text-blue-500">
                             <GlobalOutlined />
                         </a>
                     </div>
