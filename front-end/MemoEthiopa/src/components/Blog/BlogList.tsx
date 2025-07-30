@@ -8,7 +8,6 @@ import BlogFooter from './BlogFooter';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import BlogListLoading from './BlogListLoading';
 import BlogSearch from './BlogSerach';
-import GoogleAd from './GoogleTest';
 
 dayjs.extend(relativeTime);
 
@@ -104,7 +103,6 @@ const BlogList: React.FC = () => {
                                             </div>
                                         </div>
                                     ))}
-                                    <GoogleAd />
                                 </div>
                             </div>
                         ))}
