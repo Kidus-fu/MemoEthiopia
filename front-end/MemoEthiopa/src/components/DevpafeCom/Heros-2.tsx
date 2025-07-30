@@ -99,11 +99,11 @@ const Heros2: React.FC = () => {
                         Have a question, suggestion, or issue? Feel free to reach out we’re always happy to connect and improve the platform based on your feedback.
                     </p>
                     <div className="flex mt-5 text-2xl gap-3">
-                        <a href="#"><GithubFilled /></a>
-                        <a href="#"><LinkedinFilled /></a>
-                        <a href="#"><GlobalOutlined /></a>
-                        <a href="#"><InstagramOutlined /></a>
-                        <a href="#"><MailOutlined /></a>
+                        <a href="https://github.com/Kidus-fu/" target='_blank'><GithubFilled /></a>
+                        <a href="https://www.linkedin.com/in/kidus-surafel/" target='_blank'><LinkedinFilled /></a>
+                        <a href="https://kidussurafel-porfolio.vercel.app/" target='_blank'><GlobalOutlined /></a>
+                        <a href="https://www.instagram.com/_kida_18/" target="_blank"><InstagramOutlined /></a>
+                        <a href="mailto:seeh51593@gmail.com"><MailOutlined /></a>
                     </div>
                 </motion.div>
             </div>
