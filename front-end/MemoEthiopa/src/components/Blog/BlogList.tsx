@@ -8,6 +8,7 @@ import BlogFooter from './BlogFooter';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import BlogListLoading from './BlogListLoading';
 import BlogSearch from './BlogSerach';
+import GoogleAd from './GoogleTest';
 
 dayjs.extend(relativeTime);
 
@@ -38,7 +39,8 @@ const BlogList: React.FC = () => {
                     </div>
                 </div>
             </div>
-        )}
+        )
+    }
 
     return (
         <>
@@ -95,13 +97,14 @@ const BlogList: React.FC = () => {
                                                     {post.description.slice(0, 100)}...
                                                 </p>
                                                 <Link to={`${post.slug}/`}>
-                                                <Button type='link'>
-                                                    Read More →
-                                                </Button>
+                                                    <Button type='link'>
+                                                        Read More →
+                                                    </Button>
                                                 </Link>
                                             </div>
                                         </div>
                                     ))}
+                                    <GoogleAd />
                                 </div>
                             </div>
                         ))}
