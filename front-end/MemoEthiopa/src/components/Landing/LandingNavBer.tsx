@@ -85,7 +85,7 @@ const LandingNavBar: React.FC = () => {
 
           {/* Desktop Menu */}
           <ul className={getClasses("hidden bg-transparent lg:flex gap-3 items-center select-none sm:text-xs")}>
-            <Link to={"/"} target="_blank">
+            <Link to={"/"} >
               <li className="cursor-pointer" title="Home">Home</li>
             </Link>
             <Link to={"/blog"} target="_blank">
