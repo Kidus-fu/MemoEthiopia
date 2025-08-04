@@ -1,5 +1,5 @@
 from django.urls import path , include
-from .views import  NoteViewtoUrl, UserCreateViewtoUrl, userinfoViewtoUrl ,EmailLoginView,CategoryViewURL ,NotificationViewURL, GetSharedNoteView, GetSherdNotes,FavoritesURL,FolderURL,NoteOuttoTrashViewURL,ChangePasswordURL,GetUser
+from .views import  NoteViewtoUrl, UserCreateViewtoUrl, userinfoViewtoUrl ,EmailLoginView,CategoryViewURL ,NotificationViewURL, GetSharedNoteView, GetSherdNotes,FavoritesURL,FolderURL,NoteOuttoTrashViewURL,ChangePasswordURL,GetUser, SharedNoteCreateView
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -7,6 +7,7 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     path('shared-notes/', GetSherdNotes.as_view(), name="GetAllSharedNotes"),
+    path('shared-creat/', SharedNoteCreateView.as_view(), name="GetAllSharedNotes"),
     path("shared-notes/note/<uuid:uuid>/",GetSharedNoteView.as_view(), name="get-shared-notes"),
     path("email/token/",EmailLoginView.as_view(), name='email_login'),
     path("username/token/",TokenObtainPairView.as_view(), name='email_login'),

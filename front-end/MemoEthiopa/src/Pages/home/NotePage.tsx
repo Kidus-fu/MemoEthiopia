@@ -10,6 +10,7 @@ import remarkGfm from "remark-gfm";
 import { ArrowLeftOutlined, CloseOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined,  FolderOutlined, InboxOutlined, InfoCircleOutlined, ScheduleOutlined, ShareAltOutlined } from "@ant-design/icons";
 import { useMessage } from "../../components/useMessage";
 import NoteDetail from "./NoteDetail";
+import ShareNoteForm from "../../components/home/ShearNoteForm";
 
 export interface UserInfo {
   bio: string;
@@ -52,6 +53,7 @@ const NotePage = () => {
   const theme = useSelector((state: RootState) => state.theam.theme);
   const DeveloperTest = useSelector((state: RootState) => state.developertest.border_test);
   const navigate = useNavigate();
+  const [shearnote,setShearnotModel] = useState(false)
   const [note, setNote] = useState<NoteItem>();
   const [loading, setLoading] = useState(true);
   const [Notedetail, setNotedetail] = useState(false);
@@ -142,6 +144,19 @@ const NotePage = () => {
             >
               {note && <NoteDetail note={note} />}
             </Modal>
+            <Modal
+              title="Shear Note"
+              closable={{ 'aria-label': 'Custom Close Button' }}
+              open={shearnote}
+              onClose={() => setShearnotModel(false)}
+              closeIcon={<CloseOutlined onClick={() => setShearnotModel(false)} />}
+              width={400}
+              footer={
+                null
+              }
+            >
+              <ShareNoteForm note={note?.id}/>
+            </Modal>
           </ConfigProvider>
           <div className={getClassNames("min-h-screen w-full")}>
             {/* Header */}
@@ -185,9 +200,10 @@ const NotePage = () => {
                           },
                           {
                             key: '7',
-                            className: "p-2 opacity-50",
+                            className: "p-2",
                             label: "Share",
                             icon: <ShareAltOutlined />,
+                            onClick: () => setShearnotModel(true)
                           },
                           {
                             key: '4',

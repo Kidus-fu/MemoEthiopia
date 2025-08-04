@@ -23,7 +23,7 @@ interface NotificationListProps {
 
 const NotificationList: React.FC<NotificationListProps> = ({ notifications, theme }) => {
   return (
-    <div className={`w-[340px]  h-[340px] sm:text-xs rounded-2xl p-2 ${theme === "dark" ? "bg-[#242927]" : "bg-white"
+    <div className={`w-[380px]  h-[340px] sm:text-xs rounded-2xl p-2 ${theme === "dark" ? "bg-[#242927]" : "bg-white"
       }`}>
       {
         notifications.length ?
@@ -55,8 +55,8 @@ const NotificationList: React.FC<NotificationListProps> = ({ notifications, them
                         <div
                           className="flex items-center justify-between w-full">
                           <span
-                            className={`sm:text-xs truncate ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
-                            {item.user_name.username}: {item.message}
+                            className={`sm:text-xs  ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
+                            {item.message}
                           </span>
                           <ConfigProvider theme={{
                             algorithm: theme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,

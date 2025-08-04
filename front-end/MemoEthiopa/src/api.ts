@@ -58,7 +58,7 @@ api.interceptors.response.use(
                 message.error({ content: 'Session expired, please log in.', key: 'refresh', duration: 2 });
                 localStorage.removeItem(ACCESS_TOKEN);
                 localStorage.removeItem(REFRESH_TOKEN);
-                window.location.href = "/login";
+                window.location.href = "/signin";
                 return Promise.reject(refreshError);
             }
         }

@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 #api views
 from rest_framework import generics , mixins 
+from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -14,7 +15,7 @@ from rest_framework import status
 
 from rest_framework import permissions
 #serializers 
-from .serializers import NoteSerializer , userInfoSerializer , UserCreateSerializer ,EmailLoginSerializer,CategorySerializer  , NotificationSerializer, SharedNoteSerializer, ShardNoteSerializer,FavoriteSerializer,FolderSerializer,ChangePasswordSerializer 
+from .serializers import *
 
 # permission 
 
@@ -343,13 +344,62 @@ class GetSharedNoteView(APIView):
         shared_note = get_object_or_404(SharedNote, uuid=uuid, shared_with=request.user)
         serializer = ShardNoteSerializer(shared_note.note)  # Serialize the actual Note model
         return Response(serializer.data)
-class GetSherdNotes(APIView):
-    parser_classes = [permissions.IsAuthenticated]
+    
+    
+class SharedNoteCreateView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        serializer = SharedNoteCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)  # You may want to control who can share
+            print(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class GetSherdNotes(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    generics.GenericAPIView
+):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = SharedNoteCreateSerializer
+    queryset = SharedNote.objects.all()
 
     def get(self, request):
-        shared_notes = SharedNote.objects.filter(shared_with=request.user)  # Get multiple objects
-        serializer = SharedNoteSerializer(shared_notes, many=True)  # Serialize multiple objects
+        shared_notes = SharedNote.objects.filter(shared_with=request.user)
+        serializer = SharedNoteSerializer(shared_notes, many=True)
         return Response(serializer.data)
+
+    def post(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        try:
+            shared_note = serializer.save(user=self.request.user)
+            Notification.objects.create(
+                    user=shared_note.shared_with,
+                    message = (
+                        f"{shared_note.user.username} shared a note '{shared_note.note.title}' with you. Check it"
+                    )
+                )
+        except Exception as e:
+            # You can raise a DRF validation error or handle it otherwise
+            raise ValidationError({'detail': f"Failed to create shared note or notification: {str(e)}"})
+
+    def put(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        super().destroy(request, *args, **kwargs)
+        return Response({"message": "shared deleted successfully"}, status=204)
+
 class NotificationView(
     mixins.ListModelMixin,
     mixins.RetrieveModelMixin,

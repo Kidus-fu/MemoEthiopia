@@ -75,6 +75,16 @@ class NoteSerializer(serializers.ModelSerializer):
             }
 
         return user_data
+class SharedNoteCreateSerializer(serializers.ModelSerializer):
+    permission = serializers.ReadOnlyField
+    class Meta:
+        model = SharedNote
+        fields = ['note', 'shared_with', 'permission']
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+    def create(self, validated_data):
+        return super().create(validated_data)
+
 class ShardNoteSerializer(serializers.ModelSerializer):
     user_info = serializers.SerializerMethodField()
     class Meta:

@@ -313,10 +313,8 @@ python manage.py runserver
 
 ```json
 {
-    "user":"shared_user_id",
     "note":"note_id",
-    "sheard_with":"shared_with_id",    
-    "permission": "edit | view"
+    "shared_with":"shared_with_id",    
 }
 ```
 

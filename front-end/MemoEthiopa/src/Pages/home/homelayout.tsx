@@ -426,12 +426,12 @@ const HomeLayout: React.FC = () => {
                   setNewfoldercreate(false)
                   setNewFoldersNameC("")
                 }}>
-                  <h2 className={getClassNames("sm:text-xs font-semibold text-gray-400")}>Recents</h2>
+                  <h2 className={getClassNames("sm:text-xs   text-gray-400")}>Recents</h2>
                   <button className={getClassNames("text-left sm:text-xs rounded my-1")}><FileTextOutlined /> Reflection on the Month of June</button>
                   <button className={getClassNames("text-left sm:text-xs rounded my-1")}><FileTextOutlined /> Reflection on the Month of June</button>
                 </div>
                 <div className="flex justify-between text-gray-400 " >
-                  <h2 className="mt-4 sm:text-xs font-semibold text-gray-400">Folders</h2>
+                  <h2 className="mt-4 sm:text-xs text-gray-400">Folders</h2>
                   <FolderAddFilled className='mt-4 cursor-pointer' onClick={() => {
                     if (!loading) {
                       setNewfoldercreate(true)
