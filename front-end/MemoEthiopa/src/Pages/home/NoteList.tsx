@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { RootState } from "../../store/store";
 import React, { useEffect, useState } from "react";
 import { ConfigProvider, Dropdown, Result, Spin, theme as antdTheme } from "antd";
@@ -12,15 +12,16 @@ interface FoldernotesState {
 }
 
 const NoteList: React.FC<FoldernotesState> = ({ foldernotes }) => {
+  const { foldername } = useParams();
   const navigate = useNavigate();
   const [selectNote, setSelect] = useState("");
   const [notes, setNotes]: any = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isGetshear, setIsGetshear] = useState(false);
   const theme = useSelector((state: RootState) => state.theam.theme);
   const DeveloperTest = useSelector((state: RootState) => state.developertest.border_test);
   const [localoading, setLocaloading] = useState(false)
   const showMessage = useMessage()
-
 
   const getClassNames = (base: string) => {
     const border = DeveloperTest ? "border border-red-700" : "";
@@ -29,6 +30,11 @@ const NoteList: React.FC<FoldernotesState> = ({ foldernotes }) => {
     return `${base} ${border} ${themeStyle}`;
   };
 
+  useEffect(() => {
+    setIsGetshear(foldername === "getshear" ? true : false)
+  }, [foldername])
+  console.log(foldername);
+  console.log(isGetshear);
 
   useEffect(() => {
     if (foldernotes) {
@@ -116,6 +122,24 @@ const NoteList: React.FC<FoldernotesState> = ({ foldernotes }) => {
         setLoading(false)
       })
   }
+  if (isGetshear) return (
+    <>
+      <div
+        className={getClassNames("w-full sm:w-80 h-screen overflow-auto")}
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+      >
+        <section className={getClassNames("overflow-y-auto ")}>
+          <div
+            className={getClassNames(
+              "h-full mt-20 sm:text-sm flex items-center justify-center"
+            )}
+          >
+            Sheared Note was selected
+          </div>
+        </section>
+      </div>
+    </>
+  )
   return (
     <>
       {localoading && <Spin fullscreen={true} tip='just a sec.' />}

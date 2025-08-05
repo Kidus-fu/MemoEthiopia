@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 import { ConfigProvider, Dropdown, Modal, Spin, theme as antdTheme } from "antd";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { ArrowLeftOutlined, CloseOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined,  FolderOutlined, InboxOutlined, InfoCircleOutlined, ScheduleOutlined, ShareAltOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, CloseOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined, FolderOutlined, InboxOutlined, InfoCircleOutlined, ScheduleOutlined, ShareAltOutlined } from "@ant-design/icons";
 import { useMessage } from "../../components/useMessage";
 import NoteDetail from "./NoteDetail";
 import ShareNoteForm from "../../components/home/ShearNoteForm";
@@ -49,15 +49,137 @@ export interface NoteItem {
 }
 
 const NotePage = () => {
-  const { noteId } = useParams();
+  const { foldername, noteId } = useParams();
   const theme = useSelector((state: RootState) => state.theam.theme);
   const DeveloperTest = useSelector((state: RootState) => state.developertest.border_test);
   const navigate = useNavigate();
-  const [shearnote,setShearnotModel] = useState(false)
+  const [shearnote, setShearnotModel] = useState(false)
   const [note, setNote] = useState<NoteItem>();
   const [loading, setLoading] = useState(true);
   const [Notedetail, setNotedetail] = useState(false);
   const showMessage = useMessage()
+
+  const getClassNames = (base: string) => {
+    const border = DeveloperTest ? "border border-red-700" : "";
+    const themeStyle = theme === "dark" ? "bg-[#1C1C1C] text-white" : "bg-[#F3F6FB] text-black";
+    return `${base} ${border} ${themeStyle}`;
+  };
+
+  if (foldername === "getshear") {
+
+    useEffect(() => {
+      setLoading(true);
+      api(`api-v1/shared-notes/note/${noteId}/`)
+        .then((resp: any) => setNote(resp.data))
+        .finally(() => setLoading(false));
+    }, [noteId]);
+    useEffect(() => {
+      document.title = note?.title ? note?.title : "My Note"
+    }, [note])
+    return (
+      <div
+        className="fixed md:relative top-0 w-full z-0 h-full m-0 overflow-auto overflow-x-hidden sm:text-xs"
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+      >
+        {loading ? (
+          <div className={getClassNames("h-screen w-full cursor-progress flex items-center justify-center")} title="wait a min">
+            <Spin fullscreen={true} />
+          </div>
+        ) : (
+          <>
+            <div className={getClassNames("min-h-screen w-full")}>
+              {/* Header */}
+              <div className={getClassNames("sticky top-0 z-40 w-full sm:text-xs ")}>
+                <div className="flex justify-between items-center p-2 sm:text-xs">
+                  <div
+                    className="sm:text-xs cursor-pointer" 
+                    title="back"
+                    onClick={() => navigate(-1)}
+                  >
+                    <ArrowLeftOutlined />
+                  </div>
+                  <h1 className="text-lg md:text-2xl font-bold text-center truncate max-w-[60%]">
+                    {note?.title}
+                  </h1>
+                  <div>
+
+                  </div>
+                </div>
+              </div>
+
+              {/* Created Date */}
+              <div
+                className={`text-sm m-2 flex flex-wrap gap-4 md:gap-10 p-5 border-b ${theme === "dark" ? "border-gray-800" : "border-gray-300"
+                  }`}
+              >
+                <div className="flex gap-2 items-center">
+                  <ScheduleOutlined /> <p className="pt-4">Date</p>
+                </div>
+                <p className="underline pt-4" title={note?.created_at}>
+                  {dayjs(note?.created_at).format("DD/MM/YYYY")}
+                </p>
+              </div>
+
+              {/* Markdown Content */}
+              <div className={getClassNames("text-base w-full whitespace-pre-line break-words caption-top p-4 sm:text-xs")}>
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    h1: (props) => <h1 className="text-2xl font-bold mt-6 mb-3" {...props} />,
+                    h2: (props) => <h2 className="text-xl font-bold mt-5 mb-2" {...props} />,
+                    h3: (props) => <h3 className="text-lg font-semibold mt-4 mb-2" {...props} />,
+                    p: (props) => (
+                      <p className="text-base leading-6 sm:text-sm my-2 break-words" {...props} />
+                    ),
+                    hr: (props) => (
+                      <hr
+                        className={`my-7 border-t ${theme === "dark" ? "border-gray-700" : "border-gray-300"
+                          }`}
+                        {...props}
+                      />
+                    ),
+                    code: (props) => {
+                      const { className, children, ...rest } = props as any;
+                      const inline = !className;
+                      return inline ? (
+                        <code
+                          className={`px-1 py-0.5 rounded font-mono text-sm ${theme === "dark" ? "bg-gray-700 text-white" : "bg-gray-200 text-black"
+                            }`}
+                          {...rest}
+                        >
+                          {children}
+                        </code>
+                      ) : (
+                        <pre
+                          className={`my-4 p-4 rounded overflow-x-auto text-sm font-mono ${theme === "dark" ? "bg-[#272727] text-white" : "bg-[#eff2f3] text-black"
+                            }`}
+                        >
+                          <code>{children}</code>
+                        </pre>
+                      );
+                    },
+                    a: (props) => (
+                      <a
+                        className="text-blue-600 underline hover:text-blue-800 break-all sm:text-sm"
+                        target="_blank"
+                        rel="noreferrer"
+                        {...props}
+                      />
+                    ),
+                  }}
+                >
+                  {note?.content || ""}
+                </ReactMarkdown>
+
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    )
+  }
+
+
   useEffect(() => {
     setLoading(true);
     api(`api-v1/notes/${noteId}/`)
@@ -65,14 +187,10 @@ const NotePage = () => {
       .finally(() => setLoading(false));
   }, [noteId]);
   useEffect(() => {
-      document.title = note?.title ? note?.title : "My Note"
-  },[note])
+    document.title = note?.title ? note?.title : "My Note"
+  }, [note])
 
-  const getClassNames = (base: string) => {
-    const border = DeveloperTest ? "border border-red-700" : "";
-    const themeStyle = theme === "dark" ? "bg-[#1C1C1C] text-white" : "bg-[#F3F6FB] text-black";
-    return `${base} ${border} ${themeStyle}`;
-  };
+
 
   const handelArchived = (noteuuid: any, note_isarchived: any, notecontent: any, notetitle: any) => {
     setLoading(true)
@@ -155,7 +273,7 @@ const NotePage = () => {
                 null
               }
             >
-              <ShareNoteForm note={note?.id}/>
+              <ShareNoteForm note={note?.id} />
             </Modal>
           </ConfigProvider>
           <div className={getClassNames("min-h-screen w-full")}>
@@ -176,10 +294,12 @@ const NotePage = () => {
                   <ConfigProvider
                     theme={{
                       algorithm: theme === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
-                      components: { Dropdown: { 
-                        paddingBlock: 10,
-                        fontSize: 10 
-                      } },
+                      components: {
+                        Dropdown: {
+                          paddingBlock: 10,
+                          fontSize: 10
+                        }
+                      },
                     }}
                   >
                     <Dropdown

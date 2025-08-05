@@ -5,7 +5,7 @@ import NoteList from './NoteList';
 import { Outlet, useMatch, useNavigate, useParams } from 'react-router-dom';
 import { CloseOutlined, FileDoneOutlined, FileTextOutlined, FolderAddFilled, FolderFilled, FolderOpenFilled, InboxOutlined, MenuOutlined, MoreOutlined, ReloadOutlined, RestOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
 import api from '../../api';
-import { Button, ConfigProvider, Drawer, Dropdown, Empty, Skeleton, Spin, theme as antdTheme } from 'antd';
+import { Avatar, Button, ConfigProvider, Drawer, Dropdown, Empty, Skeleton, Spin, theme as antdTheme } from 'antd';
 import logo from '../../assets/MemoEthio_logo_4.png';
 import { Folderitems, useUserMenuItems } from "./MenuPropsC"
 import { fetchUserData } from '../../store/features/users/User';
@@ -33,7 +33,8 @@ const HomeLayout: React.FC = () => {
   const [localoading, setLocaloading] = useState(false)
   const [openForder, setOpenForder]: any = useState(undefined);
   const [folders, setFolders] = useState<FolderState[]>([])
-  const [trashedNotes, setTrashedNotes] = useState([])
+  const [trashedNotes, setTrashedNotes] = useState<any[]>([])
+  const [sheardNotes, setSheardNotes] = useState<any[]>([])
   const [foldersName, setFoldersName]: any = useState()
   const [newFoldersName, setNewFoldersName]: any = useState()
   const [newFoldersNameC, setNewFoldersNameC]: any = useState()
@@ -45,7 +46,9 @@ const HomeLayout: React.FC = () => {
   const folderinputnew = useRef<HTMLInputElement>(null)
   const [folderNameError, setFolderNameError] = useState(false)
   const [Trashopen, setTrashopen] = useState(false)
+  const [sheardNoteopen, setSheardNoteopen] = useState(false)
   const [TrashedLoad, setTrashedLoad] = useState(false)
+  const [sheardLoad, setSheardLoad] = useState(false)
   const match = useMatch("/feed/mynote/:uuid");
   const [mobileSidebar, setMobileSidebar] = useState(false)
   const { foldername } = useParams()
@@ -217,7 +220,7 @@ const HomeLayout: React.FC = () => {
       return null
     }
     if (e.key == "3") {
-     setIsModalOpen(true)
+      setIsModalOpen(true)
     }
     // Deleting key 4
     if (e.key == '4') {
@@ -277,6 +280,18 @@ const HomeLayout: React.FC = () => {
   }, [newfoldercreate]);
 
 
+  const handelSheardNoteopen = () => {
+    setSheardNoteopen(true)
+    setSheardLoad(true)
+    api.get('api-v1/shared-notes/')
+      .then((res: any) => {
+        console.log(res);
+        setSheardNotes(res.data)
+      }).catch((error) => {
+        console.error(error);
+        showMessage('error', 'Something went wrong, please try again')
+      }).finally(() => setSheardLoad(false))
+  }
   const handelTrashopen = () => {
     setTrashedLoad(true)
     api.get('api-v1/notes/outtrash/')
@@ -412,7 +427,7 @@ const HomeLayout: React.FC = () => {
                   <SearchOutlined />
                 </div>
 
-                <AddNoteForm onClose={() => setIsModalOpen(false)} folders={folders} theme={theme} open={isModalOpen} user={user} onSubmit={handleNoteSubmit} loading={isLoading}  />
+                <AddNoteForm onClose={() => setIsModalOpen(false)} folders={folders} theme={theme} open={isModalOpen} user={user} onSubmit={handleNoteSubmit} loading={isLoading} />
                 <button className={getClassNames(`px-2 py-2 cursor-pointer w-full rounded mt-2 mb-4 text-center ${theme === "dark" ? "bg-[#3D3939]" : "bg-[#ffff]"} `)}
                   onClick={() => setIsModalOpen(true)}
                 >+ New Note</button>
@@ -622,6 +637,68 @@ const HomeLayout: React.FC = () => {
                       }}
                     >
                       <Drawer
+                        title="Sheard notes"
+                        placement="left"
+                        width={420}
+                        onClose={() => setSheardNoteopen(false)}
+                        open={sheardNoteopen}
+                        closable={true}
+                        bodyStyle={{ padding: "1rem", overflowY: "auto" }}
+                      >
+                        {
+                          sheardLoad ?
+                            <ul className="space-y-2 px-1">
+                              {Array.from({ length: 5 }).map((_, idx) => (
+                                <li
+                                  key={idx}
+                                  className={` ${theme === "dark" ? "bg-[#2e2c2c]" : "bg-[#f3f1f1]"} p-4 rounded-lg animate-pulse  flex flex-col gap-2`}
+                                >
+                                  <div className={`h-4 w-2/3 rounded-md`} />
+                                  <div className={`h-4 w-2/3 rounded-md`} />
+                                  <div className={`h-4 w-2/3 rounded-md`} />
+                                </li>
+                              ))}
+                            </ul>
+                            : (
+
+                              sheardNotes.length ?
+                                (
+                                  <ul className="space-y-4 px-2 w-full max-w-3xl mx-auto">
+                                    {sheardNotes.map((note: any) => (
+                                      <li
+                                        key={note.uuid}
+                                        className={`flex items-center justify-between gap-4 p-4 sm:p-5 rounded-lg shadow-sm transition-all cursor-pointer hover:shadow-md 
+                                            ${theme === "dark" ? "bg-[#2b2a2a] text-white" : "bg-white text-gray-800"}`}
+                                            onClick={() => {
+                                              setSheardNoteopen(false)
+                                              navigate(`/feed/getshear/${note.uuid}`)
+                                            }}
+                                      >
+                                        {/* Avatar + User Info */}
+                                        <div className="flex items-center gap-3">
+                                          <Avatar icon={<UserOutlined />} />
+                                          <div className="flex flex-col">
+                                            <span className="text-sm font-semibold">Admin</span>
+                                            <span className="text-xs text-gray-500">Permission: <strong>{note.permission}</strong></span>
+                                          </div>
+                                        </div>
+
+                                        {/* Note Info */}
+                                        <div className="flex-1 pl-4">
+                                          <p className="text-base font-medium">{note.notetitle}</p>
+                                        </div>
+                                      </li>
+                                    ))}
+                                  </ul>
+
+                                )
+                                :
+                                (
+                                  <Empty description={"empty trash"} />
+                                ))
+                        }
+                      </Drawer>
+                      <Drawer
                         title="Trased notes"
                         placement="left"
                         width={420}
@@ -744,6 +821,11 @@ const HomeLayout: React.FC = () => {
                       onClick={() => handelTrashopen()}
                     >
                       <RestOutlined /> Tarsh
+                    </div>
+                    <div className=" mb-2 cursor-pointer"
+                      onClick={() => handelSheardNoteopen()}
+                    >
+                      <FileTextOutlined /> Get Sheard Note
                     </div>
                   </div>
                 </div>
