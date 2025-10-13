@@ -14,7 +14,7 @@ load_dotenv()
 # Initialize your LLM
 llm = ChatGroq(
     temperature=0.7,
-    model_name="llama3-8b-8192",  
+    model_name="meta-llama/llama-4-scout-17b-16e-instruct",  
 )
 
 class MemoChatView(APIView):
