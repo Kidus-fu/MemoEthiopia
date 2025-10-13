@@ -11,7 +11,7 @@ load_dotenv()
 # LLM setup
 llm = ChatGroq(
     groq_api_key=os.getenv("GROQ_API_KEY"),
-    model_name="llama3-8b-8192",
+    model_name="meta-llama/llama-4-scout-17b-16e-instruct",
     streaming=True
 )
 
